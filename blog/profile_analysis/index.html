@@ -260,13 +260,30 @@ users[is.na(users)] &lt;- 0</code></pre>
 summary(users$profile_count)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   0.000   1.000   1.000   1.854   2.000 194.000</code></pre>
-<p>Alright, here is the breakdown:</p>
+<p>Here is the breakdown:</p>
 <ul>
 <li>Around 50% of active Free plan users scheduled updates for only 1 profile in the past 28 days.</li>
 <li>The average number of profiles that active Free plan users used in the past 28 days is 1.85.</li>
 <li>Around 75% of active Free plan users scheduled updates for only 2 or less profiles.</li>
 <li>Someone scheduled updates for 194 profiles in the past 28 days!</li>
 </ul>
+<p>The maximum of 194 brings up a good point about our sample: these are only users that are <em>currently</em> on individual plans. This means that they could have been on a paid plan in the past 28 days. I don’t think it’s a huge portion, or very significant for this particular analysis, but it’s something to keep in mind!</p>
+<p>Let’s look at the distribution.</p>
+<p><img src="/blog/profile_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Wow, that’s interesting! It looks like most currently active Free users have only scheduled updates to one profile in the past 28 days. Let’s look at the CDF of this distribution.</p>
+<p><img src="/blog/profile_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Interesting! This graph tells us the following:</p>
+<ul>
+<li>Around 54% of users scheduled updates to 1 profile in the past 28 days.</li>
+<li>Around 76% of users scheduled updates to 2 or less profiles in the past 28 days.</li>
+<li>Around 91% of users scheduled updates to 3 or less profiles in the past 28 days.</li>
+</ul>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>If we were to go with the “less limited” Free plan and only allow users to connect up to 3 profiles, the data suggests that somewhere around 10% of currently active users would be affected. This equates to around 25k users.</p>
+<p>If we were to go with the “more limited” Free plan and only allow 2 profiles, the data suggests that somewhere around 25% of currently active users would be affected! This equates to around 63k users.</p>
+<p>I think it’s important to note that this is just a snapshot of <em>currently</em> active users that are <em>currently</em> on Individual plans, but I do think we can infer some insights from them!</p>
 </div>
 
       </article>
