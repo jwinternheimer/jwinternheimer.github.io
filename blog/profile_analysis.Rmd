@@ -1,6 +1,7 @@
 ---
 date: 2017-06-21T20:01:45-04:00
 subtitle: "Not too many."
+bigimg: [{src: "/blog/profile_analysis_files/figure-html/unnamed-chunk-10-1.png", desc: "Profiles"}]
 type: "post"
 tags: []
 title: "How many profiles do Free users use?"
