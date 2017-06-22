@@ -167,7 +167,7 @@
 
 
   
-    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://jwinternheimer.github.io/blog/profile_analysis_files/figure-html/unnamed-chunk-10-1.png" data-img-desc-1="Profiles"></div>
+    <div id="header-big-imgs" data-num-img=1 data-img-src-1="https://jwinternheimer.github.io/blog/profile_analysis_files/figure-html/unnamed-chunk-10-1.png" ></div>
   
 
   <header class="header-section has-img">
@@ -272,6 +272,7 @@ from transformed_updates as up
 left join users
   on up.user_id = users.user_id
 where users.billing_plan = &#39;individual&#39;
+and up.status != &#39;service&#39;
 and up.created_at &gt; (current_date - 29)
 group by up.user_id</code></pre>
 <p>Awesome! Now let’s join the <code>updates</code> and <code>users</code> dataframes so that we’ll have the number of updates and active profiles for each user. We’ll use <code>dplyr</code>’s <code>left_join</code> function and replace <code>NA</code> values with 0.</p>
@@ -288,11 +289,11 @@ users[is.na(users)] &lt;- 0</code></pre>
 <pre class="r"><code># Get summary stats on the number of profiles
 summary(users$profile_count)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   0.000   1.000   1.000   1.854   2.000 194.000</code></pre>
+##   1.000   1.000   1.000   1.877   2.000 194.000</code></pre>
 <p>Here is the breakdown:</p>
 <ul>
 <li>Around 50% of active Free plan users scheduled updates for only 1 profile in the past 28 days.</li>
-<li>The average number of profiles that active Free plan users used in the past 28 days is 1.85.</li>
+<li>The average number of profiles that active Free plan users used in the past 28 days is 1.88.</li>
 <li>Around 75% of active Free plan users scheduled updates for only 2 or less profiles.</li>
 <li>Someone scheduled updates for 194 profiles in the past 28 days!</li>
 </ul>
@@ -303,9 +304,10 @@ summary(users$profile_count)</code></pre>
 <p><img src="/blog/profile_analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Interesting! This graph tells us the following:</p>
 <ul>
-<li>Around 54% of users scheduled updates to 1 profile in the past 28 days.</li>
+<li>Around 56% of users scheduled updates to 1 profile in the past 28 days.</li>
 <li>Around 76% of users scheduled updates to 2 or less profiles in the past 28 days.</li>
 <li>Around 91% of users scheduled updates to 3 or less profiles in the past 28 days.</li>
+<li>Around 98% of users scheduled updates to 4 or less profiles in the past 28 days.</li>
 </ul>
 </div>
 <div id="conclusions" class="section level2">
