@@ -2,32 +2,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blogs on Is That Your Analysis?</title>
-    <link>/blog/</link>
+    <link>https://jwinternheimer.github.io/blog/</link>
     <description>Recent content in Blogs on Is That Your Analysis?</description>
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Thu, 22 Jun 2017 11:51:15 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jun 2017 13:34:24 -0400</lastBuildDate>
     
-	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jwinternheimer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>How many updates do Free users schedule per day?</title>
+      <link>https://jwinternheimer.github.io/blog/free_updates_per_day/</link>
+      <pubDate>Thu, 22 Jun 2017 13:34:24 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/free_updates_per_day/</guid>
+      <description>Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
+ Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.</description>
+    </item>
+    
+    <item>
       <title>Free Plan: Updates Per Day</title>
-      <link>/blog/updates_per_day/</link>
+      <link>https://jwinternheimer.github.io/blog/updates_per_day/</link>
       <pubDate>Thu, 22 Jun 2017 11:51:15 -0400</pubDate>
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/updates_per_day/</guid>
+      <guid>https://jwinternheimer.github.io/blog/updates_per_day/</guid>
       <description>Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
  Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.</description>
     </item>
     
     <item>
       <title>How many profiles do Free users use?</title>
-      <link>/blog/profile_analysis/</link>
+      <link>https://jwinternheimer.github.io/blog/profile_analysis/</link>
       <pubDate>Wed, 21 Jun 2017 20:01:45 -0400</pubDate>
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/profile_analysis/</guid>
+      <guid>https://jwinternheimer.github.io/blog/profile_analysis/</guid>
       <description>Introduction There is a big focus on simplifying the product for Buffer users on free plans in 2017 in order to create a more intuitive experience and encourage more upgrades.
 The purpose of this analysis is to get a better understanding of how users currently interact with the free plan, in order to better inform decisions around future plan limits. Specifically, we would love to learn about how many profiles users connect and actually schedule updates for.</description>
     </item>
