@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Free Plan: Updates Per Day</title>
+  <meta property="og:title" content="Free Plan: Updates Per Day" />
+  <meta name="twitter:title" content="Free Plan: Updates Per Day" />
+  <meta name="description" content="Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
+ Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.">
+  <meta property="og:description" content="Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
+ Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.">
+  <meta name="twitter:description" content="Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='https://jwinternheimer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="https://jwinternheimer.github.io/img/julian-avatar.png" />
+  <meta name="twitter:image" content="https://jwinternheimer.github.io/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="https://jwinternheimer.github.io/blog/updates_per_day/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Is That Your Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="https://jwinternheimer.github.io/blog/updates_per_day/" />
+  <link rel="alternate" href="https://jwinternheimer.github.io/index.xml" type="application/rss+xml" title="Is That Your Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://jwinternheimer.github.io/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://jwinternheimer.github.io/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="https://jwinternheimer.github.io/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://jwinternheimer.github.io">Is That Your Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Is That Your Analysis?" href="https://jwinternheimer.github.io">
+            <img class="avatar-img" src="https://jwinternheimer.github.io/img/julian-avatar.png" alt="Is That Your Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="blog-heading">
+              <h1>Free Plan: Updates Per Day</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that <em>active</em> users share on a daily basis.</p>
+</div>
+<div id="data-collection" class="section level2">
+<h2>Data collection</h2>
+<p>Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.</p>
+<pre class="sql"><code>with user_facts as (
+  select
+    up.user_id
+    , users.created_at
+    , max(up.created_at) as last_update_created_at
+    , count(distinct up.id) as update_count
+    , count(distinct date(up.created_at)) as update_date_count
+  from transformed_updates as up
+  inner join users
+    on users.user_id = up.user_id
+  where up.status != &#39;service&#39;
+  and users.billing_plan = &#39;individual&#39;
+  group by up.user_id, users.created_at
+)
+select
+  user_id
+  , created_at
+  , last_update_created_at
+  , update_count
+  , update_date_count
+from user_facts
+where last_update_created_at &gt; (current_date - 29)</code></pre>
+<p>There are over 250 thousand users in this dataset!</p>
+</div>
+<div id="data-tidying" class="section level2">
+<h2>Data tidying</h2>
+<p>Each of these users has scheduled at least one update in the past 28 days with Buffer. But how should we calculate the number of updates they send per day?</p>
+<p>One approach would be to count the number of days between the date that they joined Buffer and their last update, and divide the total number of updates they’ve sent by that number.</p>
+<pre class="r"><code># Set dates as date objects
+users$created_at &lt;- as.Date(users$created_at)
+users$last_update_created_at &lt;- as.Date(users$last_update_created_at)
+
+# Count days between join and last update date
+users &lt;- users %&gt;%
+  mutate(days_since_join = as.numeric(last_update_created_at - created_at) + 1) %&gt;%
+  mutate(updates_per_day = update_count / days_since_join)</code></pre>
+<p>Alright, now we’re ready for some summary statistics on this number.</p>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<p>Let’s compute the summary statistics for the <code>updates_per_day</code> dimension we just created.</p>
+<pre class="r"><code># Summarise updates per day
+summary(users$updates_per_day)</code></pre>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max.      NA&#39;s 
+##     0.000     0.333     0.941     2.297     2.000 11524.833        14</code></pre>
+<p>Here is the breakdown:</p>
+<ul>
+<li>Around 25% of active users have sent 0.33 updates per day or less.</li>
+<li>Around 50% of active users have sent 0.94 updates per day or less.</li>
+<li>Around 75% of active users have sent 2.00 updates per day or less.</li>
+</ul>
+<p>I have a hunch that this isn’t normally distributed, so let’s visualize the distribution of <code>updates_per_day</code>.</p>
+<pre><code>## Warning: Removed 6158 rows containing non-finite values (stat_density).</code></pre>
+<p><img src="/blog/updates_per_day_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>This distribution shape is something that we would expect. The vast majority of users send very few updates per day, while a small number of users send many updates per day.</p>
+<p>We can also “bucket” users by their value of <code>updates_per_day</code> to get the discrete user counts.</p>
+<p><img src="/blog/updates_per_day_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>As we can see, most of the Free user population is scheduling less than one update per day <em>on average</em>.</p>
+<p>Although we see that over 50% of free users scheduled less than one update per day <em>on average</em>, I would suspect that their updates aren’t necessarily evenly distributed across the time that they’ve been active with Buffer.</p>
+<p>For example, a user might be more active one week than the next, and might be completely inactive for the next two weeks. Even though the user might have a very low <code>updates_per_day</code> value, they may schedule much more than one update per day on days and weeks in which they are active.</p>
+<p>It feels like this is an important consideration when we think about rates. One alternative approach would be to look at the number of updates per day <em>only for days in which users are active</em>.</p>
+</div>
+<div id="updates-per-active-day" class="section level2">
+<h2>Updates per active day</h2>
+<p>Let’s take the same approach we did for <code>updates_per_day</code>, except this time count the total number of updates by the total number of days in which users scheduld updates. :)</p>
+<pre class="r"><code># Calculate new updates per day
+users &lt;- users %&gt;%
+  mutate(updates_per_active_day = update_count / update_date_count)</code></pre>
+<p>Now we can summarise this <code>updates_per_active_day</code> variable.</p>
+<pre class="r"><code># Summarize updates per active day
+summary(users$updates_per_active_day)</code></pre>
+<pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##     1.000     2.000     3.379     5.488     5.726 11608.956</code></pre>
+<p>Hers’s how it breaks down:</p>
+<ul>
+<li>Around 25% of active users have sent 2.00 updates per day or less.</li>
+<li>Around 50% of active users have sent 3.38 updates per day or less.</li>
+<li>Around 75% of active users have sent 5.73 updates per day or less.</li>
+</ul>
+<p>We can see that these values are quite different than our summary statistics for <code>updates_per_day</code>. Let’s visualize this distribution for active users.</p>
+<pre><code>## Warning: Removed 22160 rows containing non-finite values (stat_density).</code></pre>
+<p><img src="/blog/updates_per_day_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Quite a different shape. :) And we can “bucket” users in the same way we did last time as well.</p>
+<p><img src="/blog/updates_per_day_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Here we can see a distribution that is quite different than what we saw before.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions</h2>
+<p>Depending on how we measure <em>updates per day</em>, we see different distributions for currently active free users. Generally, most users schedule less than 5 updates per day, however it is still possible for users to be more active in certain time periods compared to others.</p>
+<p>Limiting the number of updates users can schedule per day to 5 has the potential to affect over 25% of the user base, since more than 25% schedule over 5 updates per <em>active</em> day (days in which updates are scheduled).</p>
+<p>Thanks for reading! Let me know if you have any thoughts, questions, or feedback at all! :)</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="https://jwinternheimer.github.io/blog/profile_analysis/" data-toggle="tooltip" data-placement="top" title="How many profiles do Free users use?">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="https://jwinternheimer.github.io/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://jwinternheimer.github.io">Is That Your Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://jwinternheimer.github.io/js/main.js"></script>
+<script src="https://jwinternheimer.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+
