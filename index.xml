@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Thu, 22 Jun 2017 13:34:24 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 26 Jun 2017 10:25:44 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How often do free users &#39;Share Now&#39;?</title>
+      <link>https://jwinternheimer.github.io/blog/share-now/</link>
+      <pubDate>Mon, 26 Jun 2017 10:25:44 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/share-now/</guid>
+      <description>Introduction As part of the next product cycle, we will try to create a simpler, more streamlined experience for Buffer users on a free plan. Part of that simplification process could include the limiting or removal of the option to ‘Share Now’, when drafting updates.
+Sharing an update immediately doesn’t add a post to the queue, which could possibly allow for the sending of many updates in a single time period.</description>
+    </item>
     
     <item>
       <title>How many updates do Free users schedule per day?</title>
