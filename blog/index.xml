@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 26 Jun 2017 10:25:44 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 27 Jun 2017 13:47:17 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How many users post 5 times per day?</title>
+      <link>https://jwinternheimer.github.io/blog/5-posts-per-day/</link>
+      <pubDate>Tue, 27 Jun 2017 13:47:17 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/5-posts-per-day/</guid>
+      <description>Introduction A significant part of the Kodiak product cycle and Buffer’s product vision going forward is simplifying the experience for users on a free plan. One of the components we are considering simplifying is the Queue Limit.
+As of June 2017, the Queue Limit refers to the number of updates users on a free plan can have in the Queue of a single profile at any single point in time. This can understandable cause some confusion with users, and can also be exploited (e.</description>
+    </item>
     
     <item>
       <title>How often do free users &#39;Share Now&#39;?</title>

@@ -409,7 +409,7 @@ recent_users &lt;- users_updates_per_week %&gt;%
 recent_users &lt;- recent_users %&gt;%
   mutate(percent_of_weeks = share_now_weeks / ceiling(weeks_since_joining))</code></pre>
 <p>Cool, now let’s visualize this distribution!</p>
-<pre><code>## Warning: Removed 17921 rows containing non-finite values (stat_density).</code></pre>
+<pre><code>## Warning: Removed 17917 rows containing non-finite values (stat_density).</code></pre>
 <p><img src="/blog/share-now_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <pre><code>## Warning: Removed 16603 rows containing non-finite values (stat_ecdf).</code></pre>
 <p><img src="/blog/share-now_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
@@ -435,6 +435,10 @@ recent_users &lt;- recent_users %&gt;%
             <a href="https://jwinternheimer.github.io/blog/free_updates_per_day/" data-toggle="tooltip" data-placement="top" title="How many updates do Free users schedule per day?">&larr; Previous Post</a>
           </li>
         
+        
+          <li class="next">
+            <a href="https://jwinternheimer.github.io/blog/5-posts-per-day/" data-toggle="tooltip" data-placement="top" title="How many users post 5 times per day?">Next Post &rarr;</a>
+          </li>
         
       </ul>
 
