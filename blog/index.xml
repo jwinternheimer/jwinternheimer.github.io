@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Tue, 27 Jun 2017 13:47:17 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 30 Jun 2017 08:25:27 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How many users will be affected by the Free plan limits?</title>
+      <link>https://jwinternheimer.github.io/blog/free-plan-limits/</link>
+      <pubDate>Fri, 30 Jun 2017 08:25:27 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/free-plan-limits/</guid>
+      <description>Introduction Over the past few weeks, simplifying the free plan has become a theme and key component of realizing our product vision. This Paper has a lot of good context and discussion around what that involves.
+There are four major components to this change:
+ Reducing the profile limit to 2 Reducing the number of updates people can send to 5 per day per profile Removing the ‘Share Now’ option Removing custom scheduling  The goal of this analysis is to estimate how many active users would be affected by each component.</description>
+    </item>
     
     <item>
       <title>How many users post 5 times per day?</title>
