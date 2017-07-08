@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Fri, 07 Jul 2017 10:01:22 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 08 Jul 2017 09:40:56 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Game of Thrones: Who Steals the Show?</title>
+      <link>https://jwinternheimer.github.io/blog/got-screentimes/</link>
+      <pubDate>Sat, 08 Jul 2017 09:40:56 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/got-screentimes/</guid>
+      <description>I was inspired by this analysis done by the folks of Looker, which looks at the amount of screentime different characters get in the Game of Thrones series.
+The dataset they used comes from data world and an imdb list. I’m grateful to the people that have collected and shared this data.
+The dataset includes 191 named characters, the amount of screentime they have (in minutes), and the number of episodes they appear in.</description>
+    </item>
     
     <item>
       <title>Simple Content Recommendations in R</title>
