@@ -5,9 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>Analyzing Product with Support Tickets</title>
+  <meta property="og:title" content="Analyzing Product with Support Tickets" />
+  <meta name="twitter:title" content="Analyzing Product with Support Tickets" />
+  <meta name="description" content="Customer support and advocacy play important roles in driving Buffer forward. We don’t just want to provide support to customers in need – we try to use signals and common themes from those conversations to influence decision making on the product team.
+The “Pause Queue” button is one recent, small example of how conversations with customers have led to changes in the product.
+ To keep these signals organized, we introduced area tags to our support workflow within Helpscout.">
+  <meta property="og:description" content="Customer support and advocacy play important roles in driving Buffer forward. We don’t just want to provide support to customers in need – we try to use signals and common themes from those conversations to influence decision making on the product team.
+The “Pause Queue” button is one recent, small example of how conversations with customers have led to changes in the product.
+ To keep these signals organized, we introduced area tags to our support workflow within Helpscout.">
+  <meta name="twitter:description" content="Customer support and advocacy play important roles in driving Buffer forward. We don’t just want to provide support to customers in need – we try to use signals and common themes from those …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='https://jwinternheimer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://jwinternheimer.github.io/img/julian-avatar.png" />
@@ -15,12 +22,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="https://jwinternheimer.github.io/" />
+  <meta property="og:url" content="https://jwinternheimer.github.io/area-tags/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="https://jwinternheimer.github.io/" />
+  <link rel="canonical" href="https://jwinternheimer.github.io/area-tags/" />
   <link rel="alternate" href="https://jwinternheimer.github.io/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,9 +179,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="post-heading">
+              <h1>Analyzing Product with Support Tickets</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on July 14, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -185,100 +199,125 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Customer support and advocacy play important roles in driving Buffer forward. We don’t just want to provide support to customers in need – we try to use signals and common themes from those conversations to influence decision making on the product team.</p>
+<p>The “Pause Queue” button is one recent, small example of how conversations with customers have led to changes in the product.</p>
+<div class="figure">
+<img src="http://i.imgur.com/htQDRr6.png" />
+
+</div>
+<p>To keep these signals organized, we introduced <em>area tags</em> to our support workflow within Helpscout. Each tag included in a conversation is associated with an area of the product.</p>
+<div class="figure">
+<img src="http://i.imgur.com/oVrclFU.png" />
+
+</div>
+<p>In this analysis, we’ll explore these area tags and how they have evolved over time.</p>
+<div id="data-collection" class="section level2">
+<h2>Data collection</h2>
+<p>Much of our Helpscout data is conveneiently modeled <a href="https://looker.buffer.com/looks/3965?toggle=dat,vis">in Looker</a>, so we’ll use the <code>buffer</code> package’s <code>get_look()</code> function to pull in the data from Looker’s API.</p>
+<pre class="r"><code># Get data from Looker
+convos &lt;- get_look(3965)</code></pre>
+<pre><code>## Loading required package: httr</code></pre>
+<p>Alright, we have over 45 thousand conversations with area tags! Let’s tidy up the data and get it ready for analysis.</p>
+</div>
+<div id="data-tidying" class="section level2">
+<h2>Data tidying</h2>
+<p>There are a few small changes we need to make to prep the data for analysis. We’ll change the column names to be more accessible, change the dates to date type objects, and set the subject to a character vector.</p>
+<pre class="r"><code># Rename columns
+colnames(convos) &lt;- c(&#39;date&#39;, &#39;week&#39;, &#39;threads&#39;, &#39;id&#39;, &#39;mailbox&#39;, &#39;status&#39;, &#39;subject&#39;, &#39;type&#39; , &#39;area&#39;)
+
+# Set dates as date objects
+convos$date &lt;- as.Date(convos$date, format = &quot;%Y-%m-%d&quot;)
+convos$week &lt;- as.Date(convos$week, format = &quot;%Y-%m-%d&quot;)
+
+# Set subject as character type object
+convos$subject &lt;- as.character(convos$subject)</code></pre>
+<p>There are a couple area tags that can be consolidated. <code>feature request</code> and <code>feature requests</code> can be combined, <code>profile-connection</code> and <code>profile-maintenance</code> and be combined into <code>profiles</code>, <code>composing</code> and <code>composition</code> can be combined into <code>composing</code>, and <code>extension - multiple composer</code> can be dropped.</p>
+<pre class="r"><code># Set area as character vector
+convos$area &lt;- as.character(convos$area)
+
+# Replace feature requests
+convos$area &lt;- gsub(&quot;feature requests&quot;, &quot;feature request&quot;, convos$area)
+
+# Replace profile-connection and profile-maintenance
+convos$area &lt;- gsub(&quot;profile-connection&quot;, &quot;profiles&quot;, convos$area)
+convos$area &lt;- gsub(&quot;profile-maintenance&quot;, &quot;profiles&quot;, convos$area)
+
+# Replace composition
+convos$area &lt;- gsub(&quot;composition&quot;, &quot;composing&quot;, convos$area)
+convos$area &lt;- gsub(&quot;extension - multiple composer&quot;, &quot;composing&quot;, convos$area)
+
+# Set as factor
+convos$area &lt;- as.factor(convos$area)</code></pre>
+<p>Now we’re ready for some exploratory analysis.</p>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<p>Let’s try to get a better understanding of this dataset. We have over 45 thousand conversations – how many do we have for each mailbox?</p>
+<pre class="r"><code># Group by mailbox
+convos %&gt;%
+  count(mailbox, sort = TRUE) %&gt;%
+  filter(n &gt; 100) %&gt;%
+  mutate(mailbox = reorder(mailbox, n)) %&gt;%
+  ggplot(aes(mailbox, n)) +
+  geom_col() +
+  labs(x = &quot;&quot;, y = &quot;&quot;, title = &quot;Conversations by Mailbox&quot;) + 
+  coord_flip()</code></pre>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Most of these conversations come from the Buffer, Buffer Paid, Customer Onboarding, and Buffer for Business inboxes. Which tags appear most often?</p>
+<pre class="r"><code># Group by tag
+convos %&gt;%
+  count(area, sort = TRUE) %&gt;%
+  filter(area != &#39;uncategorized&#39;) %&gt;%
+  mutate(area = reorder(area, n)) %&gt;%
+  ggplot(aes(area, n)) +
+  geom_col() +
+  labs(x = &quot;&quot;, y = &quot;&quot;, title = &quot;Conversations by Area Tag&quot;) + 
+  coord_flip()</code></pre>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Onboarding, posting, billing, user-maintenance, and profiles are the most common area tags. Let’s look at the frequency of these tags over time.</p>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>It’s hard to get a sence with all that’s going on in this graph, so let’s try to make it more readable by graphing each area tag separately.</p>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>As we can see, <code>onboarding</code> and <code>billing</code> seem to appear most frequently in Helpscout conversations. The number of conversations with the <code>onboarding</code> tag seem to be increasing somewhat, while the number of conversations with the <code>scheduling</code> tag seem to be decreasing somewhat.</p>
+<div id="length-of-conversations" class="section level3">
+<h3>Length of conversations</h3>
+<p>Bandwidth on the customer advocacy team is somewhat limited, so it may be important to find that which takes up the most amount of time. We can use <code>threads</code>, which counts the number of threads in each particular conversation, to estimate the amount of time that each area tends to take.</p>
+<p>This may be a crude approach, as threads are not necessarily equal – billing issues may very well be more complex and time-consuming than onboarding issues. Let’s look at the distribution of threads for each area tag.</p>
+<pre><code>## Warning: Removed 2244 rows containing non-finite values (stat_density).</code></pre>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>The distribution of thread count is quite similar for each tag. Most conversations will only have two, I suppose the initial request and the response. The <code>social media advice</code> tag seems to have a higher-than-average proportion of conversations with only two threads. The <code>org-maintenance</code> tag seems to have a higher proportion of conversations that have a higer number of threads, as does the <code>user-maintenance</code> tag.</p>
+<p>The <code>billing</code> tag also seems to have a higher proportion of conversations with more than two threads. Let’s make another visualization to try to understand the distribution of threads for each area.</p>
+<pre><code>## Warning: Removed 2244 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="content/area-tags_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The areas with the highest <em>median</em> thread count are <code>API</code>, <code>org-maintenance</code>, and <code>org-setup</code>.</p>
+</div>
+</div>
+<div id="conclusions-and-next-steps" class="section level2">
+<h2>Conclusions and next steps</h2>
+<p>Based on this exploratory analysis, it seems that, of the area tags we utilize now, <code>billing</code>, <code>onboarding</code>, and <code>posting</code> seem to occur the most frequently. The <code>API</code>, <code>org-maintenance</code> and <code>org-setup</code> tags might tend to be associated with longer conversations – which would make sense if they were more technical – but the overall volume is relatively low.</p>
+<p>In the future, I would love to connect these conversations to actual Buffer users, and see which areas cause the most pain for certain user segments. We could identify the areas most challenging to Business customers, and which are most closely associated with events like churn.</p>
+<p>Thanks for reading! Any thoughts, comments, or questions are welcome!</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-                
-                  <h3 class="post-subtitle">
-                  Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 19, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="https://jwinternheimer.github.io/post/2015-01-19-soccer/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="https://jwinternheimer.github.io/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/2">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
+      </ul>
+
+      
         
-      </div>
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
