@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Fri, 14 Jul 2017 09:34:20 -0400</lastBuildDate>
+    <lastBuildDate>Sat, 22 Jul 2017 11:48:43 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Game of Thrones Book Analysis</title>
+      <link>https://jwinternheimer.github.io/blog/got-analysis/</link>
+      <pubDate>Sat, 22 Jul 2017 11:48:43 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/got-analysis/</guid>
+      <description>Winter is here. Finally!
+I was inspired by this series of blog posts from the Looker team to do my own Game of Thrones inspired data analysis. While Looker’s analysis focuses on the screentime of different characters in the show, I thought it would be interesting to take a different approach and analyze the text corpuses of the George R. R. Martin’s books.
+I was particularly inspired by Julia Silge’s analysis of gender roles in Jane Austen’s works, and took a similar approach to exploring the Game of Thrones data.</description>
+    </item>
     
     <item>
       <title>Analyzing Product with Support Tickets</title>
