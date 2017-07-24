@@ -5,9 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>How active are Business trialists?</title>
+  <meta property="og:title" content="How active are Business trialists?" />
+  <meta name="twitter:title" content="How active are Business trialists?" />
+  <meta name="description" content="One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
+To answer this question, we can analyze the data in this Look. The dataset contains the trial start and end dates for each user, as well as the days in which there were any actions_taken events triggered.
+The number of actions for each day is counted for up to 30 days after the trial start date for each user.">
+  <meta property="og:description" content="One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
+To answer this question, we can analyze the data in this Look. The dataset contains the trial start and end dates for each user, as well as the days in which there were any actions_taken events triggered.
+The number of actions for each day is counted for up to 30 days after the trial start date for each user.">
+  <meta name="twitter:description" content="One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
+To answer this question, we can analyze the …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='https://jwinternheimer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="https://jwinternheimer.github.io/img/julian-avatar.png" />
@@ -15,12 +23,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="https://jwinternheimer.github.io/" />
+  <meta property="og:url" content="https://jwinternheimer.github.io/blog/trial-activity/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="https://jwinternheimer.github.io/" />
+  <link rel="canonical" href="https://jwinternheimer.github.io/blog/trial-activity/" />
   <link rel="alternate" href="https://jwinternheimer.github.io/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,9 +180,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="post-heading">
+              <h1>How active are Business trialists?</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on July 24, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -185,185 +200,68 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?</p>
+<p>To answer this question, we can analyze the data in <a href="https://looker.buffer.com/looks/3975"><strong>this Look</strong></a>. The dataset contains the trial start and end dates for each user, as well as the days in which there were any <code>actions_taken</code> events triggered.</p>
+<p>The number of actions for each day is counted for up to 30 days after the trial start date for each user. In our analysis, we can count how many users have a maximum action date 1, 2, 7, etc. days after their trial began to estimate the percentage of trialists that become inactive on each day of the trial.</p>
+<div id="data-collection" class="section level2">
+<h2>Data collection</h2>
+<p>We can use the <code>get_look()</code> function from the <code>buffer</code> package to collect data from the Look mentioned above.</p>
+<pre class="r"><code># Get data from look
+trials &lt;- get_look(3975)</code></pre>
+<p>Let’s tidy up the data quick.</p>
+<pre class="r"><code># Rename columns
+colnames(trials) &lt;- c(&#39;start_date&#39;, &#39;end_date&#39;, &#39;user_id&#39;, &#39;activity_date&#39;, &#39;trial_day&#39;, &#39;actions&#39;)
+
+# Set dates as date objects
+trials$start_date &lt;- as.Date(trials$start_date, format = &#39;%Y-%m-%d&#39;)
+trials$end_date &lt;- as.Date(trials$end_date, format = &#39;%Y-%m-%d&#39;)
+trials$activity_date &lt;- as.Date(trials$activity_date, format = &#39;%Y-%m-%d&#39;)
+
+# Calculate trial length
+trials &lt;- trials %&gt;%
+  mutate(trial_length = as.numeric(end_date - start_date),
+         trial_day = trial_day - 1)</code></pre>
+<p>Now that the data is clean, we want to calculate the latest date, after the trial began, that the user was active.</p>
+<pre class="r"><code># Group by user
+by_user &lt;- trials %&gt;%
+  group_by(user_id, start_date, end_date, trial_length) %&gt;%
+  summarise(last_active = max(activity_date), 
+            last_trial_day_activity = max(trial_day))</code></pre>
+<p>Cool. Now we’re ready to explore a bit.</p>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<p>Let’s see how many users were last active on each day. To begin, let’s filter our data so that only <em>14-day</em> trials are included.</p>
+<p><img src="/blog/trial-activity_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>As we can see, the biggest dropoff <em>by far</em> comes after the first day. We’ve seen in the past that many users start trials shortly after signing up for Buffer, so this might be something that we’d expect to see. Let’s see if we can calculate the percentage of users that are still active after each day of the trial.</p>
+<p><img src="/blog/trial-activity_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>This plot shows the percentage of trialists that are still active <em>after</em> each trial day. We can see that the biggest drop comes from the first day – only 63% of Business trialists from the past year were active after day 0.</p>
+<p>After the first day, there percentage of users remaining decreases linearly, with around the same percentage dropping out each day.</p>
+<p>In the future, we can segment these retention curves by user attributes, like the type of trial, trial length, or weekday that the trial started. For now, we’ll leave it here. :)</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-02-20-test-markdown/">
-                <h2 class="post-title">Test markdown</h2>
-                
-                  <h3 class="post-subtitle">
-                  Each post also has a subtitle
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 20, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
-Here is some bold text
-Here is a secondary heading Here&rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?
-                  <a href="https://jwinternheimer.github.io/post/2015-02-20-test-markdown/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="/tags/example">example</a>&nbsp;
-                
-                  #<a href="/tags/markdown">markdown</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-02-13-hamlet-monologue/">
-                <h2 class="post-title">To be</h2>
-                
-                  <h3 class="post-subtitle">
-                  ... or not to be?
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 13, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  To be, or not to be&ndash;that is the question: Whether &lsquo;tis nobler in the mind to suffer The slings and arrows of outrageous fortune Or to take arms against a sea of troubles And by opposing end them. To die, to sleep&ndash; No more&ndash;and by a sleep to say we end The heartache, and the thousand natural shocks That flesh is heir to. &lsquo;Tis a consummation Devoutly to be wished. To die, to sleep&ndash; To sleep&ndash;perchance to dream: ay, there&rsquo;s the rub, For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause.
-                  <a href="https://jwinternheimer.github.io/post/2015-02-13-hamlet-monologue/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-27-dear-diary/">
-                <h2 class="post-title">Dear diary</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 27, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  What is it with that Mary girl? Dragging me to school every day. As if I had a choice. What you don&rsquo;t hear in those nursery rhymes is that she starves me if I don&rsquo;t go to school with her; it&rsquo;s the only way I can stay alive! I&rsquo;m thinking about being adopted by Little Bo Peep, sure I may get lost, but anything is better than being with Mary and those little brats at school (shudder, shudder).
-                  <a href="https://jwinternheimer.github.io/post/2015-01-27-dear-diary/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-                
-                  <h3 class="post-subtitle">
-                  Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 19, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="https://jwinternheimer.github.io/post/2015-01-19-soccer/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="https://jwinternheimer.github.io/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="https://jwinternheimer.github.io/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+          <li class="previous">
+            <a href="https://jwinternheimer.github.io/blog/involuntary-churn/" data-toggle="tooltip" data-placement="top" title="Involuntary Churn">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/2">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

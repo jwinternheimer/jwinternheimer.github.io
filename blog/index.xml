@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 24 Jul 2017 08:52:13 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 24 Jul 2017 14:10:33 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How active are Business trialists?</title>
+      <link>https://jwinternheimer.github.io/blog/trial-activity/</link>
+      <pubDate>Mon, 24 Jul 2017 14:10:33 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/trial-activity/</guid>
+      <description>One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
+To answer this question, we can analyze the data in this Look. The dataset contains the trial start and end dates for each user, as well as the days in which there were any actions_taken events triggered.
+The number of actions for each day is counted for up to 30 days after the trial start date for each user.</description>
+    </item>
     
     <item>
       <title>Involuntary Churn</title>

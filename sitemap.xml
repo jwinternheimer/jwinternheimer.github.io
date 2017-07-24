@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://jwinternheimer.github.io/blog/trial-activity/</loc>
+    <lastmod>2017-07-24T14:10:33-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://jwinternheimer.github.io/blog/involuntary-churn/</loc>
     <lastmod>2017-07-24T08:52:13-04:00</lastmod>
   </url>
@@ -144,7 +149,7 @@
   
   <url>
     <loc>https://jwinternheimer.github.io/blog/</loc>
-    <lastmod>2017-07-24T08:52:13-04:00</lastmod>
+    <lastmod>2017-07-24T14:10:33-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -161,7 +166,7 @@
   
   <url>
     <loc>https://jwinternheimer.github.io/</loc>
-    <lastmod>2017-07-24T08:52:13-04:00</lastmod>
+    <lastmod>2017-07-24T14:10:33-04:00</lastmod>
     <priority>0</priority>
   </url>
   
