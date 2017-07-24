@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Sat, 22 Jul 2017 11:48:43 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 24 Jul 2017 08:52:13 -0400</lastBuildDate>
     
 	<atom:link href="https://jwinternheimer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Involuntary Churn</title>
+      <link>https://jwinternheimer.github.io/blog/involuntary-churn/</link>
+      <pubDate>Mon, 24 Jul 2017 08:52:13 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>https://jwinternheimer.github.io/blog/involuntary-churn/</guid>
+      <description>Involuntary churn is a subset of churn in which the cancellation event was not directly initiated by the customer. For us, this occurs when there have been four consecutive failed payments.
+The reasons for the failed payments are varied, but we can assume that there are customers whose intention was to continue subscribing to the service. In most cases, they could not because their credit card either expired or was declined for one reason or another.</description>
+    </item>
     
     <item>
       <title>Game of Thrones Book Analysis</title>
