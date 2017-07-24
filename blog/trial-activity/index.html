@@ -17,27 +17,27 @@ The number of actions for each day is counted for up to 30 days after the trial 
   <meta name="twitter:description" content="One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
 To answer this question, we can analyze the …">
   <meta name="author" content="Julian Winternheimer"/>
-  <link href='https://jwinternheimer.github.io/img/favicon.ico' rel='icon' type='image/x-icon'/>
-  <meta property="og:image" content="https://jwinternheimer.github.io/img/julian-avatar.png" />
-  <meta name="twitter:image" content="https://jwinternheimer.github.io/img/julian-avatar.png" />
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="https://jwinternheimer.github.io/blog/trial-activity/" />
+  <meta property="og:url" content="/blog/trial-activity/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="https://jwinternheimer.github.io/blog/trial-activity/" />
-  <link rel="alternate" href="https://jwinternheimer.github.io/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="canonical" href="/blog/trial-activity/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://jwinternheimer.github.io/css/main.css" />
+  <link rel="stylesheet" href="/css/main.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
-  <link rel="stylesheet" href="https://jwinternheimer.github.io/css/pygment_highlights.css" />
-  <link rel="stylesheet" href="https://jwinternheimer.github.io/css/highlight.min.css" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
 
 
 
@@ -103,7 +103,7 @@ To answer this question, we can analyze the …">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="https://jwinternheimer.github.io">Data Analysis?</a>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
     </div>
 
     <div class="collapse navbar-collapse" id="main-navbar">
@@ -150,8 +150,8 @@ To answer this question, we can analyze the …">
     <div class="avatar-container">
       <div class="avatar-img-border">
         
-          <a title="Data Analysis?" href="https://jwinternheimer.github.io">
-            <img class="avatar-img" src="https://jwinternheimer.github.io/img/julian-avatar.png" alt="Data Analysis?" />
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
           </a>
         
       </div>
@@ -224,7 +224,11 @@ trials$activity_date &lt;- as.Date(trials$activity_date, format = &#39;%Y-%m-%d&
 # Calculate trial length
 trials &lt;- trials %&gt;%
   mutate(trial_length = as.numeric(end_date - start_date),
-         trial_day = trial_day - 1)</code></pre>
+         trial_day = trial_day - 1)
+
+# Filter out trials that started in the last month
+trials &lt;- trials %&gt;%
+  filter(start_date &lt; as.Date(&#39;2017-06-24&#39;))</code></pre>
 <p>Now that the data is clean, we want to calculate the latest date, after the trial began, that the user was active.</p>
 <pre class="r"><code># Group by user
 by_user &lt;- trials %&gt;%
@@ -249,7 +253,7 @@ by_user &lt;- trials %&gt;%
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="https://jwinternheimer.github.io/blog/involuntary-churn/" data-toggle="tooltip" data-placement="top" title="Involuntary Churn">&larr; Previous Post</a>
+            <a href="/blog/involuntary-churn/" data-toggle="tooltip" data-placement="top" title="Involuntary Churn">&larr; Previous Post</a>
           </li>
         
         
@@ -311,7 +315,7 @@ by_user &lt;- trials %&gt;%
               </li>
           
           <li>
-            <a href="https://jwinternheimer.github.io/index.xml" title="RSS">
+            <a href="/index.xml" title="RSS">
               <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
@@ -327,7 +331,7 @@ by_user &lt;- trials %&gt;%
 
           
             &nbsp;&bull;&nbsp;
-            <a href="https://jwinternheimer.github.io">Data Analysis?</a>
+            <a href="/">Data Analysis?</a>
           
         </p>
         
@@ -344,8 +348,8 @@ by_user &lt;- trials %&gt;%
 <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="https://jwinternheimer.github.io/js/main.js"></script>
-<script src="https://jwinternheimer.github.io/js/highlight.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
 <script> hljs.initHighlightingOnLoad(); </script>
 <script> renderMathInElement(document.body); </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
