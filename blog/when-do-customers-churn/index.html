@@ -5,9 +5,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Blogs</title>
-  <meta property="og:title" content="Blogs" />
-  <meta name="twitter:title" content="Blogs" />
+  <title>When do customers churn?</title>
+  <meta property="og:title" content="When do customers churn?" />
+  <meta name="twitter:title" content="When do customers churn?" />
+  <meta name="description" content="How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?
+Data collection We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.
+select subscriptions.id , subscriptions.created , subscriptions.canceled_at , subscriptions.plan_id , plans.interval , subscriptions.customer_id , count(distinct charges.id) as successful_charges from subscriptions left join invoices on invoices.">
+  <meta property="og:description" content="How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?
+Data collection We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.
+select subscriptions.id , subscriptions.created , subscriptions.canceled_at , subscriptions.plan_id , plans.interval , subscriptions.customer_id , count(distinct charges.id) as successful_charges from subscriptions left join invoices on invoices.">
+  <meta name="twitter:description" content="How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?
+Data collection We can run the following query in …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +23,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/blog/" />
+  <meta property="og:url" content="/blog/when-do-customers-churn/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/blog/" />
+  <link rel="canonical" href="/blog/when-do-customers-churn/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -156,14 +164,33 @@
 
 
     
+  
+  
+  
+
+
+
+
+  
+
   <header class="header-section ">
+    
     <div class="intro-header no-img">
+      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Blogs</h1>
-              <hr class="small">
+            <div class="post-heading">
+              <h1>When do customers churn?</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on July 25, 2017
+  
+</span>
+
+
+                
             </div>
           </div>
         </div>
@@ -171,141 +198,132 @@
     </div>
   </header>
 
+
     
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?</p>
+<div id="data-collection" class="section level2">
+<h2>Data collection</h2>
+<p>We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.</p>
+<pre class="sql"><code>select 
+    subscriptions.id
+  , subscriptions.created
+  , subscriptions.canceled_at
+  , subscriptions.plan_id
+  , plans.interval
+  , subscriptions.customer_id
+  , count(distinct charges.id) as successful_charges
+from subscriptions
+left join invoices
+    on invoices.subscription_id = subscriptions.id
+left join charges
+    on charges.invoice_id = invoices.id
+left join plans
+    on plans.id = subscriptions.plan_id
+where charges.paid = TRUE
+group by 1, 2, 3, 4, 5, 6</code></pre>
+<p>I exported this data to a CSV, which we’ll read into R now.</p>
+<pre class="r"><code># Read CSV
+subs &lt;- read.csv(&quot;~/Downloads/subscriptions.csv&quot;, header = T)</code></pre>
+<p>There are over 185 thousand subscriptions in this dataset. We include the subscription ID, when it was created, the cancellation date (if it was cancelled), the plan ID, the billing interval, the customer ID, and the number of successful charges.</p>
+<p>Let’s calculate a new variable, the length of the subscription in days. We also need to create an indicator variable to let us know if the subscription has churned.</p>
+<pre class="r"><code># Calculate subscription length and churn indicator
+subs &lt;- subs %&gt;%
+  mutate(length = as.numeric(canceled_at - created),
+         did_churn = ifelse(is.na(canceled_at), 0, 1))</code></pre>
+</div>
+<div id="survival-analysis" class="section level2">
+<h2>Survival analysis</h2>
+<p>To get a better understanding of exactly when customers churn, we’ll use a technique called <em>survival analysis</em>. Clasically, survival analysis was used to model the time it takes for people to die of a disease. However it can be used to model and analyze the time it takes for a specific event to occur, churn in this case.</p>
+<p>It is particularly useful because of missing data – there must be subscriptions that will churn in our dataset <em>that haven’t done so yet</em>. This is called <em>censoring</em>, and in particular <em>right censoring</em>.</p>
+<p>Right censoring occurs when the date of the event is unknown, but is after some known date. Survival analysis can account for this kind of censoring.</p>
+<p>There is also left censoring, for example when the date the subscription was created is unknown, but that is less applicable to our case.</p>
+<p>The survival function, or survival curve, (<code>S</code>) models the probability that the time of the event (<code>T</code>) is greater than some specified time (<code>t</code>).</p>
+<p>Let’s build the survival curve and plot it out.</p>
+<pre class="r"><code># Kaplan Meier survival curve
+subs$survival &lt;- Surv(subs$length, subs$did_churn)
+
+# Fit the model
+fit &lt;- survfit(survival ~ 1, data = subs)
+
+# Create survival plot
+ggsurvplot(fit, data = subs, risk.table = &quot;percentage&quot;, 
+           risk.table.title = &quot;Percent Remaining&quot;,
+           break.x.by = 60, xlim = c(0, 720))</code></pre>
+<p><img src="/blog/when-do-customers-churn_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The plot shows the percent of subscriptions still active X days after creating the subscription. The risk table below the graph shows the percent of subscription still remaining after X days. We can see that there are kinks around every 30 days, as well as a large kink at 365 days, when many annual subscriptions are cancelled.</p>
+<p>It is important to note that the curve is steeper earlier on, suggesting that larger percentages of subscriptions churn early on in their lifetimes. It might be useful to break this graph up to visualize the survival curves for both monthly and annual subscriptions.</p>
+<pre class="r"><code># Fit the second model
+fit2 &lt;- survfit(survival ~ interval, data = subs)
+
+# Create survival plot
+ggsurvplot(fit2, data = subs, risk.table = &quot;percentage&quot;, 
+           risk.table.height = 0.30, surv.plot.height = 0.70,
+           risk.table.y.text = FALSE, tables.y.text = FALSE,
+           risk.table.title = &quot;Percent Remaining&quot;,
+           break.x.by = 60, xlim = c(0, 720))</code></pre>
+<p><img src="/blog/when-do-customers-churn_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>In the graph above, the survival curves have been segmented by the billing interval. By day 60, around 73% of monthly subscriptions were still active, compared to around 91% of annual subscriptions.</p>
+<p>Annual subscriptions have a very low rate of churn, up until the 365 day mark, after which time almost 70% of annual subscriptions are churned!</p>
+</div>
+<div id="v2-business-subscriptions" class="section level2">
+<h2>V2 Business Subscriptions</h2>
+<p>Let’s get a little more granular, and look only at v2 Buffer for Business subscriptions.</p>
+<pre class="r"><code># Drop survival object
+subs$survival &lt;- NULL
+
+# Identify v2 business plans
+biz_plans &lt;- c(&#39;business_v2_agency_monthly&#39;, &#39;business_v2_agency_yearly&#39;, &#39;business_v2_business_monthly&#39;,
+               &#39;business_v2_business_yearly&#39;, &#39;business_v2_small_monthly&#39;, &#39;business_v2_small_yearly&#39;)
+
+# Get business subscriptions
+biz_subs &lt;- subs %&gt;%
+  filter(plan_id %in% biz_plans)</code></pre>
+<p>Now let’s take the same approach as before, and visualize the survival curves of the annual and monthly plans.</p>
+<pre class="r"><code># Kaplan Meier survival object
+biz_subs$survival &lt;- Surv(biz_subs$length, biz_subs$did_churn)
+
+# Fit the third model
+fit3 &lt;- survfit(survival ~ interval, data = biz_subs)
+
+# Create survival plot
+ggsurvplot(fit3, data = biz_subs, risk.table = &quot;percentage&quot;, 
+           risk.table.height = 0.30, surv.plot.height = 0.70,
+           risk.table.y.text = FALSE, tables.y.text = FALSE,
+           risk.table.title = &quot;Percent Remaining&quot;,
+           break.x.by = 30, xlim = c(0, 420))</code></pre>
+<p><img src="/blog/when-do-customers-churn_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Based on the risk table, we can gather that approximately 16% of V2 Business subscriptions churn in the first 30 days.</p>
+<ul>
+<li>By day 60, only 65% of monthly subscriptions and 77% of annual subscriptions remain.</li>
+<li>By day 90, almost half of monthly subscriptions and around 30% of annual subscriptions have churned.</li>
+<li>By day 180, around 70% of monthly subscriptions and 40% of annual subscriptions have churned.</li>
+<li>By day 365, around 90% of monthly subscriptions and 80% of annual subscriptions have churned.</li>
+</ul>
+<p>This paints a fairly worrying picture of churn for the V2 Business subscriptions. It is good to know that efforts are being made to reduce churn and make sure people get on the best plan for their needs. :)</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="/blog/5-posts-per-day/">
-                <h2 class="post-title">How many users post 5 times per day?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 27, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction A significant part of the Kodiak product cycle and Buffer’s product vision going forward is simplifying the experience for users on a free plan. One of the components we are considering simplifying is the Queue Limit.
-As of June 2017, the Queue Limit refers to the number of updates users on a free plan can have in the Queue of a single profile at any single point in time. This can understandable cause some confusion with users, and can also be exploited (e.
-                  <a href="/blog/5-posts-per-day/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/share-now/">
-                <h2 class="post-title">How often do free users &#39;Share Now&#39;?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 26, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction As part of the next product cycle, we will try to create a simpler, more streamlined experience for Buffer users on a free plan. Part of that simplification process could include the limiting or removal of the option to ‘Share Now’, when drafting updates.
-Sharing an update immediately doesn’t add a post to the queue, which could possibly allow for the sending of many updates in a single time period.
-                  <a href="/blog/share-now/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/free_updates_per_day/">
-                <h2 class="post-title">How many updates do Free users schedule per day?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 22, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
- Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.
-                  <a href="/blog/free_updates_per_day/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/updates_per_day/">
-                <h2 class="post-title">Free Plan: Updates Per Day</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 22, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
- Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.
-                  <a href="/blog/updates_per_day/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/profile_analysis/">
-                <h2 class="post-title">How many profiles do Free users use?</h2>
-    
-                
-                  <h3 class="post-subtitle">
-                    Not too many.
-                  </h3>
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 21, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction There is a big focus on simplifying the product for Buffer users on free plans in 2017 in order to create a more intuitive experience and encourage more upgrades.
-The purpose of this analysis is to get a better understanding of how users currently interact with the free plan, in order to better inform decisions around future plan limits. Specifically, we would love to learn about how many profiles users connect and actually schedule updates for.
-                  <a href="/blog/profile_analysis/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-        </div>
+          <li class="previous">
+            <a href="/blog/trial-activity/" data-toggle="tooltip" data-placement="top" title="How active are Business trialists?">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/blog/page/1">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

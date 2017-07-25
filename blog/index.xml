@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 24 Jul 2017 14:10:33 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 25 Jul 2017 16:16:33 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>When do customers churn?</title>
+      <link>/blog/when-do-customers-churn/</link>
+      <pubDate>Tue, 25 Jul 2017 16:16:33 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/when-do-customers-churn/</guid>
+      <description>How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?
+Data collection We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.
+select subscriptions.id , subscriptions.created , subscriptions.canceled_at , subscriptions.plan_id , plans.interval , subscriptions.customer_id , count(distinct charges.id) as successful_charges from subscriptions left join invoices on invoices.</description>
+    </item>
     
     <item>
       <title>How active are Business trialists?</title>
