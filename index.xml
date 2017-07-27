@@ -78,6 +78,17 @@ The dataset includes 191 named characters, the amount of screentime they have (i
     </item>
     
     <item>
+      <title>Why Users Churn: A Text Analysis of Churn Surveys</title>
+      <link>/blog/churn-survey-text-analysis/</link>
+      <pubDate>Sat, 08 Jul 2017 09:40:56 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/churn-survey-text-analysis/</guid>
+      <description>People decide to leave or stop paying for Buffer every day. It’s unfortunate, but it happens for one reason or another.
+We collect a lot of data from these users in the form of surveys. We thought that it might be beneficial to analyze the text of these survey comments to see if we can identify common themes that we could address.
+Data collection We’ll use data collected from four separate surveys that represents different types of churn:</description>
+    </item>
+    
+    <item>
       <title>Simple Content Recommendations in R</title>
       <link>/blog/content-recommendations/</link>
       <pubDate>Fri, 07 Jul 2017 10:01:22 -0400</pubDate>
@@ -85,17 +96,6 @@ The dataset includes 191 named characters, the amount of screentime they have (i
       <guid>/blog/content-recommendations/</guid>
       <description>I’ve wanted to build a content recommendation engine for a long time. Buffer is sitting on a mountain of data, which some argue is the most valuable commodity on Earth. We used to provide content suggestions to users through manual curation, but we ended up retiring that feature/service.
 In this analysis we’ll build a simple recommendation engine with the recommenderlab R package, using collaborative filtering techniques. To keep it simple, we’ll only look at updates shared by Buffer team members.</description>
-    </item>
-    
-    <item>
-      <title>Why Users Churn</title>
-      <link>/blog/churn-survey-text-analysis/</link>
-      <pubDate>Wed, 05 Jul 2017 15:57:50 -0400</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/churn-survey-text-analysis/</guid>
-      <description>People decide to leave or stop paying for Buffer. It’s unfortunate, but it happens for one reason or another.
-We collect a lot of data from these users in the form of churn surveys. It might be beneficial to analyze the text of these survey comments to see if we can learn anything new.
-Data collection The data we’ll use in this analysis comes from this look and will be imported with the get_look() function from the buffer package.</description>
     </item>
     
     <item>
