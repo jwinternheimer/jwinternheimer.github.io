@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Tue, 25 Jul 2017 16:16:33 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 28 Jul 2017 15:18:52 -0400</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Buffer for Business Feature Audit</title>
+      <link>/blog/business-feature-analysis/</link>
+      <pubDate>Fri, 28 Jul 2017 15:18:52 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/business-feature-analysis/</guid>
+      <description>In a previous analysis we noted that the most common reason users gave for churning was that they weren’t using, or didn’t need, Buffer.
+I was inspired by this blog post by Intercom’s Chief Strategy Officer to conduct an audit of the features available to Buffer for Business users in order to see which were being used, and how frequently.
+In this post, we will analyze a subset of our features with two simple criteria: how many users use it and how frequently.</description>
+    </item>
     
     <item>
       <title>When do customers churn?</title>
