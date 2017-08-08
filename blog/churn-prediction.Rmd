@@ -156,7 +156,7 @@ The specific technique we'll use is this:
   
   - We'll pull out the slopes and p-values from each of these models. We are comparing many slopes here and some of them are not statistically significant, so let’s apply an adjustment to the p-values for multiple comparisons. 
 
-Let's run the models.
+Let's fit the models.
   
 ```{r warning = FALSE, message = FALSE}
 # create logistic regression model
@@ -242,6 +242,8 @@ slopes %>%
   arrange(estimate)
 ```
 
+Here is one example of a user with an estimate less than -5 and a p-value less than 0.05.
+
 ```{r echo = FALSE}
 users_complete %>%
   filter(user_id == '588684576d19b8a25536abbc') %>%
@@ -250,6 +252,8 @@ users_complete %>%
   geom_line() +
   labs(x = NULL, y = NULL, title = "Updates Sent By User 588684576d19b8a25536abbc")
 ```
+
+Will it churn? :)
 
 ## Questions and assumptions
 There are numerous small decisions made in this analysis that can have an effect on the outcome. Let's go through them and address some questions that should be asked of the analyst.
@@ -268,7 +272,7 @@ This also opens up the option of designing another experiment in which we interv
 
 That's it for now! Please share any thoughts, comments, or questions!
 
-```{r}
+```{r include = FALSE}
 detach("package:lubridate", unload=TRUE)
 ```
 

@@ -316,7 +316,7 @@ update_week_counts</code></pre>
 <li><p>This is count data so let’s use <code>glm()</code> with <code>family = &quot;binomial&quot;</code> for modeling.</p></li>
 <li><p>We’ll pull out the slopes and p-values from each of these models. We are comparing many slopes here and some of them are not statistically significant, so let’s apply an adjustment to the p-values for multiple comparisons.</p></li>
 </ul>
-<p>Let’s run the models.</p>
+<p>Let’s fit the models.</p>
 <pre class="r"><code># create logistic regression model
 mod &lt;- ~ glm(cbind(update_count, update_total) ~ year, ., family = &quot;binomial&quot;)
 
@@ -373,7 +373,9 @@ slopes %&gt;% arrange(estimate)</code></pre>
 ##  9 595425641908cd477b9be320  year -40.29440 6.1903032  -6.509277
 ## 10 508005381b81f6e250000019  year -39.63775 2.3518033 -16.854196
 ## # ... with 716 more rows, and 1 more variables: p.value &lt;dbl&gt;</code></pre>
+<p>Here is one example of a user with an estimate less than -5 and a p-value less than 0.05.</p>
 <p><img src="/blog/churn-prediction_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Will it churn? :)</p>
 </div>
 <div id="questions-and-assumptions" class="section level2">
 <h2>Questions and assumptions</h2>
@@ -384,7 +386,6 @@ slopes %&gt;% arrange(estimate)</code></pre>
 <p><strong>If it’s a natural experiment, why not look at users in the past?</strong> This is also a completely fair question. We should be able to apply these exact same techniques on historical data and view the outcomes, without having to wait for 60 days. I didn’t do that because 1) it’s difficult to find what plan a user had on a given date, but it’s easy to find for the <em>current date</em>. This is a very common problem that we should find a solution for, but I took the easy route.</p>
 <p>This also opens up the option of designing another experiment in which we intervene on one, or both groups, to see if the intervention (an email) affects the churn rate.</p>
 <p>That’s it for now! Please share any thoughts, comments, or questions!</p>
-<pre class="r"><code>detach(&quot;package:lubridate&quot;, unload=TRUE)</code></pre>
 </div>
 
       </article>
