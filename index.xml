@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Tue, 15 Aug 2017 14:02:25 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 16 Aug 2017 14:02:25 -0400</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>Predicting Churn with General Linear Models: Part 1</title>
       <link>/blog/churn-prediction/</link>
-      <pubDate>Tue, 15 Aug 2017 14:02:25 -0400</pubDate>
+      <pubDate>Wed, 16 Aug 2017 14:02:25 -0400</pubDate>
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/blog/churn-prediction/</guid>
       <description>In a text analysis of churn surveys, we found that the most common reason users give for leaving Buffer is that they weren’t using it. The graph below shows the most frequently occuring pairs of words in the surveys – notice “not using” and “don’t need” at the top.
