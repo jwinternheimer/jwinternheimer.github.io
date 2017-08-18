@@ -7,7 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Wed, 16 Aug 2017 14:02:25 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 18 Aug 2017 14:02:25 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,11 +15,21 @@
     <item>
       <title>Predicting Churn with General Linear Models: Part 1</title>
       <link>/blog/churn-prediction/</link>
-      <pubDate>Wed, 16 Aug 2017 14:02:25 -0400</pubDate>
+      <pubDate>Fri, 18 Aug 2017 14:02:25 -0400</pubDate>
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/blog/churn-prediction/</guid>
       <description>In a text analysis of churn surveys, we found that the most common reason users give for leaving Buffer is that they weren’t using it. The graph below shows the most frequently occuring pairs of words in the surveys – notice “not using” and “don’t need” at the top.
  In this analysis, we’ll identify Business customers that have stopped using Buffer or use it less than they previously had. We’ll create a natural experiment in which users exposed to the experimental and control conditions are determined by their own actions.</description>
+    </item>
+    
+    <item>
+      <title>Diversity of Buffer Applicants</title>
+      <link>/blog/diversity/</link>
+      <pubDate>Wed, 16 Aug 2017 14:43:01 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/diversity/</guid>
+      <description>Much has been said about diversity in the tech industry recently. Unfortunately, discriminatory beliefs are still held by people in companies that influence how we collectively perceive the world.
+We’re committed to inclusivity at Buffer. We have an inclusivity officer who is also the Director of the People team, and we try to measure and share all of the data we have around diversity. Our diversity dashboard is one example of this.</description>
     </item>
     
     <item>
