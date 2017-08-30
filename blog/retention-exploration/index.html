@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Exploring Retention at Buffer</title>
+  <meta property="og:title" content="Exploring Retention at Buffer" />
+  <meta name="twitter:title" content="Exploring Retention at Buffer" />
+  <meta name="description" content="Tech companies are often asked about their retention curves. Growth hacking and marketing techniques can provide new users, but product/market fit and retention loops will keep them using your product.
+I realized that I don’t have a solid grasp of Buffer’s retention curve, so I thought I’d make a small post out of the exploration.
+Picking the right metrics to use to calculate retention can be a tricky thing. It should be a leading indicator of revenue and repeat behavior.">
+  <meta property="og:description" content="Tech companies are often asked about their retention curves. Growth hacking and marketing techniques can provide new users, but product/market fit and retention loops will keep them using your product.
+I realized that I don’t have a solid grasp of Buffer’s retention curve, so I thought I’d make a small post out of the exploration.
+Picking the right metrics to use to calculate retention can be a tricky thing. It should be a leading indicator of revenue and repeat behavior.">
+  <meta name="twitter:description" content="Tech companies are often asked about their retention curves. Growth hacking and marketing techniques can provide new users, but product/market fit and retention loops will keep them using your …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/retention-exploration/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/retention-exploration/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Exploring Retention at Buffer</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on August 29, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Tech companies are often asked about their retention curves. Growth hacking and marketing techniques can provide new users, but product/market fit and retention loops will keep them using your product.</p>
+<p>I realized that I don’t have a solid grasp of Buffer’s retention curve, so I thought I’d make a small post out of the exploration.</p>
+<p>Picking the right metrics to use to calculate retention can be a tricky thing. It should be a leading indicator of revenue and repeat behavior. It shouldn’t be a vanity metric like app downloads. For Buffer, the major retention metric we’ll use is <em>scheduling a post</em>.</p>
+<p>Next we’ll need to choose the right <em>period</em> for each cohort of users. For Buffer, a weekly or monthly period would make sense. For simplicity’s sake, we’ll begin with a <em>monthly</em> period.</p>
+<p>Once we make our overall retention curve, we can segment it by different user characteristics.</p>
+<p>Let’s begin gathering the data we need.</p>
+<div id="data-collection" class="section level2">
+<h2>Data collection</h2>
+<p>For each user that has scheduled an update, we’ll want to collect all of the months in which the user scheduled at least one update. We will also need the user’s signup date.</p>
+<pre class="sql"><code>select
+  u.user_id
+  , date_trunc(&#39;month&#39;, u.created_at) as join_month
+  , date_trunc(&#39;month&#39;, up.created_at) as month
+  , count(distinct up.id) as updates
+from users as u
+left join profiles as p
+  on u.user_id = p.user_id
+left join dbt.updates as up
+  on u.user_id = up.user_id
+where up.was_sent_with_buffer = TRUE
+  and u.created_at &gt;= &#39;2016-01-01&#39;
+  and u.created_at &lt;= up.created_at
+group by 1, 2, 3</code></pre>
+<p>We now have almost 3 million rows of data to work with.</p>
+</div>
+<div id="data-tidying" class="section level2">
+<h2>Data tidying</h2>
+<p>We need to specify the first month that a user shared an update, and then we need to specify which month (1st, 2nd, etc.) each update month represents for each user.</p>
+<pre class="r"><code># specify first update month
+first_month &lt;- users %&gt;%
+  group_by(user_id) %&gt;%
+  summarise(first_update_month = min(month))
+
+# join first month into original data frame
+users &lt;- users %&gt;%
+  inner_join(first_month, by = &#39;user_id&#39;)
+
+# remove unneeded dataframe
+rm(first_month)</code></pre>
+<p>Now let’s calculate the differences in months.</p>
+<pre class="r"><code># function to calculate difference in months
+elapsed_months &lt;- function(end_date, start_date) {
+  
+    end &lt;- as.POSIXlt(end_date)
+    start &lt;- as.POSIXlt(start_date)
+    12 * (end$year - start$year) + (end$mon - start$mon)
+    
+}
+
+# calculate differences in months
+users &lt;- users %&gt;%
+  mutate(month_num = elapsed_months(month, first_update_month) + 1)</code></pre>
+</div>
+<div id="building-the-retention-curve" class="section level2">
+<h2>Building the retention curve</h2>
+<p>For each month number, we want to see the percentage of users <em>that could have scheduled an update</em> that did schedule an update. Let’s start with users that scheduled their first update in January of 2016.</p>
+<pre class="r"><code># filter users
+jan_users &lt;- users %&gt;% filter(first_update_month == &#39;2016-01-01&#39;)
+
+# build retention curve
+jan_users %&gt;% 
+  group_by(month_num) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / max(users)) %&gt;%
+  ggplot(aes(x = month_num, y = percent)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = seq(0, 18, 3)) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2)) +
+  labs(x = &quot;Month&quot;, y = NULL, title = &quot;Retention Curve for Users (Jan 2016)&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="/blog/retention-exploration_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Great! Now, let’s try to build the overall retention curve. The challenge is that we want to make sure we’re only taking the percentage of users that <em>could have sent an update</em> that did. We’ll therefore only look at users that have been around for 12 months.</p>
+<p><img src="/blog/retention-exploration_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>The graph above shows us the percentage of users that scheduled an update with Buffer on each month after scheduling their first update. Approximately 46% of users schedule an update in the month following the month in which they scheduled their first update. Around 32% of users scheduled an update in month 3, around 21% of users scheduled an update in month 6, and around 15% of users scheduled an update in month 12. This seems pretty good!</p>
+<p>This data was taken with one big sample. We can also look at how the monthly retention rates have changed over time.</p>
+<p><img src="/blog/retention-exploration_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>This is interesting! Overall, it looks like retention has been declining since the beginning of 2016. Retention rates for months 2, 3, 6, and 12 have all declined since 2016. I won’t speculate on the cause of these trends here, but it is something to address!</p>
+<p>Thanks for reading. Please let me know of any questions about the methodology, graphs, or anything!</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/churn-prediction/" data-toggle="tooltip" data-placement="top" title="Predicting Churn with General Linear Models: Part 1">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+
