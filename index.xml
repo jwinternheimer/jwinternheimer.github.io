@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Tue, 29 Aug 2017 10:45:16 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 14 Sep 2017 14:43:32 -0400</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Predicting trial conversions with an activation metric</title>
+      <link>/blog/trial-activation/</link>
+      <pubDate>Thu, 14 Sep 2017 14:43:32 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/trial-activation/</guid>
+      <description>You’ve likely heard of activation rates before, especially if you’ve worked in a tech company. Facebook famously learned that users that connected with a certain number of friends were significantly more likely to be retained, so they encouraged users to connect with more friends when they signed up.
+Causality in that relationship is questionable, but finding a testable hypothesis based on an observed relationship can be a big step forward for companies, especially those with the type of volume that Facebook had.</description>
+    </item>
     
     <item>
       <title>Exploring Retention at Buffer</title>

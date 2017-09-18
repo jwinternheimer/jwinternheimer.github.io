@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Predicting trial conversions with an activation metric</title>
+  <meta property="og:title" content="Predicting trial conversions with an activation metric" />
+  <meta name="twitter:title" content="Predicting trial conversions with an activation metric" />
+  <meta name="description" content="You’ve likely heard of activation rates before, especially if you’ve worked in a tech company. Facebook famously learned that users that connected with a certain number of friends were significantly more likely to be retained, so they encouraged users to connect with more friends when they signed up.
+Causality in that relationship is questionable, but finding a testable hypothesis based on an observed relationship can be a big step forward for companies, especially those with the type of volume that Facebook had.">
+  <meta property="og:description" content="You’ve likely heard of activation rates before, especially if you’ve worked in a tech company. Facebook famously learned that users that connected with a certain number of friends were significantly more likely to be retained, so they encouraged users to connect with more friends when they signed up.
+Causality in that relationship is questionable, but finding a testable hypothesis based on an observed relationship can be a big step forward for companies, especially those with the type of volume that Facebook had.">
+  <meta name="twitter:description" content="You’ve likely heard of activation rates before, especially if you’ve worked in a tech company. Facebook famously learned that users that connected with a certain number of friends were significantly …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/trial-activation/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/trial-activation/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Predicting trial conversions with an activation metric</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on September 14, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>You’ve likely heard of <a href="https://effinamazing.com/blog/everything-need-know-activation-metrics/">activation rates</a> before, especially if you’ve worked in a tech company. Facebook famously learned that users that connected with a certain number of friends were significantly more likely to be retained, so they encouraged users to connect with more friends when they signed up.</p>
+<p>Causality in that relationship is questionable, but finding a testable hypothesis based on an observed relationship can be a big step forward for companies, especially those with the type of volume that Facebook had.</p>
+<p>At Buffer, we have defined an activation metric that is related to the probability that a new user will be retained for a certain number of months. In this analysis, we will try to define an activation metric for <a href="https://buffer.com/business">Buffer for Business trials</a>.</p>
+<p>Defining an activation metric would allow us to experiment more rapidly, as the amount of time it takes to “activate” is inherently shorter than the length of a trial. Experiments that increase the activation rate of trialists should increase the conversion rate of the trial, if we have a good activation metric.</p>
+<div id="data-collection" class="section level3">
+<h3>Data collection</h3>
+<p>We’ll begin by analyzing small number of features.</p>
+<ul>
+<li><code>days_since_signup</code>: The number of days between a user’s signup date and trial start date.</li>
+<li><code>plan_before_trial</code>: The plan a user was on when he or she started the trial.</li>
+<li><code>team_members</code>: The number of team members that the user had.</li>
+<li><code>updates</code>: The number of updates scheduled <em>in the first week of the trial</em>.</li>
+<li><code>profiles</code>: The number of profiles the user had <em>in the first week of the trial</em>.</li>
+<li><code>days_active</code>: The number of days in which the user took any action <em>in the first week of the trial</em>.</li>
+</ul>
+<p>We only look at data from the first week of the trial so that we can make predictions about the trial’s end result before it is completed.</p>
+<p>We’ll avoid having to use a massive SQL query by using the data that has been collected in <a href="https://looker.buffer.com/looks/4034">this handy look</a>. We can use the <code>get_look()</code> function from the <code>buffer</code> package to pull the data into R.</p>
+<pre class="r"><code># get data from look
+trials &lt;- get_look(4034)</code></pre>
+<p>We have around 28K trials to train our models on. Let’s do a bit of cleaning to get the data ready for analysis.</p>
+</div>
+<div id="data-cleaning" class="section level3">
+<h3>Data cleaning</h3>
+<p>First let’s rename the columns.</p>
+<pre class="r"><code># rename columns
+colnames(trials) &lt;- c(&#39;user_id&#39;, &#39;plan_before_trial&#39;, &#39;join_date&#39;, &#39;trial_start&#39;, &#39;trial_end&#39;, 
+                      &#39;converted&#39;, &#39;team_members&#39;, &#39;updates&#39;, &#39;profiles&#39;, &#39;days_active&#39;)</code></pre>
+<p>Now we need to make sure that the columns in our data frame are of the correct type.</p>
+<pre class="r"><code># create function to set date as date object
+set_date &lt;- function(column) {
+  column &lt;- as.Date(column, format = &#39;%Y-%m-%d&#39;)
+}
+
+# apply function to date columns
+trials[3:5] &lt;- lapply(trials[3:5], set_date)</code></pre>
+<p>Now let’s replace NA values with 0.</p>
+<pre class="r"><code># replace NA with 0
+trials[is.na(trials)] &lt;- 0</code></pre>
+<p>Ok, now we need to take a look at the <code>plan_before_trial</code> column. What are the values of this column?</p>
+<pre class="r"><code># list frequencies of plan_before_trial values
+table(trials$plan_before_trial)</code></pre>
+<p>We can simplify these values.</p>
+<pre class="r"><code># list plan categories
+awesome &lt;- c(&#39;awesome&#39;, &#39;pro-monthly&#39;, &#39;pro-annual&#39;)
+individual &lt;- c(NULL, &#39;individual&#39;, &#39;&#39;)
+
+# set plan_before_trial as character type
+trials$plan_before_trial &lt;- as.character(trials$plan_before_trial)
+
+# assign new values to plan_before_trial
+trials &lt;- trials %&gt;%
+  mutate(previous_plan = ifelse(plan_before_trial %in% awesome, &#39;awesome&#39;,
+                                     ifelse(plan_before_trial %in% individual, &#39;individual&#39;, &#39;business&#39;)))
+
+# set plans as factors
+trials$previous_plan &lt;- as.factor(trials$previous_plan)
+
+# remove unneeded column
+trials$plan_before_trial &lt;- NULL</code></pre>
+<p>Cool! We’re just about ready to go. Let’s create a new variable <code>days_to_trial</code> that counts the number of days that elapsed between the users joining Buffer and starting a trial.</p>
+<pre class="r"><code># create days_to_trial column
+trials &lt;- trials %&gt;%
+  mutate(days_to_trial = as.numeric(trial_start - join_date))</code></pre>
+<p>Alright! We are ready for some exploratory analysis! Let’s first save our dataset here. :)</p>
+<pre class="r"><code># save dataset
+# saveRDS(trials, &#39;trial_activation.rds&#39;)
+
+# load data
+trials &lt;- readRDS(&#39;trial_activation.rds&#39;)</code></pre>
+</div>
+<div id="exploratory-data-analysis" class="section level3">
+<h3>Exploratory data analysis</h3>
+<p>We have several features to analyze in this dataset. It might be useful to visualize how they are related to one another, if at all. But first, let’s just take a look and see how many of our 28K trials converted.</p>
+<pre class="r"><code># see how many trials converted
+trials %&gt;%
+  group_by(converted) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / sum(users))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   converted users   percent
+##      &lt;fctr&gt; &lt;int&gt;     &lt;dbl&gt;
+## 1        No 21736 0.8040543
+## 2       Yes  5297 0.1959457</code></pre>
+<p>Alright, around 20% of trials converted. That’s more than I thought! Now let’s plot our features and see how they are related.</p>
+<pre class="r"><code># define features
+features &lt;- trials %&gt;%
+  select(team_members, updates, profiles, days_active, days_to_trial, previous_plan)
+
+# plot the relationship
+plot(features)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>It’s difficult to glean much from this visualization. Let’s zoom in on a couple features that I suspect might be related. First, let’s see if <code>profiles</code> and <code>updates</code> might be related. We’ll take the log of <code>updates</code> to scale it down a bit.</p>
+<pre class="r"><code># plot profiles and updates
+trials %&gt;%
+  filter(profiles &lt;= 50) %&gt;%
+  ggplot(aes(x = profiles, y = log(updates))) +
+  geom_point(position = &#39;jitter&#39;, alpha = 0.2) +
+  stat_smooth(method = &#39;loess&#39;)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>We can see that there is indeed a positive relationship that is stronger at lower profile counts. Let’s look at the relationship between <code>updates</code> and <code>team_members</code> now.</p>
+<pre class="r"><code>library(ggridges)</code></pre>
+<pre><code>## Warning: package &#39;ggridges&#39; was built under R version 3.4.1</code></pre>
+<pre class="r"><code># plot team members and updates
+ggplot(filter(trials, team_members &lt;= 5), aes(x = log(updates), y = as.factor(team_members))) +
+  geom_density_ridges(rel_min_height = 0.01, scale = 2) +
+  theme_ridges() +
+  labs(x = &quot;Log Updates&quot;, y = &quot;Team Members&quot;)</code></pre>
+<pre><code>## Picking joint bandwidth of 0.312</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Cool! We can see that the distribution of the log of updates shifts to the right as the number of team members increases.</p>
+<p>Alright, what do the distributions of updates look like for users that converted their trials?</p>
+<pre class="r"><code># plot distributions of updates
+ggplot(trials, aes(x = log(updates), y = converted, fill = converted)) +
+  geom_density_ridges(rel_min_height = 0.01, scale = 2) +
+  theme_ridges() +
+  guides(fill=FALSE) +
+  labs(x = &quot;Log Updates&quot;, y = &quot;Converted&quot;)</code></pre>
+<pre><code>## Picking joint bandwidth of 0.204</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>And what about profiles?</p>
+<pre class="r"><code># plot distributions of profiles
+trials %&gt;%
+  ggplot(aes(x = converted, y = profiles)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(0, 20))</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>We can see that users that converted tended to have a higher number of profiles associated with their accounts. Alright, now let’s move forwards towards predictive modeling.</p>
+</div>
+<div id="choosing-and-evaluating-models" class="section level3">
+<h3>Choosing and evaluating models</h3>
+<p>This is a classification task, so we’ll want to think of measures like precision and recall. We’ll evaluate single-variable models, logistic regression, decision trees, and random forest models in this analysis. How should we evaluate these models?</p>
+<p>The most common measure of quality is <em>accuracy</em>, which is the number of items categorized correctly divided by the total number of items. This might not be appropriate for this case though, because our classes (converted and unconverted are unbalanced).</p>
+<p>We then move on to <em>precision</em> and <em>recall</em>. Precision represents how often a positive classification turns out to be correct. Recall is the fraction of things that are in the class that are detected by the classifier. There are combinations of the two, like <em>F1</em> as well.</p>
+<p>For our classifier, we will calculate the area under the ROC curve (which represents every possible tradeoff between sensitivity and specificity). We’ll call this area under the curve <em>AUC</em>.</p>
+</div>
+<div id="single-variable-models." class="section level3">
+<h3>Single variable models.</h3>
+<p>Let’s see how well each individual feature does in predicting trial conversions. First, we’ll need to split our data into training and testing sets.</p>
+<pre class="r"><code># set seed for reproducibility
+set.seed(1235)
+
+# give a random number to each observation
+trials$rgroup &lt;- runif(nrow(trials))
+
+# remove cases in which team members &gt; 10
+trials &lt;- trials %&gt;% filter(team_members &lt;= 10)
+
+# split observations into training and testing sets
+training &lt;- subset(trials, rgroup &lt;= 0.8)
+testing &lt;- subset(trials, rgroup &gt; 0.8)</code></pre>
+<p>Now let’s identify categorical and numeric features. Then, we’ll build a function to make single-variable models.</p>
+<pre class="r"><code># list variables we don&#39;t want to include
+to_exclude &lt;- c(&#39;user_id&#39;, &#39;join_date&#39;, &#39;trial_start&#39;, &#39;trial_end&#39;, &#39;converted&#39;,&#39;rgroup&#39;)
+
+# get a list of the features
+vars &lt;- setdiff(colnames(trials), to_exclude)
+
+# odentify the categorical variables
+catVars &lt;- vars[sapply(trials[, vars], class) %in% c(&#39;factor&#39;, &#39;character&#39;)]
+
+# identify the numeric variables
+numVars &lt;- vars[sapply(trials[, vars], class) %in% c(&#39;numeric&#39;, &#39;integer&#39;)]</code></pre>
+<p>Define the outcome.</p>
+<pre class="r"><code># specify the outcome
+outcome &lt;- &#39;converted&#39;
+
+# specify which outcome is considered positive
+pos &lt;- &quot;Yes&quot;</code></pre>
+<p>Cool, now let’s define a function to make preditions based on the levels of the categorical variables.</p>
+<pre class="r"><code># given a vector of training outcomes (outcomes), a categorical training variable (variable), 
+# and a prediction variable (predictor), use outcomes and variable to build a single-variable model 
+# and then apply the model to predictor to get new predictions.
+
+make_prediction &lt;- function(outcomes, variable, predictor) {
+  
+  # Find how often the outcome is positive during training
+  positive_rate &lt;- sum(outcomes == pos) / length(outcomes)
+  
+  # We need this to handle NA values
+  na_table &lt;- table(as.factor(outcomes[is.na(variable)]))
+  
+  # Get stats on how often outcome is positive for NA values in training
+  positive_rate_na &lt;- (na_table/sum(na_table))[pos]
+  
+  var_table &lt;- table(as.factor(outcomes), variable)
+  
+  # Get stats on how often outcome is positive, conditioned on levels of the variable
+  pPosWv &lt;- (var_table[pos,] + 1.0e-3 * positive_rate)/(colSums(var_table) + 1.0e-3)
+  
+  # Make predictions by looking up levels of the predictor
+  pred &lt;- pPosWv[predictor]
+  
+  # Add in predictions for levels of the predictor that weren’t known during training
+  pred[is.na(pred)] &lt;- positive_rate
+  
+  pred
+
+} </code></pre>
+<p>Apply this function.</p>
+<pre class="r"><code>for(v in catVars) {
+  
+  # Make prediction for each categorical variable
+  pi &lt;- paste(&#39;pred_&#39;, v, sep=&#39;&#39;)
+  
+  # Do it for the training and testing datasets
+  training[, pi] &lt;- make_prediction(training[, outcome], training[, v], training[, v]) 
+  testing[, pi] &lt;- make_prediction(testing[, outcome], testing[, v], testing[, v]) 
+}</code></pre>
+<p>Once we have the predictions, we can find the categorical variables that have a good AUC both on the training data and on the calibration data not used during training. These are likely the more useful variables.</p>
+<pre class="r"><code>library(&#39;ROCR&#39;)
+
+# Define a function to calculate AUC
+calcAUC &lt;- function(predictions, outcomes) {
+  
+  perf &lt;- performance(prediction(predictions, outcomes == pos), &#39;auc&#39;) 
+  as.numeric(perf@y.values)
+  
+}</code></pre>
+<p>Now, for each of the categorical variables, we calculate the AUC based on the predictions that we made earlier.</p>
+<pre class="r"><code>for(v in catVars) {
+  
+  pi &lt;- paste(&#39;pred_&#39;, v, sep = &#39;&#39;)
+  
+  aucTrain &lt;- calcAUC(training[, pi], training[, outcome])
+  aucTest &lt;- calcAUC(testing[, pi], testing[, outcome])
+
+  print(sprintf(&quot;%s, trainingAUC: %4.3f testingnAUC: %4.3f&quot;, pi, aucTrain, aucTest))
+
+}</code></pre>
+<pre><code>## [1] &quot;pred_previous_plan, trainingAUC: 0.560 testingnAUC: 0.555&quot;</code></pre>
+<p>Let’s use the same technique for numeric variables by converting them into categorical variables.</p>
+<pre class="r"><code># Define a function that makes predictions
+make_prediction_numeric &lt;- function(outcome, variable, predictor) {
+  
+  # Make the cuts to bin the data
+  cuts &lt;- unique(as.numeric(quantile(variable, probs = seq(0, 1, 0.1), na.rm = T)))
+  varC &lt;- cut(variable, cuts)
+  appC &lt;- cut(predictor, cuts)
+  
+  # Now apply the categorical make prediction function
+  make_prediction(outcome, varC, appC)
+}</code></pre>
+<p>Now let’s apply this function to the numeric variables.</p>
+<pre class="r"><code># Loop through the columns and apply the formula
+for(v in numVars) {
+  
+  # Name the prediction column
+  pi &lt;- paste(&#39;pred_&#39;, v, sep = &#39;&#39;)
+  
+  # Make the predictions
+  training[, pi] &lt;- make_prediction_numeric(training[, outcome], training[, v], training[, v])
+  testing[, pi] &lt;- make_prediction_numeric(training[, outcome], training[, v], testing[, v])
+  
+  # Score the predictions
+  aucTrain &lt;- calcAUC(training[, pi], training[, outcome])
+  aucTest &lt;- calcAUC(testing[, pi], testing[, outcome])
+
+  print(sprintf(&quot;%s, trainingAUC: %4.3f testingnAUC: %4.3f&quot;, pi, aucTrain, aucTest))
+    
+}</code></pre>
+<pre><code>## [1] &quot;pred_team_members, trainingAUC: 0.649 testingnAUC: 0.648&quot;
+## [1] &quot;pred_updates, trainingAUC: 0.640 testingnAUC: 0.642&quot;
+## [1] &quot;pred_profiles, trainingAUC: 0.641 testingnAUC: 0.638&quot;
+## [1] &quot;pred_days_active, trainingAUC: 0.611 testingnAUC: 0.618&quot;
+## [1] &quot;pred_days_to_trial, trainingAUC: 0.561 testingnAUC: 0.574&quot;</code></pre>
+<p>Alright. It looks like team members, updates, profiles, and days active could be decent predictors of a trial conversion. We’ll try to beat an AUC of 0.65 with our models.</p>
+</div>
+<div id="general-linear-model" class="section level3">
+<h3>General linear model</h3>
+<p>Let’s fit a general linear model to our data and see how well if performs.</p>
+<pre class="r"><code># fit glm
+glm_mod &lt;- glm(converted ~ team_members + updates + profiles + days_active + previous_plan + days_to_trial,
+               data = training, family = &#39;binomial&#39;)</code></pre>
+<p>Let’s view a summary of the model.</p>
+<pre class="r"><code># view summary of model
+summary(glm_mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = converted ~ team_members + updates + profiles + 
+##     days_active + previous_plan + days_to_trial, family = &quot;binomial&quot;, 
+##     data = training)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.9080  -0.6405  -0.4996  -0.4120   2.5003  
+## 
+## Coefficients:
+##                           Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)             -1.953e+00  6.796e-02 -28.734  &lt; 2e-16 ***
+## team_members             6.390e-01  1.716e-02  37.229  &lt; 2e-16 ***
+## updates                 -4.290e-05  2.447e-05  -1.753  0.07958 .  
+## profiles                 4.421e-02  4.042e-03  10.937  &lt; 2e-16 ***
+## days_active              2.029e-01  9.216e-03  22.021  &lt; 2e-16 ***
+## previous_planbusiness    5.173e-02  2.199e-01   0.235  0.81406    
+## previous_planindividual -7.180e-01  5.307e-02 -13.531  &lt; 2e-16 ***
+## days_to_trial            1.287e-04  4.987e-05   2.581  0.00986 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 23017  on 22308  degrees of freedom
+## Residual deviance: 19824  on 22301  degrees of freedom
+## AIC: 19840
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Interestingly, <code>team_members</code>, <code>profiles</code>, <code>days_active</code>, <code>previous_plan</code>, and <code>days_to_trial</code> all have significant effects on the probability that a trial converts, but <code>updates</code> does not!</p>
+<p>The point estimate for <code>updates</code> is even negative! This doesn’t quite seem right, so let’s take a closer look at this feature. I suspect that there is some overfitting going on.</p>
+<pre class="r"><code># plot distribution of updates in training dataset
+ggplot(training, aes(x = updates)) +
+  stat_ecdf()</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Ok, no wonder! There are people with over 70K updates scheduled in the first week! Let’s zoom in a bit.</p>
+<pre class="r"><code># plot distribution of updates
+ggplot(training, aes(x = updates)) +
+  stat_ecdf() +
+  coord_cartesian(xlim = c(0, 400)) +
+  scale_y_continuous(breaks = seq(0, 1, 0.2))</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>Around 97% of users in the training set scheduled 400 or less updates in the first week of the trial. Let’s filter users that scheduled more out of the dataset and revisit them later.</p>
+<pre class="r"><code># remove people that scheduled 400 or more updates from the training dataset
+training &lt;- training %&gt;%
+  filter(updates &lt; 400)</code></pre>
+<p>Ok, now let’s refit the general linear model.</p>
+<pre class="r"><code># fit glm
+glm_mod &lt;- glm(converted ~ team_members + updates + profiles + days_active + previous_plan + days_to_trial,
+               data = training, family = &#39;binomial&#39;)
+
+# summarize model
+summary(glm_mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = converted ~ team_members + updates + profiles + 
+##     days_active + previous_plan + days_to_trial, family = &quot;binomial&quot;, 
+##     data = training)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.5145  -0.6271  -0.4874  -0.4041   2.2590  
+## 
+## Coefficients:
+##                           Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)             -2.084e+00  7.086e-02 -29.414  &lt; 2e-16 ***
+## team_members             6.311e-01  1.752e-02  36.031  &lt; 2e-16 ***
+## updates                  2.101e-03  3.156e-04   6.658 2.78e-11 ***
+## profiles                 6.605e-02  5.550e-03  11.899  &lt; 2e-16 ***
+## days_active              1.747e-01  9.901e-03  17.639  &lt; 2e-16 ***
+## previous_planbusiness    9.081e-02  2.285e-01   0.397    0.691    
+## previous_planindividual -6.288e-01  5.546e-02 -11.337  &lt; 2e-16 ***
+## days_to_trial            7.908e-05  5.187e-05   1.525    0.127    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 22131  on 21621  degrees of freedom
+## Residual deviance: 18949  on 21614  degrees of freedom
+## AIC: 18965
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>That’s more like it! All features have statistically significant effects. Let’s make predictions on the <code>testing</code> set now. :)</p>
+<pre class="r"><code># make predictions on testing set
+testing$probs &lt;- predict(glm_mod, newdata = testing, type = c(&quot;response&quot;))
+
+# create prediction object
+pred &lt;- prediction(testing$probs, testing$converted)
+
+# plot ROC curve
+roc = performance(pred, measure = &quot;tpr&quot;, x.measure = &quot;fpr&quot;)
+plot(roc) + abline(a = 0, b = 1, lty = 2)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<pre><code>## integer(0)</code></pre>
+<p>Sweet! Now let’s plot the accuracy of the model.</p>
+<pre class="r"><code># plot accuracy
+acc.perf = performance(pred, measure = &quot;acc&quot;)
+plot(acc.perf)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p>Now let’s calculate the AUC for the model.</p>
+<pre class="r"><code># calculate AUC
+performance(pred, measure = &quot;auc&quot;)</code></pre>
+<pre><code>## An object of class &quot;performance&quot;
+## Slot &quot;x.name&quot;:
+## [1] &quot;None&quot;
+## 
+## Slot &quot;y.name&quot;:
+## [1] &quot;Area under the ROC curve&quot;
+## 
+## Slot &quot;alpha.name&quot;:
+## [1] &quot;none&quot;
+## 
+## Slot &quot;x.values&quot;:
+## list()
+## 
+## Slot &quot;y.values&quot;:
+## [[1]]
+## [1] 0.7572236
+## 
+## 
+## Slot &quot;alpha.values&quot;:
+## list()</code></pre>
+<p>Alright, 0.75 isn’t too shabby!</p>
+</div>
+<div id="using-decision-trees" class="section level3">
+<h3>Using decision trees</h3>
+<p>Building decision trees involves proposing many possible <em>data cuts</em> and then choosing the best cuts based on simultaneous competing criteria of predictive power, cross-validation strength, and interaction with other chosen cuts.</p>
+<p>One of the advantages of using a package for decision tree work is not having to worry about the construction details.</p>
+<pre class="r"><code>library(rpart); library(rpart.plot)
+
+# fit decision tree model
+tree_mod &lt;- rpart(converted ~ team_members + updates + profiles + days_active + previous_plan + days_to_trial,
+               data = training, method = &#39;class&#39;, control = rpart.control(cp = 0.001, minsplit = 1000,
+                                                              minbucket = 1000, maxdepth = 5))
+
+# plot model
+rpart.plot(tree_mod)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p>Ok, so <code>team_members</code> is the moset important feature, by far, to this model. Let’s see how well it does at predicting conversions in the <code>testing</code> set.</p>
+<pre class="r"><code># make predictions on testing set
+testing$tree_preds &lt;- predict(tree_mod, newdata = testing)[,2]
+
+# create prediction object for tree model
+pred &lt;- prediction(testing$tree_preds, testing$converted)
+
+# plot ROC curve
+roc = performance(pred, measure = &quot;tpr&quot;, x.measure = &quot;fpr&quot;)
+plot(roc) + abline(a = 0, b = 1, lty = 2)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<pre><code>## integer(0)</code></pre>
+<p>This model did not perform well. Let’s calculate the AUC just for kicks and giggles.</p>
+<pre class="r"><code># calculate AUC
+performance(pred, measure = &quot;auc&quot;)</code></pre>
+<pre><code>## An object of class &quot;performance&quot;
+## Slot &quot;x.name&quot;:
+## [1] &quot;None&quot;
+## 
+## Slot &quot;y.name&quot;:
+## [1] &quot;Area under the ROC curve&quot;
+## 
+## Slot &quot;alpha.name&quot;:
+## [1] &quot;none&quot;
+## 
+## Slot &quot;x.values&quot;:
+## list()
+## 
+## Slot &quot;y.values&quot;:
+## [[1]]
+## [1] 0.6483663
+## 
+## 
+## Slot &quot;alpha.values&quot;:
+## list()</code></pre>
+<p>It’s 0.65, about as good as single variable model, which is what it is essentially!</p>
+</div>
+<div id="random-forests" class="section level3">
+<h3>Random forests</h3>
+<p>Random Forest is a versatile machine learning method capable of performing both regression and classification tasks. It also undertakes dimensional reduction methods, treats missing values, outlier values and other essential steps of data exploration, and does a fairly good job. It is a type of ensemble learning method, where a group of weak models combine to form a powerful model.</p>
+<p>Let’s try it out.</p>
+<pre class="r"><code>library(randomForest)
+
+# fit random forest model
+rf_mod &lt;- randomForest(converted ~ team_members + updates + profiles + days_active + previous_plan + 
+                         days_to_trial, data = training, importance = T, ntree = 500)</code></pre>
+<p>Let’s see which variables were important to the model.</p>
+<pre class="r"><code># plot variable importance
+varImpPlot(rf_mod)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>Those team members! Let’s make our predictions on the testing set.</p>
+<pre class="r"><code># make predictions based on random forest model
+rf_preds &lt;- predict(rf_mod, newdata = testing, type = &#39;prob&#39;)
+
+# create prediction object for rf model
+rf_pred &lt;- prediction(rf_preds[, 2], testing$converted)
+
+# plot ROC curve
+roc = performance(rf_pred, measure = &quot;tpr&quot;, x.measure = &quot;fpr&quot;)
+plot(roc) + abline(a = 0, b = 1, lty = 2)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<pre><code>## integer(0)</code></pre>
+<p>Now let’s calculate AUC.</p>
+<pre class="r"><code># calculate AUC
+performance(rf_pred, measure = &quot;auc&quot;)</code></pre>
+<pre><code>## An object of class &quot;performance&quot;
+## Slot &quot;x.name&quot;:
+## [1] &quot;None&quot;
+## 
+## Slot &quot;y.name&quot;:
+## [1] &quot;Area under the ROC curve&quot;
+## 
+## Slot &quot;alpha.name&quot;:
+## [1] &quot;none&quot;
+## 
+## Slot &quot;x.values&quot;:
+## list()
+## 
+## Slot &quot;y.values&quot;:
+## [[1]]
+## [1] 0.7623362
+## 
+## 
+## Slot &quot;alpha.values&quot;:
+## list()</code></pre>
+<p>Alright, we have 0.76. This is much better than the single-variable models and the decision tree model, but about the same as the general linear model!</p>
+</div>
+<div id="an-activation-metric" class="section level3">
+<h3>An activation metric</h3>
+<p>So we’ve built these models. How does that help us find an activation metric? We know that these features (team members, updates, etc) are important, so let’s do some more exploratory analysis to see how we could fit them into an activation metric.</p>
+<p>We’ll start with <code>team_members</code>. That seems to be the most important variable in each of our models. Let’s plot team members against the proportion of trials that converted.</p>
+<pre class="r"><code># plot team members and conversion rate
+trials %&gt;%
+  group_by(team_members, converted) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / sum(users)) %&gt;%
+  filter(converted == &#39;Yes&#39;) %&gt;%
+  ggplot(aes(x = as.factor(team_members), y = percent)) + 
+  geom_bar(stat = &#39;identity&#39;) +
+  labs(x = &quot;Number of Team Members&quot;, y = NULL, title = &quot;Conversion Rate by Team Size&quot;)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+<p>As we can see, the conversion rate increases quite a bit for trialists with the addition of each team member, <em>up to 5</em>. The biggest jump comes from 0 to 1 team member, so we can use <strong><em>at least one team member</em></strong> as part of the activation metric.</p>
+<p>The number of updates scheduled in the first week was also an important feature, so let’s make the same plot for that. We’ll need to bucket the number of updates.</p>
+<pre class="r"><code># make the cuts to bin the updates data
+cuts &lt;- unique(as.numeric(quantile(trials$updates, probs = seq(0, 1, 0.1), na.rm = T)))
+
+# set updates bins
+trials$update_bin &lt;- cut(trials$updates, cuts)
+
+# plot updates bin and conversion rate
+trials %&gt;%
+  filter(!(is.na(trials$update_bin))) %&gt;%
+  group_by(update_bin, converted) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / sum(users)) %&gt;%
+  filter(converted == &#39;Yes&#39;) %&gt;%
+  ggplot(aes(x = as.factor(update_bin), y = percent)) + 
+  geom_bar(stat = &#39;identity&#39;) +
+  labs(x = &quot;Number of Updates&quot;, y = NULL, title = &quot;Conversion Rate by Updates Shared&quot;)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+<p>There looks to be a near-linear relationship between update bin and conversion rate. We can use <strong><em>10 or more updates</em></strong> as a good cutoff for our activation metric.</p>
+<p>Now let’s look at profiles.</p>
+<pre class="r"><code># make the cuts to bin the profiles data
+cuts &lt;- unique(as.numeric(quantile(trials$profiles, probs = seq(0, 1, 0.1), na.rm = T)))
+
+# set profile bins
+trials$profile_bin &lt;- cut(trials$profiles, cuts)
+
+trials %&gt;%
+  filter(!(is.na(trials$profile_bin))) %&gt;%
+  group_by(profile_bin, converted) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / sum(users)) %&gt;%
+  filter(converted == &#39;Yes&#39;) %&gt;%
+  ggplot(aes(x = as.factor(profile_bin), y = percent)) + 
+  geom_bar(stat = &#39;identity&#39;) +
+  labs(x = &quot;Number of Profiles&quot;, y = NULL, title = &quot;Conversion Rate by Profiles&quot;)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<p>There seems to be a large <em>relative</em> jump at the 4 profile mark. Not good science, but let’s go with it!</p>
+<p>Now let’s look at days active.</p>
+<pre class="r"><code># plot conversion rate and days active
+trials %&gt;%
+  filter(!(is.na(trials$days_active))) %&gt;%
+  group_by(days_active, converted) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / sum(users)) %&gt;%
+  filter(converted == &#39;Yes&#39;) %&gt;%
+  ggplot(aes(x = as.factor(days_active), y = percent)) + 
+  geom_bar(stat = &#39;identity&#39;) +
+  labs(x = &quot;Number of Days Active&quot;, y = NULL, title = &quot;Conversion Rate by Days Active&quot;)</code></pre>
+<p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<p>Cool.</p>
+</div>
+<div id="conclusions" class="section level3">
+<h3>Conclusions</h3>
+<p>Add conclusions and assumptions here.</p>
+<p>Activation metric can be 1 team member, 10 updates, and 4 profiles through the first week.</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/retention-exploration/" data-toggle="tooltip" data-placement="top" title="Exploring Retention at Buffer">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+

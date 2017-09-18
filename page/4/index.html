@@ -194,236 +194,21 @@
           
           
             <article class="post-preview">
-              <a href="/blog/trial-activation/">
-                <h2 class="post-title">Predicting trial conversions with an activation metric</h2>
+              <a href="/post/2015-01-04-first-post/">
+                <h2 class="post-title">First post!</h2>
                 
               </a>
 
               <span class="post-meta">
-  Posted on September 14, 2017
+  Posted on January 5, 2015
   
 </span>
 
 
               <div class="post-entry">
                 
-                  You’ve likely heard of activation rates before, especially if you’ve worked in a tech company. Facebook famously learned that users that connected with a certain number of friends were significantly more likely to be retained, so they encouraged users to connect with more friends when they signed up.
-Causality in that relationship is questionable, but finding a testable hypothesis based on an observed relationship can be a big step forward for companies, especially those with the type of volume that Facebook had.
-                  <a href="/blog/trial-activation/" class="post-read-more">[Read More]</a>
-                
-              </div>
+                  <p>This is my first post, how exciting!</p>
 
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/retention-exploration/">
-                <h2 class="post-title">Exploring Retention at Buffer</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on August 29, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Tech companies are often asked about their retention curves. Growth hacking and marketing techniques can provide new users, but product/market fit and retention loops will keep them using your product.
-I realized that I don’t have a solid grasp of Buffer’s retention curve, so I thought I’d make a small post out of the exploration.
-Picking the right metrics to use to calculate retention can be a tricky thing. It should be a leading indicator of revenue and repeat behavior.
-                  <a href="/blog/retention-exploration/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/churn-prediction/">
-                <h2 class="post-title">Predicting Churn with General Linear Models: Part 1</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on August 18, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  In a text analysis of churn surveys, we found that the most common reason users give for leaving Buffer is that they weren’t using it. The graph below shows the most frequently occuring pairs of words in the surveys – notice “not using” and “don’t need” at the top.
- In this analysis, we’ll identify Business customers that have stopped using Buffer or use it less than they previously had. We’ll create a natural experiment in which users exposed to the experimental and control conditions are determined by their own actions.
-                  <a href="/blog/churn-prediction/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/business-feature-analysis/">
-                <h2 class="post-title">Buffer for Business Feature Audit</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 28, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  In a previous analysis we discovered that the most common reason users gave for churning was that they weren’t using, or didn’t need, Buffer.
-I was inspired by this blog post by Intercom’s Chief Strategy Officer to conduct an audit of the features available to Buffer for Business users in order to see which were being used, and how frequently.
-In this post, we will analyze a subset of our features with two simple criteria: how many users use it and how frequently.
-                  <a href="/blog/business-feature-analysis/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/when-do-customers-churn/">
-                <h2 class="post-title">When do customers churn?</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 25, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?
-Data collection We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.
-select subscriptions.id , subscriptions.created , subscriptions.canceled_at , subscriptions.plan_id , plans.interval , subscriptions.customer_id , count(distinct charges.id) as successful_charges from subscriptions left join invoices on invoices.
-                  <a href="/blog/when-do-customers-churn/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/trial-activity/">
-                <h2 class="post-title">How active are Business trialists?</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 24, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
-To answer this question, we can analyze the data in this Look. The dataset contains the trial start and end dates for each user, as well as the days in which there were any actions_taken events triggered.
-The number of actions for each day is counted for up to 30 days after the trial start date for each user.
-                  <a href="/blog/trial-activity/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/involuntary-churn/">
-                <h2 class="post-title">Involuntary Churn</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 24, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Involuntary churn is a subset of churn in which the cancellation event was not directly initiated by the customer. For us, this occurs when there have been four consecutive failed payments.
-The reasons for the failed payments are varied, but we can assume that there are customers whose intention was to continue subscribing to the service. In most cases, they could not because their credit card either expired or was declined for one reason or another.
-                  <a href="/blog/involuntary-churn/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/got-analysis/">
-                <h2 class="post-title">Game of Thrones Book Analysis</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 22, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Winter is here. Finally!
-I was inspired by this series of blog posts from the Looker team to do my own Game of Thrones inspired data analysis. While Looker’s analysis focuses on the screentime of different characters in the show, I thought it would be interesting to take a different approach and analyze the text corpuses of the George R. R. Martin’s books.
-I was particularly inspired by Julia Silge’s analysis of gender roles in Jane Austen’s works, and took a similar approach to exploring the Game of Thrones data.
-                  <a href="/blog/got-analysis/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/area-tags/">
-                <h2 class="post-title">Analyzing Product with Support Tickets</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 14, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Customer support and advocacy play important roles in driving Buffer forward. We don’t just want to provide support to customers in need – we try to use signals and common themes from those conversations to influence decision making on the product team.
-The “Pause Queue” button is one recent, small example of how conversations with customers have led to changes in the product.
- To keep these signals organized, we introduced area tags to our support workflow within Helpscout.
-                  <a href="/blog/area-tags/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/got-screentimes/">
-                <h2 class="post-title">Game of Thrones: Who Steals the Show?</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 8, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  I was inspired by this analysis done by the folks of Looker, which looks at the amount of screentime different characters get in the Game of Thrones series.
-The dataset they used comes from data world and an imdb list. I’m grateful to the people that have collected and shared this data.
-The dataset includes 191 named characters, the amount of screentime they have (in minutes), and the number of episodes they appear in.
-                  <a href="/blog/got-screentimes/" class="post-read-more">[Read More]</a>
                 
               </div>
 
@@ -435,10 +220,10 @@ The dataset includes 191 named characters, the amount of screentime they have (i
         
           <ul class="pager main-pager">
             
-            
-              <li class="next">
-                <a href="/page/2">Older Posts &rarr;</a>
+              <li class="previous">
+                <a href="/page/3">&larr; Newer Posts</a>
               </li>
+            
             
           </ul>
         
