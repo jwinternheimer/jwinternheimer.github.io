@@ -5,9 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>How much vacation does Buffer take?</title>
+  <meta property="og:title" content="How much vacation does Buffer take?" />
+  <meta name="twitter:title" content="How much vacation does Buffer take?" />
+  <meta name="description" content="Buffer introduced a minimum vacation policy a year ago, in which we encouraged Americans to take at least 15 days of vacation (excluding holidays), Australians to take at least 17 days, Canadians at least 20 days, and Europeans at least 25 days.
+The fairness of this policy is open to debate, but we can try to measure the effect that it has had on the team over the past year. We use timetastic to schedule time off, and we’re lucky enough to have a nice report that shows how much time each team member has taken off.">
+  <meta property="og:description" content="Buffer introduced a minimum vacation policy a year ago, in which we encouraged Americans to take at least 15 days of vacation (excluding holidays), Australians to take at least 17 days, Canadians at least 20 days, and Europeans at least 25 days.
+The fairness of this policy is open to debate, but we can try to measure the effect that it has had on the team over the past year. We use timetastic to schedule time off, and we’re lucky enough to have a nice report that shows how much time each team member has taken off.">
+  <meta name="twitter:description" content="Buffer introduced a minimum vacation policy a year ago, in which we encouraged Americans to take at least 15 days of vacation (excluding holidays), Australians to take at least 17 days, Canadians at …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +20,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/" />
+  <meta property="og:url" content="/blog/vacation-time/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/" />
+  <link rel="canonical" href="/blog/vacation-time/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,9 +177,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="post-heading">
+              <h1>How much vacation does Buffer take?</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on September 19, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -185,73 +197,83 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Buffer introduced a <a href="https://open.buffer.com/minimum-vacation/">minimum vacation policy</a> a year ago, in which we encouraged Americans to take <em>at least</em> 15 days of vacation (excluding holidays), Australians to take at least 17 days, Canadians at least 20 days, and Europeans at least 25 days.</p>
+<p>The fairness of this policy is open to debate, but we can try to measure the effect that it has had on the team over the past year. We use timetastic to schedule time off, and we’re lucky enough to have a nice report that shows how much time each team member has taken off.</p>
+<div id="data-collection" class="section level3">
+<h3>Data collection</h3>
+<p>We’ll read the data in from a CSV that we exported from the site.</p>
+<pre class="r"><code># read CSV
+days &lt;- read.csv(&#39;~/Downloads/vacation.csv&#39;, header = T)</code></pre>
+<p>Let’s clean up the column names and set the dates as date types.</p>
+<p>Great! Now let’s get the data in the format we want.</p>
+</div>
+<div id="data-tidying" class="section level3">
+<h3>Data tidying</h3>
+<p>We only want to look at time taken off in the past year, so let’s filter out dates that don’t apply. We also want to filter to only look at <em>vacation</em> days taken off. We also want to exclude people that are no longer on the team.</p>
+<pre class="r"><code># filter dates
+vacation &lt;- days %&gt;%
+  filter(start_time &gt; (Sys.Date() - 365) &amp; leave_type == &quot;Vacation&quot; &amp; status == &quot;Authorised&quot;)</code></pre>
+<p>Now let’s group the data by team member, so that we can see the total number of days taken off by each.</p>
+<pre class="r"><code># group by person
+by_user &lt;- vacation %&gt;%
+  group_by(user) %&gt;%
+  summarise(total_working_days = sum(working))</code></pre>
+<pre class="r"><code># make bins for total days
+cuts &lt;- c(-Inf, seq(0, 50, 5))
+
+# bin the days
+by_user &lt;- by_user %&gt;%
+  mutate(days_off = cut(total_working_days, cuts))</code></pre>
+</div>
+<div id="exploratory-analysis" class="section level2">
+<h2>Exploratory analysis</h2>
+<p>So how much time has the team taken off in the past year?</p>
+<p><img src="/blog/vacation-time_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>That’s interesting! Over the past year, many team members have only taken 10-15 vacation days. A quarter of the team has taken 12 or less days, half of the team has taken 16 or less days, and a quarter of the team has taken 24 or more days. We have one team member who has taken over 40 days of vacation!</p>
+<p>How does this look for people that live in different regions?</p>
+<p><img src="/blog/vacation-time_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Overall, it looks like people are following the recommendations of the policy! The center of the distribution of days off for Americans is between 10 and 20, as is the center of the distribution of days off for Europeans.</p>
+<p>The distribution is far wider for Europeans, which suggests that there are people that have taken very few days off (one person has only taken 2) and people that have taken many days off (one has taken 44.5).</p>
+<p>Canadians seem to really know how to take time off. Their distribution is more uniformly distributed and is closer to the 30-40 day range.</p>
+<p>Team members in Asia represent a smaller sample, but their distribution is centered around 11 days. Here are the means and medians for each group.</p>
+<pre class="r"><code>by_user %&gt;%
+  group_by(region) %&gt;%
+  summarise(average = mean(total_working_days), median = median(total_working_days),
+            standard_deviation = sd(total_working_days)) %&gt;%
+  arrange(average)</code></pre>
+<pre><code>## # A tibble: 5 x 4
+##      region  average median standard_deviation
+##       &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;              &lt;dbl&gt;
+## 1      Asia 10.70000  11.00           3.701351
+## 2        US 16.33333  15.00           6.082334
+## 3    Europe 19.92308  18.00           8.890098
+## 4 Australia 24.25000  24.25           2.474874
+## 5    Canada 25.90000  27.00           8.792042</code></pre>
+<p>There we go!</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+          <li class="previous">
+            <a href="/blog/trial-activation/" data-toggle="tooltip" data-placement="top" title="Predicting trial conversions with an activation metric">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/3">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
