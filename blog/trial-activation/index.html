@@ -702,11 +702,11 @@ performance(rf_pred, measure = &quot;auc&quot;)</code></pre>
 ## 
 ## Slot &quot;alpha.values&quot;:
 ## list()</code></pre>
-<p>Alright, we have 0.76. This is much better than the single-variable models and the decision tree model, but about the same as the general linear model!</p>
+<p>Alright, we have 0.76. This is much better than the single-variable models and the decision tree model, but performed about the same as the general linear model! Now that we’ve tried a few different approaches, let’s get back to the original goal of defining an activation metric for Business trialists.</p>
 </div>
 <div id="an-activation-metric" class="section level3">
 <h3>An activation metric</h3>
-<p>So we’ve built these models. How does that help us find an activation metric? We know that these features (team members, updates, etc) are important, so let’s do some more exploratory analysis to see how we could fit them into an activation metric.</p>
+<p>We’ve built these models. How does that help us find an activation metric? We know that our features (team members, updates, etc) are important, so we can do some more exploratory analysis to see how we could fit them into an activation metric.</p>
 <p>We’ll start with <code>team_members</code>. That seems to be the most important variable in each of our models. Let’s plot team members against the proportion of trials that converted.</p>
 <pre class="r"><code># plot team members and conversion rate
 trials %&gt;%
@@ -718,8 +718,8 @@ trials %&gt;%
   geom_bar(stat = &#39;identity&#39;) +
   labs(x = &quot;Number of Team Members&quot;, y = NULL, title = &quot;Conversion Rate by Team Size&quot;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
-<p>As we can see, the conversion rate increases quite a bit for trialists with the addition of each team member, <em>up to 5</em>. The biggest jump comes from 0 to 1 team member, so we can use <strong><em>at least one team member</em></strong> as part of the activation metric.</p>
-<p>The number of updates scheduled in the first week was also an important feature, so let’s make the same plot for that. We’ll need to bucket the number of updates.</p>
+<p>As we can see, the conversion rate increases quite a bit for trialists with the addition of each team member, <em>up to 5</em>. The biggest jump comes from 0 to 1 team member, so we can start by using <strong><em>at least one team member</em></strong> as part of the activation metric.</p>
+<p>The number of updates scheduled in the first week was also an important feature, so let’s make the same plot for that. We’ll need to bucket the number of updates to convert the continuous variable into a categorical one.</p>
 <pre class="r"><code># make the cuts to bin the updates data
 cuts &lt;- unique(as.numeric(quantile(trials$updates, probs = seq(0, 1, 0.1), na.rm = T)))
 
@@ -737,7 +737,7 @@ trials %&gt;%
   geom_bar(stat = &#39;identity&#39;) +
   labs(x = &quot;Number of Updates&quot;, y = NULL, title = &quot;Conversion Rate by Updates Shared&quot;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
-<p>There looks to be a near-linear relationship between update bin and conversion rate. We can use <strong><em>10 or more updates</em></strong> as a good cutoff for our activation metric.</p>
+<p>There looks to be a near-linear relationship between update bin and conversion rate. We can use <strong><em>10 or more updates</em></strong> as a good cutoff for our activation metric, so as to not cut off too many trialists.</p>
 <p>Now let’s look at profiles.</p>
 <pre class="r"><code># make the cuts to bin the profiles data
 cuts &lt;- unique(as.numeric(quantile(trials$profiles, probs = seq(0, 1, 0.1), na.rm = T)))
@@ -755,8 +755,8 @@ trials %&gt;%
   geom_bar(stat = &#39;identity&#39;) +
   labs(x = &quot;Number of Profiles&quot;, y = NULL, title = &quot;Conversion Rate by Profiles&quot;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
-<p>There seems to be a large <em>relative</em> jump at the 4 profile mark. Not good science, but let’s go with it!</p>
-<p>Now let’s look at days active.</p>
+<p>There seems to be a large <em>relative</em> jump at the 4 profile mark. I acknowledge that this is not good science, but let’s go with it.</p>
+<p>Finally we can look at the number of days active in the first week of the trial.</p>
 <pre class="r"><code># plot conversion rate and days active
 trials %&gt;%
   filter(!(is.na(trials$days_active))) %&gt;%
@@ -768,7 +768,30 @@ trials %&gt;%
   geom_bar(stat = &#39;identity&#39;) +
   labs(x = &quot;Number of Days Active&quot;, y = NULL, title = &quot;Conversion Rate by Days Active&quot;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
-<p>Cool.</p>
+<p>Cool. I’m hesitent to include this, but let’s see what happens for different activation metric choices. What would happen if we chose the following criteria for an “activation”:</p>
+<ul>
+<li>At least 1 team member.</li>
+<li>At least 4 profiles.</li>
+<li>At least 10 updates.</li>
+</ul>
+<pre class="r"><code># define a boolean activation variable
+trials &lt;- trials %&gt;%
+  mutate(activated = (team_members &gt;= 1 &amp; profiles &gt;= 4 &amp; updates &gt;= 10))
+
+# find conversion rate for those activated
+trials %&gt;%
+  group_by(activated, converted) %&gt;%
+  summarise(users = n_distinct(user_id)) %&gt;%
+  mutate(percent = users / sum(users))</code></pre>
+<pre><code>## # A tibble: 4 x 4
+## # Groups:   activated [2]
+##   activated converted users   percent
+##       &lt;lgl&gt;    &lt;fctr&gt; &lt;int&gt;     &lt;dbl&gt;
+## 1     FALSE        No 21134 0.8285244
+## 2     FALSE       Yes  4374 0.1714756
+## 3      TRUE        No   596 0.3835264
+## 4      TRUE       Yes   958 0.6164736</code></pre>
+<p>Alright. With these criteria, around 8% of trials activated. Around 62% of activated trials converted, compared to only 17% of trials that did not activate.</p>
 </div>
 <div id="conclusions" class="section level3">
 <h3>Conclusions</h3>
