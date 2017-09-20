@@ -220,14 +220,14 @@ Causality in that relationship is questionable, but finding a testable hypothesi
 <p>We’ll avoid having to use a massive SQL query by using the data that has been collected in <a href="https://looker.buffer.com/looks/4034">this handy look</a>. We can use the <code>get_look()</code> function from the <code>buffer</code> package to pull the data into R.</p>
 <pre class="r"><code># get data from look
 trials &lt;- get_look(4034)</code></pre>
-<p>We have around 28K trials to train our models on. Let’s do a bit of cleaning to get the data ready for analysis.</p>
+<p>We have around 25K trials to train our models on. Let’s do a bit of cleaning to get the data ready for analysis.</p>
 </div>
 <div id="data-cleaning" class="section level3">
 <h3>Data cleaning</h3>
 <p>First let’s rename the columns.</p>
 <pre class="r"><code># rename columns
 colnames(trials) &lt;- c(&#39;user_id&#39;, &#39;plan_before_trial&#39;, &#39;join_date&#39;, &#39;trial_start&#39;, &#39;trial_end&#39;, 
-                      &#39;converted&#39;, &#39;team_members&#39;, &#39;updates&#39;, &#39;profiles&#39;, &#39;days_active&#39;)</code></pre>
+                      &#39;converted&#39;, &#39;team_members&#39;, &#39;subscription_plan&#39;, &#39;updates&#39;, &#39;profiles&#39;, &#39;days_active&#39;)</code></pre>
 <p>Now we need to make sure that the columns in our data frame are of the correct type.</p>
 <pre class="r"><code># create function to set date as date object
 set_date &lt;- function(column) {
@@ -265,11 +265,6 @@ trials$plan_before_trial &lt;- NULL</code></pre>
 trials &lt;- trials %&gt;%
   mutate(days_to_trial = as.numeric(trial_start - join_date))</code></pre>
 <p>Alright! We are ready for some exploratory analysis! Let’s first save our dataset here. :)</p>
-<pre class="r"><code># save dataset
-# saveRDS(trials, &#39;trial_activation.rds&#39;)
-
-# load data
-trials &lt;- readRDS(&#39;trial_activation.rds&#39;)</code></pre>
 </div>
 <div id="exploratory-data-analysis" class="section level3">
 <h3>Exploratory data analysis</h3>
@@ -282,9 +277,9 @@ trials %&gt;%
 <pre><code>## # A tibble: 2 x 3
 ##   converted users   percent
 ##      &lt;fctr&gt; &lt;int&gt;     &lt;dbl&gt;
-## 1        No 21736 0.8040543
-## 2       Yes  5297 0.1959457</code></pre>
-<p>Alright, around 20% of trials converted. That’s more than I thought! Now let’s plot our features and see how they are related.</p>
+## 1        No 21624 0.8927421
+## 2       Yes  2598 0.1072579</code></pre>
+<p>Alright, around 10% of trials converted. That’s more than I thought! Now let’s plot our features and see how they are related.</p>
 <pre class="r"><code># define features
 features &lt;- trials %&gt;%
   select(team_members, updates, profiles, days_active, days_to_trial, previous_plan)
@@ -301,31 +296,31 @@ trials %&gt;%
   stat_smooth(method = &#39;loess&#39;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>We can see that there is indeed a positive relationship that is stronger at lower profile counts. Let’s look at the relationship between <code>updates</code> and <code>team_members</code> now.</p>
-<pre class="r"><code>library(ggridges)</code></pre>
-<pre><code>## Warning: package &#39;ggridges&#39; was built under R version 3.4.1</code></pre>
-<pre class="r"><code># plot team members and updates
+<pre class="r"><code>library(ggridges)
+
+# plot team members and updates
 ggplot(filter(trials, team_members &lt;= 5), aes(x = log(updates), y = as.factor(team_members))) +
   geom_density_ridges(rel_min_height = 0.01, scale = 2) +
   theme_ridges() +
   labs(x = &quot;Log Updates&quot;, y = &quot;Team Members&quot;)</code></pre>
-<pre><code>## Picking joint bandwidth of 0.312</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Cool! We can see that the distribution of the log of updates shifts to the right as the number of team members increases.</p>
-<p>Alright, what do the distributions of updates look like for users that converted their trials?</p>
+<p>What do the distributions of updates look like for users that converted their trials?</p>
 <pre class="r"><code># plot distributions of updates
 ggplot(trials, aes(x = log(updates), y = converted, fill = converted)) +
   geom_density_ridges(rel_min_height = 0.01, scale = 2) +
   theme_ridges() +
   guides(fill=FALSE) +
   labs(x = &quot;Log Updates&quot;, y = &quot;Converted&quot;)</code></pre>
-<pre><code>## Picking joint bandwidth of 0.204</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>And what about profiles?</p>
 <pre class="r"><code># plot distributions of profiles
 trials %&gt;%
   ggplot(aes(x = converted, y = profiles)) +
   geom_boxplot() +
-  scale_y_continuous(limits = c(0, 20))</code></pre>
+  scale_y_continuous(limits = c(0, 20)) +
+  theme_minimal() +
+  labs(x = &quot;Converted&quot;, y = NULL, title = &quot;Number of Profiles&quot;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>We can see that users that converted tended to have a higher number of profiles associated with their accounts. Alright, now let’s move forwards towards predictive modeling.</p>
 </div>
@@ -353,7 +348,7 @@ training &lt;- subset(trials, rgroup &lt;= 0.8)
 testing &lt;- subset(trials, rgroup &gt; 0.8)</code></pre>
 <p>Now let’s identify categorical and numeric features. Then, we’ll build a function to make single-variable models.</p>
 <pre class="r"><code># list variables we don&#39;t want to include
-to_exclude &lt;- c(&#39;user_id&#39;, &#39;join_date&#39;, &#39;trial_start&#39;, &#39;trial_end&#39;, &#39;converted&#39;,&#39;rgroup&#39;)
+to_exclude &lt;- c(&#39;user_id&#39;, &#39;join_date&#39;, &#39;trial_start&#39;, &#39;trial_end&#39;, &#39;converted&#39;, &#39;rgroup&#39;)
 
 # get a list of the features
 vars &lt;- setdiff(colnames(trials), to_exclude)
@@ -410,9 +405,9 @@ make_prediction &lt;- function(outcomes, variable, predictor) {
   testing[, pi] &lt;- make_prediction(testing[, outcome], testing[, v], testing[, v]) 
 }</code></pre>
 <p>Once we have the predictions, we can find the categorical variables that have a good AUC both on the training data and on the calibration data not used during training. These are likely the more useful variables.</p>
-<pre class="r"><code>library(&#39;ROCR&#39;)
+<pre class="r"><code>library(ROCR)
 
-# Define a function to calculate AUC
+# define a function to calculate AUC
 calcAUC &lt;- function(predictions, outcomes) {
   
   perf &lt;- performance(prediction(predictions, outcomes == pos), &#39;auc&#39;) 
@@ -430,43 +425,43 @@ calcAUC &lt;- function(predictions, outcomes) {
   print(sprintf(&quot;%s, trainingAUC: %4.3f testingnAUC: %4.3f&quot;, pi, aucTrain, aucTest))
 
 }</code></pre>
-<pre><code>## [1] &quot;pred_previous_plan, trainingAUC: 0.560 testingnAUC: 0.555&quot;</code></pre>
-<p>Let’s use the same technique for numeric variables by converting them into categorical variables.</p>
-<pre class="r"><code># Define a function that makes predictions
+<pre><code>## [1] &quot;pred_previous_plan, trainingAUC: 0.600 testingnAUC: 0.598&quot;</code></pre>
+<p>The AUC for the single-variable model using <code>previous_plan</code> as the predictor is around 0.60, which isn’t that much better than random guessing. Let’s use the same technique for numeric variables by converting them into categorical variables.</p>
+<pre class="r"><code># define a function that makes predictions
 make_prediction_numeric &lt;- function(outcome, variable, predictor) {
   
-  # Make the cuts to bin the data
+  # make the cuts to bin the data
   cuts &lt;- unique(as.numeric(quantile(variable, probs = seq(0, 1, 0.1), na.rm = T)))
   varC &lt;- cut(variable, cuts)
   appC &lt;- cut(predictor, cuts)
   
-  # Now apply the categorical make prediction function
+  # now apply the categorical make prediction function
   make_prediction(outcome, varC, appC)
 }</code></pre>
 <p>Now let’s apply this function to the numeric variables.</p>
-<pre class="r"><code># Loop through the columns and apply the formula
+<pre class="r"><code># loop through the columns and apply the formula
 for(v in numVars) {
   
-  # Name the prediction column
+  # name the prediction column
   pi &lt;- paste(&#39;pred_&#39;, v, sep = &#39;&#39;)
   
-  # Make the predictions
+  # make the predictions
   training[, pi] &lt;- make_prediction_numeric(training[, outcome], training[, v], training[, v])
   testing[, pi] &lt;- make_prediction_numeric(training[, outcome], training[, v], testing[, v])
   
-  # Score the predictions
+  # score the predictions
   aucTrain &lt;- calcAUC(training[, pi], training[, outcome])
   aucTest &lt;- calcAUC(testing[, pi], testing[, outcome])
 
   print(sprintf(&quot;%s, trainingAUC: %4.3f testingnAUC: %4.3f&quot;, pi, aucTrain, aucTest))
     
 }</code></pre>
-<pre><code>## [1] &quot;pred_team_members, trainingAUC: 0.649 testingnAUC: 0.648&quot;
-## [1] &quot;pred_updates, trainingAUC: 0.640 testingnAUC: 0.642&quot;
-## [1] &quot;pred_profiles, trainingAUC: 0.641 testingnAUC: 0.638&quot;
-## [1] &quot;pred_days_active, trainingAUC: 0.611 testingnAUC: 0.618&quot;
-## [1] &quot;pred_days_to_trial, trainingAUC: 0.561 testingnAUC: 0.574&quot;</code></pre>
-<p>Alright. It looks like team members, updates, profiles, and days active could be decent predictors of a trial conversion. We’ll try to beat an AUC of 0.65 with our models.</p>
+<pre><code>## [1] &quot;pred_team_members, trainingAUC: 0.768 testingnAUC: 0.778&quot;
+## [1] &quot;pred_updates, trainingAUC: 0.643 testingnAUC: 0.666&quot;
+## [1] &quot;pred_profiles, trainingAUC: 0.671 testingnAUC: 0.676&quot;
+## [1] &quot;pred_days_active, trainingAUC: 0.600 testingnAUC: 0.614&quot;
+## [1] &quot;pred_days_to_trial, trainingAUC: 0.585 testingnAUC: 0.585&quot;</code></pre>
+<p>Alright. It looks like team members, updates, profiles, and days active could be good predictors of a trial conversion. We’ll try to beat an AUC of 0.65 with our models.</p>
 </div>
 <div id="general-linear-model" class="section level3">
 <h3>General linear model</h3>
@@ -485,28 +480,28 @@ summary(glm_mod)</code></pre>
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -3.9080  -0.6405  -0.4996  -0.4120   2.5003  
+## -4.0747  -0.3860  -0.3170  -0.2716   2.5960  
 ## 
 ## Coefficients:
 ##                           Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)             -1.953e+00  6.796e-02 -28.734  &lt; 2e-16 ***
-## team_members             6.390e-01  1.716e-02  37.229  &lt; 2e-16 ***
-## updates                 -4.290e-05  2.447e-05  -1.753  0.07958 .  
-## profiles                 4.421e-02  4.042e-03  10.937  &lt; 2e-16 ***
-## days_active              2.029e-01  9.216e-03  22.021  &lt; 2e-16 ***
-## previous_planbusiness    5.173e-02  2.199e-01   0.235  0.81406    
-## previous_planindividual -7.180e-01  5.307e-02 -13.531  &lt; 2e-16 ***
-## days_to_trial            1.287e-04  4.987e-05   2.581  0.00986 ** 
+## (Intercept)             -2.174e+00  8.747e-02 -24.857   &lt;2e-16 ***
+## team_members             9.299e-01  2.025e-02  45.925   &lt;2e-16 ***
+## updates                 -9.748e-06  1.741e-05  -0.560   0.5756    
+## profiles                 5.131e-02  4.387e-03  11.695   &lt;2e-16 ***
+## days_active              1.330e-01  1.306e-02  10.183   &lt;2e-16 ***
+## previous_planbusiness   -5.188e-01  2.899e-01  -1.790   0.0735 .  
+## previous_planindividual -1.344e+00  6.614e-02 -20.324   &lt;2e-16 ***
+## days_to_trial            1.181e-04  6.769e-05   1.745   0.0809 .  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 23017  on 22308  degrees of freedom
-## Residual deviance: 19824  on 22301  degrees of freedom
-## AIC: 19840
+##     Null deviance: 15138  on 20032  degrees of freedom
+## Residual deviance: 11012  on 20025  degrees of freedom
+## AIC: 11028
 ## 
-## Number of Fisher Scoring iterations: 4</code></pre>
+## Number of Fisher Scoring iterations: 5</code></pre>
 <p>Interestingly, <code>team_members</code>, <code>profiles</code>, <code>days_active</code>, <code>previous_plan</code>, and <code>days_to_trial</code> all have significant effects on the probability that a trial converts, but <code>updates</code> does not!</p>
 <p>The point estimate for <code>updates</code> is even negative! This doesn’t quite seem right, so let’s take a closer look at this feature. I suspect that there is some overfitting going on.</p>
 <pre class="r"><code># plot distribution of updates in training dataset
@@ -520,10 +515,10 @@ ggplot(training, aes(x = updates)) +
   coord_cartesian(xlim = c(0, 400)) +
   scale_y_continuous(breaks = seq(0, 1, 0.2))</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
-<p>Around 97% of users in the training set scheduled 400 or less updates in the first week of the trial. Let’s filter users that scheduled more out of the dataset and revisit them later.</p>
-<pre class="r"><code># remove people that scheduled 400 or more updates from the training dataset
+<p>Around 95% of users in the training set scheduled 200 or less updates in the first week of the trial. Let’s filter users that scheduled more out of the dataset and revisit them later.</p>
+<pre class="r"><code># remove people that scheduled 200 or more updates from the training dataset
 training &lt;- training %&gt;%
-  filter(updates &lt; 400)</code></pre>
+  filter(updates &lt; 200)</code></pre>
 <p>Ok, now let’s refit the general linear model.</p>
 <pre class="r"><code># fit glm
 glm_mod &lt;- glm(converted ~ team_members + updates + profiles + days_active + previous_plan + days_to_trial,
@@ -539,28 +534,28 @@ summary(glm_mod)</code></pre>
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -3.5145  -0.6271  -0.4874  -0.4041   2.2590  
+## -3.9699  -0.3646  -0.3021  -0.2606   2.6465  
 ## 
 ## Coefficients:
 ##                           Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)             -2.084e+00  7.086e-02 -29.414  &lt; 2e-16 ***
-## team_members             6.311e-01  1.752e-02  36.031  &lt; 2e-16 ***
-## updates                  2.101e-03  3.156e-04   6.658 2.78e-11 ***
-## profiles                 6.605e-02  5.550e-03  11.899  &lt; 2e-16 ***
-## days_active              1.747e-01  9.901e-03  17.639  &lt; 2e-16 ***
-## previous_planbusiness    9.081e-02  2.285e-01   0.397    0.691    
-## previous_planindividual -6.288e-01  5.546e-02 -11.337  &lt; 2e-16 ***
-## days_to_trial            7.908e-05  5.187e-05   1.525    0.127    
+## (Intercept)             -2.435e+00  9.589e-02 -25.389  &lt; 2e-16 ***
+## team_members             9.468e-01  2.144e-02  44.166  &lt; 2e-16 ***
+## updates                  2.588e-03  7.052e-04   3.670 0.000243 ***
+## profiles                 9.912e-02  7.429e-03  13.343  &lt; 2e-16 ***
+## days_active              1.025e-01  1.502e-02   6.823 8.91e-12 ***
+## previous_planbusiness   -8.176e-01  3.375e-01  -2.423 0.015400 *  
+## previous_planindividual -1.241e+00  7.273e-02 -17.061  &lt; 2e-16 ***
+## days_to_trial            3.306e-05  7.489e-05   0.442 0.658834    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 22131  on 21621  degrees of freedom
-## Residual deviance: 18949  on 21614  degrees of freedom
-## AIC: 18965
+##     Null deviance: 13668.1  on 18798  degrees of freedom
+## Residual deviance:  9750.5  on 18791  degrees of freedom
+## AIC: 9766.5
 ## 
-## Number of Fisher Scoring iterations: 4</code></pre>
+## Number of Fisher Scoring iterations: 5</code></pre>
 <p>That’s more like it! All features have statistically significant effects. Let’s make predictions on the <code>testing</code> set now. :)</p>
 <pre class="r"><code># make predictions on testing set
 testing$probs &lt;- predict(glm_mod, newdata = testing, type = c(&quot;response&quot;))
@@ -596,12 +591,12 @@ performance(pred, measure = &quot;auc&quot;)</code></pre>
 ## 
 ## Slot &quot;y.values&quot;:
 ## [[1]]
-## [1] 0.7572236
+## [1] 0.8748636
 ## 
 ## 
 ## Slot &quot;alpha.values&quot;:
 ## list()</code></pre>
-<p>Alright, 0.75 isn’t too shabby!</p>
+<p>Alright, 0.86 is pretty dang good!</p>
 </div>
 <div id="using-decision-trees" class="section level3">
 <h3>Using decision trees</h3>
@@ -617,7 +612,7 @@ tree_mod &lt;- rpart(converted ~ team_members + updates + profiles + days_active
 # plot model
 rpart.plot(tree_mod)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
-<p>Ok, so <code>team_members</code> is the moset important feature, by far, to this model. Let’s see how well it does at predicting conversions in the <code>testing</code> set.</p>
+<p>Ok, so this tree model has one node. If a user has 2 or more team members, around 62% convert, compared to only 7% of those with 1 or less. Let’s see how well it does at predicting conversions in the <code>testing</code> set. I suspect not very well.</p>
 <pre class="r"><code># make predictions on testing set
 testing$tree_preds &lt;- predict(tree_mod, newdata = testing)[,2]
 
@@ -647,12 +642,12 @@ performance(pred, measure = &quot;auc&quot;)</code></pre>
 ## 
 ## Slot &quot;y.values&quot;:
 ## [[1]]
-## [1] 0.6483663
+## [1] 0.7269378
 ## 
 ## 
 ## Slot &quot;alpha.values&quot;:
 ## list()</code></pre>
-<p>It’s 0.65, about as good as single variable model, which is what it is essentially!</p>
+<p>It’s 0.69, about as good as single variable model, which is what it is!</p>
 </div>
 <div id="random-forests" class="section level3">
 <h3>Random forests</h3>
@@ -667,6 +662,8 @@ rf_mod &lt;- randomForest(converted ~ team_members + updates + profiles + days_a
 <pre class="r"><code># plot variable importance
 varImpPlot(rf_mod)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>Since the random forest algorithm uses a large number of bootstrap samples, each data point x has a corresponding set of out-of-bag samples: those samples that don’t contain the point x. The out-of-bag samples can be used is a way similar to N-fold cross validation, to estimate the accuracy of each tree in the ensemble.</p>
+<p>To estimate the imporance of a variable, the variable’s values are randomly permuted in the out-of-bag samples, and the corresponding decrease in each tree’s accuracy is estimated. If the average decrease over all the trees is large, then the variable is considered important – its value makes a big difference in predicting the outcome. If the average decrease is small, then the variable doesn’t make much difference to the outcome. The algorithm also measures the decrease in node purity that occurs from splitting on a permuted variable (how this variable affects the quality of the tree).</p>
 <p>Those team members! Let’s make our predictions on the testing set.</p>
 <pre class="r"><code># make predictions based on random forest model
 rf_preds &lt;- predict(rf_mod, newdata = testing, type = &#39;prob&#39;)
@@ -697,12 +694,12 @@ performance(rf_pred, measure = &quot;auc&quot;)</code></pre>
 ## 
 ## Slot &quot;y.values&quot;:
 ## [[1]]
-## [1] 0.7623362
+## [1] 0.8716769
 ## 
 ## 
 ## Slot &quot;alpha.values&quot;:
 ## list()</code></pre>
-<p>Alright, we have 0.76. This is much better than the single-variable models and the decision tree model, but performed about the same as the general linear model! Now that we’ve tried a few different approaches, let’s get back to the original goal of defining an activation metric for Business trialists.</p>
+<p>Alright, we have 0.86. This is much better than the single-variable models and the decision tree model, but performed about the same as the general linear model! Now that we’ve tried a few different approaches, let’s get back to the original goal of defining an activation metric for Business trialists.</p>
 </div>
 <div id="an-activation-metric" class="section level3">
 <h3>An activation metric</h3>
@@ -718,7 +715,7 @@ trials %&gt;%
   geom_bar(stat = &#39;identity&#39;) +
   labs(x = &quot;Number of Team Members&quot;, y = NULL, title = &quot;Conversion Rate by Team Size&quot;)</code></pre>
 <p><img src="/blog/trial-activation_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
-<p>As we can see, the conversion rate increases quite a bit for trialists with the addition of each team member, <em>up to 5</em>. The biggest jump comes from 0 to 1 team member, so we can start by using <strong><em>at least one team member</em></strong> as part of the activation metric.</p>
+<p>As we can see, the conversion rate increases quite a bit for trialists with the addition of each team member, <em>up to 5</em>. The biggest jump comes from 0 to 2 team members, so we can start by using <strong><em>at least one team member</em></strong> as part of the activation metric.</p>
 <p>The number of updates scheduled in the first week was also an important feature, so let’s make the same plot for that. We’ll need to bucket the number of updates to convert the continuous variable into a categorical one.</p>
 <pre class="r"><code># make the cuts to bin the updates data
 cuts &lt;- unique(as.numeric(quantile(trials$updates, probs = seq(0, 1, 0.1), na.rm = T)))
@@ -785,13 +782,13 @@ trials %&gt;%
   mutate(percent = users / sum(users))</code></pre>
 <pre><code>## # A tibble: 4 x 4
 ## # Groups:   activated [2]
-##   activated converted users   percent
-##       &lt;lgl&gt;    &lt;fctr&gt; &lt;int&gt;     &lt;dbl&gt;
-## 1     FALSE        No 21134 0.8285244
-## 2     FALSE       Yes  4374 0.1714756
-## 3      TRUE        No   596 0.3835264
-## 4      TRUE       Yes   958 0.6164736</code></pre>
-<p>Alright. With these criteria, around 8% of trials activated. Around 62% of activated trials converted, compared to only 17% of trials that did not activate.</p>
+##   activated converted users    percent
+##       &lt;lgl&gt;    &lt;fctr&gt; &lt;int&gt;      &lt;dbl&gt;
+## 1     FALSE        No 21022 0.92201754
+## 2     FALSE       Yes  1778 0.07798246
+## 3      TRUE        No   596 0.41131815
+## 4      TRUE       Yes   853 0.58868185</code></pre>
+<p>Alright. With these criteria, around 6% of trials activated. Around 59% of activated trials converted, compared to only 8% of trials that did not activate.</p>
 </div>
 <div id="conclusions" class="section level3">
 <h3>Conclusions</h3>
