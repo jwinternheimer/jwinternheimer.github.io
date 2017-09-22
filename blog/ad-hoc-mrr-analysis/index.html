@@ -5,9 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>An ad-hoc MRR analysis</title>
+  <meta property="og:title" content="An ad-hoc MRR analysis" />
+  <meta name="twitter:title" content="An ad-hoc MRR analysis" />
+  <meta name="description" content="In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
+We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.">
+  <meta property="og:description" content="In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
+We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.">
+  <meta name="twitter:description" content="In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +20,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/" />
+  <meta property="og:url" content="/blog/ad-hoc-mrr-analysis/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/" />
+  <link rel="canonical" href="/blog/ad-hoc-mrr-analysis/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,9 +177,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="post-heading">
+              <h1>An ad-hoc MRR analysis</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on September 22, 2017
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -185,100 +197,108 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the <a href="https://github.com/bufferapp/buffer-analysis/blob/master/deliverables/mrr-breakdown.md">Stripe MRR breakdown script</a>.</p>
+<p>We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.</p>
+<p>We will also run simulations based on historical MRR growth to predict what the MRR growth rate will be given certain conditions.</p>
+<p>We will aggregate MRR growth, and the growth of the components that make up MRR, by <em>week</em>. I chose this because it is a standard unit of time. It will help us compare time windows of the same length, which we cannot do with months. Months also have differing numbers of weekdays in them, which impacts MRR growth.</p>
+<div id="net-mrr-by-mrr-calculation" class="section level3">
+<h3>Net MRR by MRR calculation</h3>
+<p>Let’s start by looking at how <em>Stripe</em> MRR has grown each week this year, as measured by the daily MRR calculation.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The data suggests that 2016 was a bit more volatile than 2017 has been so far. We experimented with trial length and pricing, which caused some volatility. Overall the amount of MRR growth from Stripe each week seems relatively stable. There may be a slight negative trend over the past several weeks however.</p>
+<p>Let’s look at the MRR breakdown data.</p>
+</div>
+<div id="revenue-gained-and-lost" class="section level3">
+<h3>Revenue gained and lost</h3>
+<p>Now we can look at the <em>weekly</em> MRR amounts that were gained and lost in the past 8 months. These amounts were calculated with the <a href="https://github.com/bufferapp/buffer-analysis/blob/master/deliverables/mrr-breakdown.md">new Stripe MRR breakdown script</a>.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>It looks like there may be an issue with the data on the last week of June, let’s remove it. We can stil learn from this data. Let’s add <code>new</code> and <code>upgrade</code> together to get <code>net gained</code>, and <code>churn</code> and <code>downgrade</code> to get <code>net lost</code>.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>We can flip the sign on net lost to get a better comparison.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>We can see in this graph that <code>net_lost</code> has increased over time, but so has <code>net_gained</code>. There is always a gap between the two, but it isn’t easy to tell if the gap is growing, shrinking, or staying about the same. We can find out by looking at the <em>overall</em> net MRR amount, which is equal to new + upgrade - churn - downgrade MRR.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>There is a lot of variance, so we can try to fit a smoother over this data to view longer term trands. Remember that something could be off with the data from the last week of June.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>In the past 8 months, the data suggests that there may have been a slight decrease in MRR gained after the end of April, but it doesn’t seem like the trend continues to decrease after that.</p>
+<p>I suspect that there is a seasonal component that affects this data, but I haven’t yet had time to backfill data through 2016 and 2015, so we may have to wait to confirm that.</p>
+</div>
+<div id="extrapolating-a-bad-scenario" class="section level3">
+<h3>Extrapolating a bad scenario</h3>
+<p>We can go through the exercise of thinking about the worst-case scenario. In the very first graph of this analysis, in which I show the amount that Stripe MRR has changed each week in the past two years, we can fit a straight line through the data.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code># get linear equation
+lm_mod &lt;- lm(change ~ week, data = mrr)
+summary(lm_mod)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = change ~ week, data = mrr)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4976.2 -1414.4  -143.1  1400.1  4513.9 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 25821.006  19275.560   1.340    0.184
+## week           -1.151      1.126  -1.022    0.310
+## 
+## Residual standard error: 1815 on 84 degrees of freedom
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.01228,    Adjusted R-squared:  0.0005187 
+## F-statistic: 1.044 on 1 and 84 DF,  p-value: 0.3098</code></pre>
+<p>The formula for this line is <code>change = beta + (-1.151 * week)</code>, which means that MRR change <em>decreases</em> by 1-2 dollars each week. It would take thousands of weeks for this straight line to hit 0.</p>
+<p>It’s worth noting that the effect of week on MRR change <em>is not significant</em>, meaning that there is <strong>not</strong> a significant negative effect on MRR, according to this linear regression model.</p>
+</div>
+<div id="a-more-realistic-scenario" class="section level3">
+<h3>A more realistic scenario</h3>
+<p>Instead of this approach, we can use the variance in MRR change to simulate how the future could play out in thousands of parrallel universes. We can generate a random MRR growth number that is based on the average MRR growth in the past two years and the variance in that number. We can repeat that proccess thousands of times to give us an idea of how things <em>could</em> play out, and can then take the average to find how things are more likely to turn out.</p>
+<pre class="r"><code># find mean mrr growth
+mean(mrr$change, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 6125.872</code></pre>
+<pre class="r"><code># get the standard deviation
+sd(mrr$change, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 1815.237</code></pre>
+<p>We can now generate random samples from the distribution of MRR change. Here are 10 of such numbers.</p>
+<pre class="r"><code># generate random sample of 10 months of mrr growth.
+rnorm(10, mean = mean(mrr$change, na.rm = T), sd = sd(mrr$change, na.rm = T))</code></pre>
+<pre><code>##  [1] 6002.705 4530.914 8359.278 5086.355 4236.314 9082.638 5751.966
+##  [8] 6003.394 9993.829 6083.648</code></pre>
+<p>Now let’s get a sample of 52, simulating MRR growth for the next year, and repeat this 100 times.</p>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Each line represents a different simulation based on our historical data. This is what would happen if we plotted the <em>average</em> of all 100 simulations for each week.</p>
+<pre class="r"><code>ggplot() +
+  geom_line(aes(x = week, y = samp, color = run), alpha = 0.2, data = runs) +
+  geom_line(aes(x = week, y = mean_samp), data = by_week) +
+  guides(color = FALSE) +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, title = &quot;Weekly MRR Change Simulations&quot;)</code></pre>
+<p><img src="/blog/ad-hoc-mrr-analysis_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>The first plot looked to be trending downwards to me, but the average is linear.</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-                
-                  <h3 class="post-subtitle">
-                  Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 19, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="/post/2015-01-19-soccer/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+          <li class="previous">
+            <a href="/blog/vacation-time/" data-toggle="tooltip" data-placement="top" title="How much vacation does Buffer take?">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/3">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

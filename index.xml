@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Tue, 19 Sep 2017 14:56:22 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 22 Sep 2017 18:07:59 -0400</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>An ad-hoc MRR analysis</title>
+      <link>/blog/ad-hoc-mrr-analysis/</link>
+      <pubDate>Fri, 22 Sep 2017 18:07:59 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/ad-hoc-mrr-analysis/</guid>
+      <description>In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
+We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.</description>
+    </item>
     
     <item>
       <title>How much vacation does Buffer take?</title>
