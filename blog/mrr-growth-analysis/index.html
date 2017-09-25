@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>An ad hoc analysis of MRR</title>
+  <meta property="og:title" content="An ad hoc analysis of MRR" />
+  <meta name="twitter:title" content="An ad hoc analysis of MRR" />
+  <meta name="description" content="In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
+We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.">
+  <meta property="og:description" content="In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
+We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.">
+  <meta name="twitter:description" content="In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/mrr-growth-analysis/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/mrr-growth-analysis/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>An ad hoc analysis of MRR</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on September 25, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the <a href="https://github.com/bufferapp/buffer-analysis/blob/master/deliverables/mrr-breakdown.md">Stripe MRR breakdown script</a>.</p>
+<p>We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.</p>
+<p>We will also run simulations based on historical MRR growth to predict what the MRR growth rate will be given certain conditions.</p>
+<p>We will aggregate MRR growth, and the growth of the components that make up MRR, by <em>week</em>. I chose this because it is a standard unit of time. It will help us compare time windows of the same length, which we cannot do with months. Months also have differing numbers of weekdays in them, which impacts MRR growth.</p>
+<div id="net-mrr-by-mrr-calculation" class="section level3">
+<h3>Net MRR by MRR calculation</h3>
+<p>Let’s start by looking at how <em>Stripe</em> MRR has grown each week this year, as measured by the daily MRR calculation.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The data suggests that 2016 was a bit more volatile than 2017 has been so far. We experimented with trial length and pricing, which caused some volatility. Overall the amount of MRR growth from Stripe each week seems relatively stable. There may be a slight negative trend over the past several weeks however.</p>
+<p>Let’s look at the MRR breakdown data.</p>
+</div>
+<div id="revenue-gained-and-lost" class="section level3">
+<h3>Revenue gained and lost</h3>
+<p>Now we can look at the <em>weekly</em> MRR amounts that were gained and lost since January 2016. These amounts were calculated with the <a href="https://github.com/bufferapp/buffer-analysis/blob/master/deliverables/mrr-breakdown.md">new Stripe MRR breakdown script</a>.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>It looks like there may be an issue with the data on the last week of June, let’s remove it. We can stil learn from this data. Let’s add <code>new</code> and <code>upgrade</code> together to get <code>net gained</code>, and <code>churn</code> and <code>downgrade</code> to get <code>net lost</code>.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>We can flip the sign on net MRR lost to more easily compare the lines.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>We can see in this graph that <code>net_lost</code> has increased over time, but so has <code>net_gained</code>. There is always a gap between the two, but it isn’t easy to tell if the gap is growing, shrinking, or staying about the same.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We can find out by looking at the <em>overall</em> net MRR amount, which is equal to new + upgrade - churn - downgrade MRR.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>At first glance, it does appear that there may be a slight decrease in weekly new MRR in 2017 compared to 2016. There is a lot of variance here, so we can try to fit a smoother over this data to view longer term trands. The big spike and dip in July 2016 was arount the tie we were experimenting with trial lengths.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>In the past 20 months, the data suggests that there may have been a slight decrease in MRR gained in 2017 compared to 2016. This effect appears after the end of April 2017, but it doesn’t seem like the trend continues to decrease after that.</p>
+<p>This is how net MRR would look if we only looked at data from 2017.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>It is worth remembering that net MRR is the combination of new, churn, upgrade, and downgrade MRR.</p>
+</div>
+<div id="extrapolating-a-bad-scenario" class="section level3">
+<h3>Extrapolating a bad scenario</h3>
+<p>We’ve seen that there may have been a slight dip in weekly net mrr in 2017. We can go through the exercise of thinking about the worst-case scenario if the trend continues.</p>
+<p>In the very first graph of this analysis, in which I show the amount that Stripe MRR has changed each week in the past two years, we can fit a straight line through the data by fitting a linear regression model.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>We can see that this line has a negative slope, which isn’t ideal. We can extrapolate it into the future and determine how long it might take for this line, which represents the average weekly growth rate, to reach 0.</p>
+<pre class="r"><code># get linear equation
+lm_mod &lt;- lm(change ~ week, data = mrr)
+summary(lm_mod)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = change ~ week, data = mrr)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4981.2 -1400.0   -78.1  1377.4  4510.8 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 26737.721  18410.135   1.452    0.150
+## week           -1.204      1.076  -1.119    0.266
+## 
+## Residual standard error: 1795 on 86 degrees of freedom
+## Multiple R-squared:  0.01435,    Adjusted R-squared:  0.002885 
+## F-statistic: 1.252 on 1 and 86 DF,  p-value: 0.2663</code></pre>
+<p>The formula for this line is <code>change = beta + (-1.204 * week)</code>, which means that, on average, MRR change <em>decreases</em> by 1-2 dollars each week. At this rate it would take over one thousand weeks for this line to reach 0.</p>
+<p>It’s worth noting that the effect of week on MRR change <em>is not significant</em>, meaning that there is <strong>not</strong> a significant negative effect on MRR, according to this linear regression model. There is a very weak correlation between time and MRR change in this model.</p>
+</div>
+<div id="simulating-possible-outcomes" class="section level3">
+<h3>Simulating possible outcomes</h3>
+<p>Instead of this approach, we can use the variance in MRR change to simulate how the future could play out in thousands of parrallel universes. We can generate a random MRR growth number that is based on the average MRR growth in the past two years and the variance in that number. We can repeat that proccess hundredds of times to give us an idea of how things <em>could</em> play out under current conditions.</p>
+<p>Let’s calculate the average amount that MRR grows weekly over the pats couple of years.</p>
+<pre class="r"><code># find mean mrr growth
+mean(mrr$change, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 6141.64</code></pre>
+<p>We can also calculate the standard deviation.</p>
+<pre class="r"><code># get the standard deviation
+sd(mrr$change, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 1797.431</code></pre>
+<p>We can now generate random samples from the distribution of MRR change. The assumes that weekly MRR change is normally distributed around 6141 with a standard deviation of 1797. Here are 10 of such numbers.</p>
+<pre class="r"><code># generate random sample of 10 months of mrr growth.
+rnorm(10, mean = mean(mrr$change, na.rm = T), sd = sd(mrr$change, na.rm = T))</code></pre>
+<pre><code>##  [1] 4437.113 6228.439 3469.006 7062.566 7132.605 5871.061 2804.827
+##  [8] 6594.012 5926.321 5029.579</code></pre>
+<p>Now let’s get a sample of 52, simulating MRR growth for the next year, and repeat this 100 times.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Each line represents a different simulation based on our historical data. This is what it would look like to plot the <em>average</em> of all 100 simulations for each week.</p>
+<pre class="r"><code>ggplot() +
+  geom_line(aes(x = week, y = samp, color = run), alpha = 0.2, data = runs) +
+  geom_line(aes(x = week, y = mean_samp), data = by_week) +
+  guides(color = FALSE) +
+  theme_minimal() +
+  labs(x = NULL, y = NULL, title = &quot;Weekly MRR Change Simulations&quot;)</code></pre>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>The first plot looked to be trending downwards to me, but the average is linear.</p>
+</div>
+<div id="monthly-growth-rate" class="section level3">
+<h3>Monthly growth rate</h3>
+<p>I understand that the monthly growth rate is the metric that is given the most attention, so we can look at how that has changed over time as well. It might just be good to remember that a month is not quite a standard unit of time, because months have different numbers of days (and weekdays) in them. :)</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>These graphs shows a very linear relationship between month and MRR, with little variation. We can fit a linear regression model to get the equation for this line.</p>
+<pre class="r"><code># get linear equation
+lm_mod &lt;- lm(mrr ~ month, data = monthly)
+summary(lm_mod)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mrr ~ month, data = monthly)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -16416  -7656   -102   6233  34609 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -1.390e+07  1.860e+05  -74.73   &lt;2e-16 ***
+## month        8.705e+02  1.092e+01   79.70   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 11270 on 22 degrees of freedom
+## Multiple R-squared:  0.9965, Adjusted R-squared:  0.9964 
+## F-statistic:  6352 on 1 and 22 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Now we can get predictions for future months.</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>The blue points are the predictions from the linear model. What would the MRR growth rate look like?</p>
+<p><img src="/blog/mrr-growth-analysis_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>We can see that the monthly MRR growth rate would trend downwards, which we’d expect. The predictions assume linear growth, which we have experienced over the long run. There will be some significant variation however, as we can see with the growth rates in red. September 2017, for example, looks set to have a monthly growth rate around 1%, which is much lower than what this model would predict.</p>
+</div>
+<div id="conclusions" class="section level3">
+<h3>Conclusions</h3>
+<p>Overall, MRR growth appears to be steady but may have a slight downwward trend. This trend is not yet significant, and would take years to reach 0% growth. MRR gained through new signups and updates continues to increase, but so does MRR lost through churn and downgrades.</p>
+<p><a href="https://looker.buffer.com/dashboards/332">September 2017</a> looks set to be a month in which we experience lower-than-expected growth, which could slightly alter some of these estimations. I would guess that MRR would revert to the average, linear growth path over the next couple of months, but I can’t say that definitively.</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/ad-hoc-mrr-analysis/" data-toggle="tooltip" data-placement="top" title="An ad hoc analysis of MRR">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+
