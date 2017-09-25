@@ -23,16 +23,6 @@ We will try to determine if there are any long term trends in the MRR we gain an
     </item>
     
     <item>
-      <title>An ad hoc analysis of MRR</title>
-      <link>/blog/ad-hoc-mrr-analysis/</link>
-      <pubDate>Mon, 25 Sep 2017 10:45:16 -0400</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/ad-hoc-mrr-analysis/</guid>
-      <description>In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
-We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.</description>
-    </item>
-    
-    <item>
       <title>How much vacation does Buffer take?</title>
       <link>/blog/vacation-time/</link>
       <pubDate>Tue, 19 Sep 2017 14:56:22 -0400</pubDate>
@@ -241,16 +231,6 @@ Sharing an update immediately doesn’t add a post to the queue, which could pos
       <guid>/blog/profile_analysis/</guid>
       <description>Introduction There is a big focus on simplifying the product for Buffer users on free plans in 2017 in order to create a more intuitive experience and encourage more upgrades.
 The purpose of this analysis is to get a better understanding of how users currently interact with the free plan, in order to better inform decisions around future plan limits. Specifically, we would love to learn about how many profiles users connect and actually schedule updates for.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/blog/ad-hoc-mrr-analysis/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/ad-hoc-mrr-analysis/</guid>
-      <description>Analysis of MRR Growth In this analysis we will look at how MRR has grown in 2017. We will look at the overall growth of MRR as measured by our daily MRR calculation, and we will look at the MRR components (new, churn, etc.) as measured by the Stripe MRR breakdown script.
-We will try to determine if there are any long term trends in the MRR we gain and lose each week to determine if net mrr, defined as MRR gained less MRR lost in any given time period, is trending towards 0.</description>
     </item>
     
   </channel>
