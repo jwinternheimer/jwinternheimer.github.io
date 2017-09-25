@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 25 Sep 2017 10:50:58 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 25 Sep 2017 12:06:30 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How has MRR grown over time?</title>
+      <link>/blog/mrr-changepoints/</link>
+      <pubDate>Mon, 25 Sep 2017 12:06:30 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/mrr-changepoints/</guid>
+      <description>In recent times we’ve seen MRR growth that is roughly linear. This wasn’t always the case - Buffer has had periods of higher growth and periods of low growth. We weren’t always growing MRR by 25-30K each month.
+In this analysis we’ll try to identify points of inflection at which growth in MRR changed significantly. We’ll use methods in the changepoint package to identify points at which there is a shift in the amount of MRR growth.</description>
+    </item>
     
     <item>
       <title>An ad hoc analysis of MRR</title>

@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/mrr-changepoints/</loc>
+    <lastmod>2017-09-25T12:06:30-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/mrr-growth-analysis/</loc>
     <lastmod>2017-09-25T10:50:58-04:00</lastmod>
   </url>
@@ -184,7 +189,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2017-09-25T10:50:58-04:00</lastmod>
+    <lastmod>2017-09-25T12:06:30-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -201,7 +206,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2017-09-25T10:50:58-04:00</lastmod>
+    <lastmod>2017-09-25T12:06:30-04:00</lastmod>
     <priority>0</priority>
   </url>
   
