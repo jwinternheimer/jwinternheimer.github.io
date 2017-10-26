@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/bufferchat/</loc>
+    <lastmod>2017-10-26T16:27:54-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/mrr-changepoints/</loc>
     <lastmod>2017-09-25T12:06:30-04:00</lastmod>
   </url>
@@ -189,7 +194,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2017-09-25T12:06:30-04:00</lastmod>
+    <lastmod>2017-10-26T16:27:54-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -206,7 +211,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2017-09-25T12:06:30-04:00</lastmod>
+    <lastmod>2017-10-26T16:27:54-04:00</lastmod>
     <priority>0</priority>
   </url>
   

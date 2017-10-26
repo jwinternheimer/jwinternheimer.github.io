@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 25 Sep 2017 12:06:30 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 26 Oct 2017 16:27:54 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>An analysis of #bufferchat tweets</title>
+      <link>/blog/bufferchat/</link>
+      <pubDate>Thu, 26 Oct 2017 16:27:54 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/bufferchat/</guid>
+      <description>Every week Buffer hosts an hour long discussion on twitter called Bufferchat, in which participants talk about social media, productivity, and occasionally self-care. The topics change from week to week, and there is often a guest host that moderates.
+ People join the chat from around the world. Many industries and company types are represented. This week, I thought it would be fun to collect the tweets and do some basic analysis on them.</description>
+    </item>
     
     <item>
       <title>How has MRR grown over time?</title>
