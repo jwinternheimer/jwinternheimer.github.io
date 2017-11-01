@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Effect of landing page and upgrade modal intervention on Awesome MRR</title>
+  <meta property="og:title" content="Effect of landing page and upgrade modal intervention on Awesome MRR" />
+  <meta name="twitter:title" content="Effect of landing page and upgrade modal intervention on Awesome MRR" />
+  <meta name="description" content="TL;DR  Changes to the app and landing pages have led to a large (30%) and significant increase in Awesome trial starts.
+ The changes have not yet made any detectable effect on Awesome MRR, which still stagnates.
+ Awesome trialists still need time to convert and finish trials.
+   Background In September, Buffer experienced a period of relatively low MRR growth. This was especially impactful for the Awesome plans, which saw a sharp and distinct decrease in growth.">
+  <meta property="og:description" content="TL;DR  Changes to the app and landing pages have led to a large (30%) and significant increase in Awesome trial starts.
+ The changes have not yet made any detectable effect on Awesome MRR, which still stagnates.
+ Awesome trialists still need time to convert and finish trials.
+   Background In September, Buffer experienced a period of relatively low MRR growth. This was especially impactful for the Awesome plans, which saw a sharp and distinct decrease in growth.">
+  <meta name="twitter:description" content="TL;DR  Changes to the app and landing pages have led to a large (30%) and significant increase in Awesome trial starts.
+ The changes have not yet made any detectable effect on Awesome MRR, which still …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/awesome-causal-impact/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/awesome-causal-impact/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Effect of landing page and upgrade modal intervention on Awesome MRR</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on November 1, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <div id="tldr" class="section level3">
+<h3>TL;DR</h3>
+<ul>
+<li><p>Changes to the app and landing pages have led to a large (30%) and significant increase in Awesome trial starts.</p></li>
+<li><p>The changes have not yet made any detectable effect on Awesome MRR, which still stagnates.</p></li>
+<li><p>Awesome trialists still need time to convert and finish trials.</p></li>
+</ul>
+</div>
+<div id="background" class="section level3">
+<h3>Background</h3>
+<p>In September, Buffer experienced a period of relatively low <a href="https://github.com/bufferapp/buffer-analysis/blob/master/deliverables/september_mrr_analysis.md">MRR growth</a>. This was especially impactful for the Awesome plans, which saw a sharp and distinct decrease in growth.</p>
+<p>There were several factors that could have contributed to this change: landing page changes, product changes, churn, and bugs all conspired to create a batch effect that slowed growth for Awesome subscriptions. After a lot of analysis and many conversations, we <a href="https://paper.dropbox.com/doc/Meeting-notes-Awesome-trial-decline-Landing-page-changes-cR1SIYptglsspqVOnN0He">took action</a> on October 11 by <a href="https://buffer.slack.com/archives/C14F676AZ/p1507709680000379?thread_ts=1507624638.000063&amp;cid=C14F676AZ">fixing a bug</a> that prevented the Awesome upgrade modal from appearing and on October 13 by reverting some changes made to the landing page.</p>
+<p>It has now been a couple of weeks, so we can try to measure the impact that these changes have made so far on Awesome trials and Awesome MRR. In order to estimate the effects, we’ll use an R package written by Google engineers for causal inference called <code>CausalImpact</code>. A controlled experiment is the gold standard for estimating effect sizes, but we don’t have that here – we effectively put everyone in the experiment group. Sometimes that is necessary! There are still ways to estimate effect sizes however.</p>
+<p>The idea is this: given a response time series (e.g. trials, revenue) and a set of control time series (e.g. clicks in non-affected markets or clicks on other sites), the package constructs a Bayesian structural time-series model. This model is then used to try and predict the counterfactual, i.e. how the response metric would have evolved after the intervention if the intervention had never occurred.</p>
+<p>The model assumes that the time series of the treated unit can be explained in terms of a set of covariates which were themselves not affected by the intervention whose causal effect we are interested in. We’ll use time and business trials as the covariates.</p>
+<p>Let’s give it a shot!</p>
+</div>
+<div id="awesome-trials" class="section level3">
+<h3>Awesome trials</h3>
+<p>Before we look at MRR, let’s look at the number of Awesome trials started. I believe these are more directly under our control - we have a greater influence on the number of trial starts than we do over the number of people that subscribe or churn.</p>
+<p>We’ll use the data in <a href="https://looker.buffer.com/looks/4171">this Look</a> and import it using the <code>buffer</code> package.</p>
+<pre class="r"><code># import data from Looker
+trials &lt;- get_look(4171)</code></pre>
+<p>Let’s do a bit of cleanup now.</p>
+<pre class="r"><code># rename columns
+colnames(trials) &lt;- c(&#39;start_date&#39;, &#39;awesome_trials&#39;, &#39;business_trials&#39;)
+
+# set dates as date type
+trials$start_date &lt;- as.Date(trials$start_date, format = &#39;%Y-%m-%d&#39;)</code></pre>
+<p>Great, let’s plot these values out.</p>
+<p><img src="/blog/awesome-causal-impact_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Cool, we might be able to detect a nice increase in awesome trial starts here. Let’s try to estimate the impact that the change we made on October 13 had on trial starts by building the counterfactual. Remember, we’ll use the number of business trials started as a predictor of the number of awesome trials started.</p>
+<pre class="r"><code># load zoo package
+library(zoo)
+
+# create time series object
+trials_ts &lt;- zoo(dplyr::select(trials, awesome_trials:business_trials), trials$start_date)
+
+# specify the pre and post periods
+pre.period &lt;- as.Date(c(&quot;2017-07-04&quot;, &quot;2017-10-10&quot;))
+post.period &lt;- as.Date(c(&quot;2017-10-11&quot;, &quot;2017-10-31&quot;))</code></pre>
+<p>To perform inference, we run the analysis using the <code>CausalImpact</code> command.</p>
+<pre class="r"><code># run analysis
+impact &lt;- CausalImpact(trials_ts, pre.period, post.period, model.args = list(niter = 5000, nseasons = 7))</code></pre>
+<p>Let’s plot the outcome.</p>
+<pre class="r"><code># plot results
+plot(impact)</code></pre>
+<p><img src="/blog/awesome-causal-impact_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Wow, the results are something! The top panel in the graph shows the counterfactual as a dotted line and blue confidence interval – this is the estimate of what trials would have been <em>without an intervention</em>. The solid black line shows the number of Awesome trials that actually were started.</p>
+<p>The middle panel shows the point estimate of the effect of the intervention on each day. We can see that the point estimate of the effect is around 25-100 extra trials <em>each day</em>.</p>
+<p>The bottom panel visualizes the cumulative effect that the intervention had on Awesome trial starts. As of October 31, the cumulative effect is around 1000 extra trial starts. Wow!</p>
+<p>How can we determine if this effect is statistically significant? That is the core question, since we don’t have a controlled experiment here.</p>
+<pre class="r"><code># get summary
+summary(impact)</code></pre>
+<pre><code>## Posterior inference {CausalImpact}
+## 
+##                          Average      Cumulative  
+## Actual                   215          4525        
+## Prediction (s.d.)        166 (4.7)    3491 (99.4) 
+## 95% CI                   [157, 175]   [3299, 3685]
+##                                                   
+## Absolute effect (s.d.)   49 (4.7)     1034 (99.4) 
+## 95% CI                   [40, 58]     [840, 1226] 
+##                                                   
+## Relative effect (s.d.)   30% (2.8%)   30% (2.8%)  
+## 95% CI                   [24%, 35%]   [24%, 35%]  
+## 
+## Posterior tail-area probability p:   2e-04
+## Posterior prob. of a causal effect:  99.97998%
+## 
+## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
+<p>This summary tells us that we’ve seen an average of 215 awesome trials since the action was taken. The predicted average, based on previous months worth of data, would have been 166. The relative effect was a 30% increase in awesome trial starts – the 95% confidence interval for this effect size is [24%, 35%]. That’s a big effect.</p>
+<p>The probability of a true causal effect is very high (99.98%), which makes sense given what we saw in the graphs. Nice!</p>
+</div>
+<div id="awesome-mrr" class="section level3">
+<h3>Awesome MRR</h3>
+<p>I have a hunch that this effect will be harder to detect, if it does exist. We’ll use the same approach as we did with trials, excepct this time we’ll look at Awesome MRR in <a href="https://looker.buffer.com/looks/4173">this look</a>.</p>
+<pre class="r"><code># collect data
+mrr &lt;- get_look(4173)
+
+# remove first row
+mrr &lt;- mrr[-1, ]
+
+# rename columns
+colnames(mrr) &lt;- c(&#39;date&#39;, &#39;awesome_mrr&#39;, &#39;business_mrr&#39;)
+
+# set numeric values
+mrr$awesome_mrr &lt;- as.numeric(as.character(mrr$awesome_mrr))
+mrr$business_mrr &lt;- as.numeric(as.character(mrr$business_mrr))
+
+# set as date
+mrr$date &lt;- as.Date(mrr$date, format = &#39;%Y-%m-%d&#39;)</code></pre>
+<p>Let’s plot the values.</p>
+<p><img src="/blog/awesome-causal-impact_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Now let’s try to see if we’ve been able to make any impact on Awesome MRR.</p>
+<pre class="r"><code># create time series object
+mrr_ts &lt;- zoo(dplyr::select(mrr, awesome_mrr), mrr$date)
+
+# specify the pre and post periods
+pre.period &lt;- as.Date(c(&quot;2017-07-05&quot;, &quot;2017-10-10&quot;))
+post.period &lt;- as.Date(c(&quot;2017-10-11&quot;, &quot;2017-10-31&quot;))
+
+# run analysis
+mrr_impact &lt;- CausalImpact(mrr_ts, pre.period, post.period, model.args = list(niter = 5000, nseasons = 7))
+
+# plot impact
+plot(mrr_impact)</code></pre>
+<p><img src="/blog/awesome-causal-impact_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>This is an interesting one. Please ignore the <code>cumulative</code> panel, as it is not relevant to us here (MRR is already an aggregation and we don’t sum it every day).</p>
+<p>The <code>original</code> panel shows the counterfactual, as well as the confidence bands, as the dotted line and blue ribbon. The solid black line is the actual MRR amounts we’ve seen. We can see here that the observed values (the solid black line) are within the bounds of the confidence interval.</p>
+<p>The <code>pointwise</code> panel indicates the point estimate of the effect, which ,at its maximum value, was less than $1000. There doesn’t appear to have been any significant effect on MRR yet.</p>
+<pre class="r"><code># summarise model
+summary(mrr_impact)</code></pre>
+<pre><code>## Posterior inference {CausalImpact}
+## 
+##                          Average              Cumulative        
+## Actual                   5.8e+05              1.2e+07           
+## Prediction (s.d.)        5.8e+05 (609)        1.2e+07 (12779)   
+## 95% CI                   [5.8e+05, 5.8e+05]   [1.2e+07, 1.2e+07]
+##                                                                 
+## Absolute effect (s.d.)   14 (609)             296 (12779)       
+## 95% CI                   [-1170, 1185]        [-24572, 24876]   
+##                                                                 
+## Relative effect (s.d.)   0.0024% (0.1%)       0.0024% (0.1%)    
+## 95% CI                   [-0.2%, 0.2%]        [-0.2%, 0.2%]     
+## 
+## Posterior tail-area probability p:   0.49798
+## Posterior prob. of a causal effect:  50%
+## 
+## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
+<p>The summary confirms that we have not yet seen any significant effect on Awesome MRR.</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/awesome-price-experiment/" data-toggle="tooltip" data-placement="top" title="Analysis of 2016 Awesome Pricing Experiment">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+
