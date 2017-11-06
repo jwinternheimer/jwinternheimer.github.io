@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Wed, 01 Nov 2017 11:38:42 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 06 Nov 2017 10:14:27 -0500</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Another case for annual subscriptions</title>
+      <link>/blog/annual-ltv/</link>
+      <pubDate>Mon, 06 Nov 2017 10:14:27 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/annual-ltv/</guid>
+      <description>It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.</description>
+    </item>
     
     <item>
       <title>Effect of landing page and upgrade modal intervention on Awesome MRR</title>
@@ -273,6 +282,16 @@ Sharing an update immediately doesn’t add a post to the queue, which could pos
       <guid>/blog/profile_analysis/</guid>
       <description>Introduction There is a big focus on simplifying the product for Buffer users on free plans in 2017 in order to create a more intuitive experience and encourage more upgrades.
 The purpose of this analysis is to get a better understanding of how users currently interact with the free plan, in order to better inform decisions around future plan limits. Specifically, we would love to learn about how many profiles users connect and actually schedule updates for.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/blog/business-pricing-and-upgrades/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/business-pricing-and-upgrades/</guid>
+      <description>On March 11, 2016, we doubled the price of all of our Business plans. We measured the effect that this change had on MRR and new MRR, but don’t have the best understanding of the effect that it had on upgrades from Awesome plans.
+My hypothesis is that the percentage of Awesome customers that eventually upgraded to a Business subscription decreased significantly, but we don’t yet know if that is true.</description>
     </item>
     
   </channel>

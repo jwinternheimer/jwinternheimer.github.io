@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Another case for annual subscriptions</title>
+  <meta property="og:title" content="Another case for annual subscriptions" />
+  <meta name="twitter:title" content="Another case for annual subscriptions" />
+  <meta name="description" content="It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.">
+  <meta property="og:description" content="It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.">
+  <meta name="twitter:description" content="It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/annual-ltv/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/annual-ltv/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Another case for annual subscriptions</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on November 6, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed <em>annually</em>. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.</p>
+<div class="figure">
+<img src="http://hi.buffer.com/3U3Z2f2s0G1R/Screen%20Shot%202017-11-06%20at%2010.20.17%20AM.png" />
+
+</div>
+<p>A Hootsuite subscription that is billed monthly actually costs the customer $29 per month (<a href="https://iag.me/socialmedia/the-hidden-pricing-of-social-media-tools-revealed/">source</a>). This means that, for a customer that uses Hootsuite’s Professional plan for one year, paying for an annual subscription up front would give the customer a 34% discount over the course of the year. In comparison, Buffer offers a 15% discount.I suspect that Hootsuite understands the added value that annual subscriptions provide, and price their plans accordingly.</p>
+<p>In this analysis I will outline the effects that the plan interval has on churn, average revenue per customer, and lifetime value. This post will finish with a proposal to lower the relative cost of annual subscriptions to make them a more attractive offerring.</p>
+<div id="churn" class="section level3">
+<h3>Churn</h3>
+<p>We can use <a href="https://looker.buffer.com/x/MMA0UrdhKsXYkHVAxt6EWC">this Look</a> to compare customer churn rates of subscriptions that are billed monthly and annually. Simply put, the customer churn rate for a single day is calculated by counting the number of customers that canceled their subscriptions in the previous 28 days, and dividing that by the total number of customers that could have canceled their subscriptions in the previous 28 days.</p>
+<p>We can see clearly in the graph below that subscriptions that are billed annually have much lower churn rates than those that are billed monthly.</p>
+<p><img src="/blog/annual-ltv_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can calculate a rough estimate of the overall churn by taking the weighted average of these two averages. Specifically, the overall churn rate would be the proportion of subscriptions billed monthly multiplied by the monthly subscription churn rate, plus the proportion of subscriptions billed annually multiplied by the annual subscription churn rate.</p>
+<p>As of November 2017, approximately 57% of all active subscriptions are billed monthly (<a href="https://looker.buffer.com/x/pGAlNaxoTsVsiCGoDZx7z1">source</a>. We can use this number to calculate the overall churn rate as a function of the percentage of subscriptions that are billed annually.</p>
+<p><img src="/blog/annual-ltv_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>This graph illustrates the theoretical effect that annual billing could have on the overall churn rate. This is likely the maximum feasible effect, based on the core assumption that an annual customer that would have subscribed to a monthly plan churns at the same rate as customers that had already been subscribed to annual plans. In practice that assumption probably wouldn’t hold, but we would likely still see a negative effect on the overall churn rate.</p>
+<p>If we were able to increase the proportion of all subscriptions that were billed annually from 47% to 60%, we could decrease the overall churn rate by around 1%, which would be equivalent to a 20% relative change. This would have a huge impact on Buffer’s financial health. The chart below illustrates this.</p>
+<p><img src="/blog/annual-ltv_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The plot shows the effect that decreasing the churn rate from 6% to 5% would have on Total MRR over the course of 24 months, <em>given that everything else remained constant</em>. The solid black line represents how MRR would grow given that new MRR is around 7% each month and churned mrr is around 6%. This isn’t too far off of what we actually see. The red dotted line represents the scenario in which new MRR remains at 7%, but churn decreases to 5%.</p>
+<p>After 12 months, total MRR would be around 170K higher, and after 24 months, MRR would be around 360 higher! This would equate to a difference of between 2 and 5 <em>million</em> dollars per year! We could have the next retreat on a private island and pay for a private wifi balloon.</p>
+<p>This is slightly wishful thinking, based on the assumption that new MRR will be somewhere around 7% total MRR each month. At some point saturation takes effect, and there would likely be shocks to the market, but it is still interesting to see what a difference 1% can make over time.</p>
+</div>
+<div id="average-revenue-per-paying-user" class="section level3">
+<h3>Average revenue per paying user</h3>
+<p>Another advantage of annual billing is the fact that a large churn of the customer’s revenue contribution is paid up front, instead of over the course of 12 months. That added cash can be used to further the progress of achieving Buffer’s vision of self-determination. We can use the data from <a href="https://looker.buffer.com/x/uDe1OEBCnCKG11TDPzUPND">this Look</a> to calculate the average revenue per paying user. From now on let’s call this ARPPU.</p>
+<p>Let’s plot the density functions of the ARPPU for customers of monthly subscriptions and annual subscriptions. These are only customers that have been charged successfully since the beginning of 2016.</p>
+<p><img src="/blog/annual-ltv_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The plot has some interesting characteristics. The ladder steps of the yearly customers’ ARPPU are very distinct and dramatic – this occurs because of the large payment amounts that occur each year and the high churn rate at the end of that yearly period.</p>
+<p>We can see that approximately 90% of annual plan customers are worth $100 or more, while only 38% of monthly customers are worth $100 or more. However, at the $102 mark, only around 38% of annual plan customers are worth more, and around 38% of monthly customers are worth more.</p>
+<p>The real difference comes in between the $0 and $102 mark, and in between the $102 and $204 mark. Customers that are billed monthly churn out (roughly) continously over time, while customers billed annually tend to churn in big chunks at once, at the end of their billing periods. At the end of the year, we might have the same percentage of customers left, but it’s the time in between that makes the most difference in ARPPU.</p>
+<p>The median revenue contribution for a customer subscribed to a monthly plan is $70, while the median revenue contribution for a customer subscribed to a yearly plan is $102, the cost of the <code>pro-annual</code> plan. Annual customers’ ARPPU is over 45% higher than that of monthly customers.</p>
+<p>The overall effect that the billing interval has is a large increase in <em>lifetime value</em>.</p>
+</div>
+<div id="lifetime-value" class="section level3">
+<h3>Lifetime value</h3>
+<p>At Buffer, we generally calculate lifetime value (LTV) by dividing ARPU by the monthly churn rate. We can apply this approach to different user segments and calculate the lifetime value of customers that subscribe to monthly and annual plans.</p>
+<p>First, let’s calculate <em>customer lifetime</em>, which is the inverse of the monthly customer churn rate. In other words, how many months is a new customer likely to stay subscribed?</p>
+<p>For subscriptions billed monthly, the monthly churn rate is around 7%. The customer lifetime would be 14 months. For annual subscriptions, the monthly churn rate is around 2.4%. The customer lifetime would be around 40 months.</p>
+<p>To estimate the lifetime value of these customers, we calculate the average <em>monthly</em> revenue contribution and multiply that by the customer lifetime. This is $20.56 for monthly customers and $12.68 for annual customers. Multiplying these amounts by customer lifetime, we get an LTV of <strong>$267 for monthly customers and $507 for annual customers</strong>.</p>
+<p>Based on this basic calculation, the lifetime value of a customer subscribed to an annual plan is around 90% higher than that of a customer subscribed to a monthly plan. The cherry on top is the fact that more of that value is realized up-front as a yearly payment. Given the fact that there is no added cost to supporting an annual customer, this is a good deal. That’s why Hootsuite gives people a 34% “discount”.</p>
+</div>
+<div id="a-proposal" class="section level3">
+<h3>A proposal</h3>
+<p>I hope I’ve convinced you that annual billing is good for Buffer’s finances. There is a lot we can do to promote annual billing - some of which could be considered low hanging fruit. We could display the prices of annual plans, in any form, on the pricing page. We could also default to diplaying the price of annual plans in monthly amounts, as Hootsuite does. I think that we can do this in a way that is less misleading, while informing the customer of discount they would receive (or how much more they would have to pay).</p>
+<p>However, the biggest impact we could have would probably come from some sort of change to our pricing structure. In particular, the cost of annual subscribtions relative to monthly subscriptions could be lowered. Instead of a 15% discount resulting in an end price of $1010 (ouch), we could offer a 20% discount on the yearly small business plan and offer it for $79/mo*, billed annually. Instead of a $102 price point, we could offer the Awesome plan for $8/mo, billed annually.</p>
+<p>By distributing more customers to annual plans, we effectively reduce churn, increase LTV, and increase cash in hand. We would likely see ARPU decrease and the churn rate increase for users on annual subscriptions, but the difference in LTV would still be vast, and more importantly, the overall LTV value for Buffer customers would increase.</p>
+<p>Overall, we have room to give customers a bigger discount, which would result in Buffer making more money. It is a win-win. There is a big opportunity here, and I would love to discuss possible experiments we could run to make a big impact on Buffer’s future.</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/awesome-causal-impact/" data-toggle="tooltip" data-placement="top" title="Effect of landing page and upgrade modal intervention on Awesome MRR">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+

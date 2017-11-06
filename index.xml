@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Wed, 01 Nov 2017 11:38:42 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 06 Nov 2017 10:14:27 -0500</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Another case for annual subscriptions</title>
+      <link>/blog/annual-ltv/</link>
+      <pubDate>Mon, 06 Nov 2017 10:14:27 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/annual-ltv/</guid>
+      <description>It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.</description>
+    </item>
     
     <item>
       <title>Effect of landing page and upgrade modal intervention on Awesome MRR</title>
@@ -452,6 +461,16 @@ Association football, more commonly known as football or soccer,[2] is a sport p
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/post/2015-01-04-first-post/</guid>
       <description>This is my first post, how exciting!</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/blog/business-pricing-and-upgrades/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/business-pricing-and-upgrades/</guid>
+      <description>On March 11, 2016, we doubled the price of all of our Business plans. We measured the effect that this change had on MRR and new MRR, but don’t have the best understanding of the effect that it had on upgrades from Awesome plans.
+My hypothesis is that the percentage of Awesome customers that eventually upgraded to a Business subscription decreased significantly, but we don’t yet know if that is true.</description>
     </item>
     
     <item>

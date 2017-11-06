@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/annual-ltv/</loc>
+    <lastmod>2017-11-06T10:14:27-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/awesome-causal-impact/</loc>
     <lastmod>2017-11-01T11:38:42-04:00</lastmod>
   </url>
@@ -193,6 +198,10 @@
   </url>
   
   <url>
+    <loc>/blog/business-pricing-and-upgrades/</loc>
+  </url>
+  
+  <url>
     <loc>/page/about/</loc>
   </url>
   
@@ -204,7 +213,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2017-11-01T11:38:42-04:00</lastmod>
+    <lastmod>2017-11-06T10:14:27-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -221,7 +230,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2017-11-01T11:38:42-04:00</lastmod>
+    <lastmod>2017-11-06T10:14:27-05:00</lastmod>
     <priority>0</priority>
   </url>
   
