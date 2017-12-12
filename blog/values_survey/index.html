@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>How Buffer lives its values</title>
+  <meta property="og:title" content="How Buffer lives its values" />
+  <meta name="twitter:title" content="How Buffer lives its values" />
+  <meta name="description" content="Buffer is well known for its 10 core values that guide the company forward. Continuously thinking and acting on these values has benefited the company a great deal over the years and has made an important contibution to our financial and emotional health.
+Every year, we ask team members to grade Buffer as an organization on how well it lives up to the values. In the survey, the responder is prompted to choose a value on a five-point scale for each of the ten values, with one corresponding to a value that needs a lot more work and five corresponding to a value that Buffer is strongly living.">
+  <meta property="og:description" content="Buffer is well known for its 10 core values that guide the company forward. Continuously thinking and acting on these values has benefited the company a great deal over the years and has made an important contibution to our financial and emotional health.
+Every year, we ask team members to grade Buffer as an organization on how well it lives up to the values. In the survey, the responder is prompted to choose a value on a five-point scale for each of the ten values, with one corresponding to a value that needs a lot more work and five corresponding to a value that Buffer is strongly living.">
+  <meta name="twitter:description" content="Buffer is well known for its 10 core values that guide the company forward. Continuously thinking and acting on these values has benefited the company a great deal over the years and has made an …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/values_survey/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/values_survey/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="blog-heading">
+              <h1>How Buffer lives its values</h1>
+                
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Buffer is well known for its <a href="https://open.buffer.com/buffer-values/">10 core values</a> that guide the company forward. Continuously thinking and acting on these values has benefited the company a great deal over the years and has made an important contibution to our financial and emotional health.</p>
+<p>Every year, we ask team members to grade Buffer as an organization on how well it lives up to the values. In the survey, the responder is prompted to choose a value on a five-point scale for each of the ten values, with one corresponding to a value that needs a lot more work and five corresponding to a value that Buffer is strongly living. The respondents were also asked if there were any values that should be added to Buffer’s company values and if there were any values that should be removed from Buffer’s current values.</p>
+<p>In this analysis, we’ll summarise the responses for each value and compare 2017’s responses to those of 2016.</p>
+<div id="data-collection" class="section level3">
+<h3>Data collection</h3>
+<p>The responses were stored in two Google Sheet’s which I have downloaded, <code>2017_values_survey.csv</code> and <code>2016_values_survey.csv</code>. Let’s read those into our R session.</p>
+<pre class="r"><code># read csv files
+values17 &lt;- read.csv(&#39;~/Downloads/2017_values_survey.csv&#39;)
+values16 &lt;- read.csv(&#39;~/Downloads/2016_values_survey.csv&#39;)</code></pre>
+<p>Next we’ll do a bit of tidying. We’ll need to select the right columns and clean up the column names.</p>
+<pre class="r"><code># function to capitalize first letter
+capitalize &lt;- function(value_string) {
+  
+   substr(value_string, 1, 1) &lt;- toupper(substr(value_string, 1, 1))
+
+   return(value_string)
+}
+
+# function to clean data
+clean_df &lt;- function(df) {
+  
+  # only select 10 columns
+  df &lt;- df[, 2:11]
+  
+  # clean column names
+  colnames(df) &lt;- c(&#39;choose_positivity&#39;, &#39;default_to_transparency&#39;, 
+                    &#39;focus_on_self_improvement&#39;, &#39;be_no_ego_doer&#39;, 
+                    &#39;listen_first&#39;, &#39;communicate_with_clarity&#39;, &#39;make_time_to_reflect&#39;,
+                    &#39;live_smarter&#39;, &#39;show_gratitude&#39;, &#39;do_the_right_thing&#39;)
+  
+  # create well written value column
+  df &lt;- df %&gt;%
+    gather(value, score, choose_positivity:do_the_right_thing) %&gt;%
+    mutate(good_value = capitalize(gsub(&quot;_&quot;, &quot; &quot;, value)))
+  
+  return(df)
+}
+
+# clean data frames
+values17 &lt;- clean_df(values17)
+values16 &lt;- clean_df(values16)</code></pre>
+<p>Awesome! Now we’re ready to summarise the responses from this year’s survey.</p>
+</div>
+<div id="results" class="section level3">
+<h3>2017 results</h3>
+<p>We can average the scores for each value to summarise the sentiment from the team. Although not every distribution of scores is normally distributed, the sample sizes are relatively large and the scores are constrained to a low number of values (1-5). We could plot the distribution of responses anyway, if anyone is interested in seeing that.</p>
+<p>Without further ado, here are the values ranked by how well Buffer lives up to them.</p>
+<p><img src="/blog/values_survey_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>There are four values with an average score of 4.0 or higher: choose positivity, show gratitude, do the right thing, and be a no ego doer. This is a great accomplishment and reflects well on Buffer as a selfless, optimistic organization.</p>
+<p>Five values had an average score between 3.9 and 3.5: listen first, then listen more, focus on self improvement, default to transparency, communicate with clarity, and live smarter, not harder. These values may be more difficult to live up to in practice in a fully remote and distributed team. It’s good to know that we have room to grow in these areas.</p>
+<p>Finally, “Make time to reflect” has an average score of 3.4. This value is similar in a way to “Live smarter, not harder”, and can be difficult to live by for an ambitious organization with limited resources.</p>
+<p>Let’s compare these scores to the responses from last year’s survey.</p>
+</div>
+<div id="comparing-2017-and-2016" class="section level3">
+<h3>Comparing 2017 and 2016</h3>
+<p>In order to do this effectively, we’ll need to combine the dataframes including the responses from 2016 and 2017.</p>
+<pre class="r"><code># specify years
+values17$year &lt;- 2017
+values16$year &lt;- 2016
+
+# bind data frames
+responses &lt;- values17 %&gt;%
+  bind_rows(values16)</code></pre>
+<p>Now let’s plot the changes in the average scores from 2016 to 2017.</p>
+<p><img src="/blog/values_survey_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>A few things stand out in this plot. First, we can see that there is a slightly narrower range of the scores. The highest (average) score is lower in 2017 than the highest score in 2016, and the lowest score is higher than that of 2016. The global average, the overall average of all scores, decreased slightly from 3.97 in 2016 to 3.92 in 2017.</p>
+<p>Choose positivity, do the right thing, show gratitude, and be a no ego doer were the highest scoring values again. The value “do the right thing” had a significantly lower average score and was “overtaken” by the “show gratitude” value, which had a higher average score in 2017.</p>
+<p>Interestingly, two values had particularly lower average scores in 2017. These are “communicate with clarity” and “default to transparency”. The “focus on self improvement” and “live smarter, not harder” values had significantly higher average scores in 2017 and ended up with similar scores to “communicate with clarity” and “default to transparency”.</p>
+<p>That’s it for now! Let me know if you have any questions or feedback for me. :)</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/clustering-business-customers/" data-toggle="tooltip" data-placement="top" title="Clustering Business Users in R">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+

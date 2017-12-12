@@ -7,18 +7,38 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 06 Nov 2017 10:14:27 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 11 Dec 2017 15:14:20 -0500</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Another case for annual subscriptions</title>
+      <title>How Buffer lives its values</title>
+      <link>/blog/values_survey/</link>
+      <pubDate>Mon, 11 Dec 2017 15:14:20 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/values_survey/</guid>
+      <description>Buffer is well known for its 10 core values that guide the company forward. Continuously thinking and acting on these values has benefited the company a great deal over the years and has made an important contibution to our financial and emotional health.
+Every year, we ask team members to grade Buffer as an organization on how well it lives up to the values. In the survey, the responder is prompted to choose a value on a five-point scale for each of the ten values, with one corresponding to a value that needs a lot more work and five corresponding to a value that Buffer is strongly living.</description>
+    </item>
+    
+    <item>
+      <title>Clustering Business Users in R</title>
+      <link>/blog/clustering-business-customers/</link>
+      <pubDate>Mon, 20 Nov 2017 13:09:25 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/clustering-business-customers/</guid>
+      <description>I often get questions like “How many profiles do Business customers have?” or “How often to Business cusotmers log in?”. These are useful questions to ask when designing and developing a product to fit the needs of a specific user segment, but a singular answer isn’t always sufficient.
+You could answer these questions with a mean or median, but these can be misleading if the metric in question isn’t normally distributed.</description>
+    </item>
+    
+    <item>
+      <title>A case for annual subscriptions</title>
       <link>/blog/annual-ltv/</link>
       <pubDate>Mon, 06 Nov 2017 10:14:27 -0500</pubDate>
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/blog/annual-ltv/</guid>
-      <description>It’s well known that, for a subscription business model, subscriptions that are billed on an annual basis are more valuable than subsciptions billed monthly. That’s why many saas companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.</description>
+      <description>It’s fairly well known that, for a subscription business model, subscriptions that are billed annually are more valuable than subsciptions billed monthly. That’s why many SaaS companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.</description>
     </item>
     
     <item>
