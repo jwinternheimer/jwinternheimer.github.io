@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>An exploration of Awesome profile counts</title>
+  <meta property="og:title" content="An exploration of Awesome profile counts" />
+  <meta name="twitter:title" content="An exploration of Awesome profile counts" />
+  <meta name="description" content="In order to gain a better understanding of how Buffer’s customers use the product within the constraint of the current plan limits, we can explore the data related to users’ active profiles. More specifically, we can use this data to answer the question “How many Awesome users with up to 3 Active profiles connected have 2 or 3 of the same profile types?”
+This is a very specific question. It will help us learn about usage and inform future decisions related to Buffer’s pricing structure.">
+  <meta property="og:description" content="In order to gain a better understanding of how Buffer’s customers use the product within the constraint of the current plan limits, we can explore the data related to users’ active profiles. More specifically, we can use this data to answer the question “How many Awesome users with up to 3 Active profiles connected have 2 or 3 of the same profile types?”
+This is a very specific question. It will help us learn about usage and inform future decisions related to Buffer’s pricing structure.">
+  <meta name="twitter:description" content="In order to gain a better understanding of how Buffer’s customers use the product within the constraint of the current plan limits, we can explore the data related to users’ active profiles. More …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/awesome_profile_counts/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/awesome_profile_counts/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>An exploration of Awesome profile counts</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on December 14, 2017
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>In order to gain a better understanding of how Buffer’s customers use the product within the constraint of the current plan limits, we can explore the data related to users’ <em>active</em> profiles. More specifically, we can use this data to answer the question “How many Awesome users with up to 3 Active profiles connected have 2 or 3 of the same profile types?”</p>
+<p>This is a very specific question. It will help us learn about usage and inform future decisions related to Buffer’s pricing structure. In order to fully answer this question, we can gather all of the profiles associated with Buffer users that are on an Awesome plan.</p>
+<div id="data-collection" class="section level3">
+<h3>Data collection</h3>
+<p>We can use the data in <a href="https://looker.buffer.com/x/NcAnzPT96HaoHTktwilFXI">this Look</a> for our analysis. We read the data into our R session and clean it up a bit.</p>
+<pre class="r"><code># read data
+profiles &lt;- readRDS(&#39;awesome_user_profiles.rds&#39;)
+
+# set column names
+colnames(profiles) &lt;- c(&#39;user_id&#39;, &#39;profile_id&#39;, &#39;service&#39;, &#39;updates&#39;)</code></pre>
+<p>There are approximately 71 thousand users in this dataset and 384 thousand profiles.</p>
+</div>
+<div id="how-many-users-have-three-or-less-active-profiles" class="section level3">
+<h3>How many users have three or less active profiles</h3>
+<p>One of the fields in our dataframe, <code>updates</code>, represents the number of posts that have been scheduled for a specific profile in the past 30 days. If the value in this column is <code>NA</code>, we assume that the profile is inactive. If the value is greater than or equal to one, we consider the profile active.</p>
+<pre class="r"><code># determine if profile is active
+profiles &lt;- profiles %&gt;%
+  mutate(is_active = !is.na(updates))</code></pre>
+<p>Now, let’s count how many Awesome users have 3 or less active profiles.</p>
+<pre class="r"><code># group by user and count active profiles
+by_user &lt;- profiles %&gt;%
+  filter(is_active == TRUE) %&gt;% 
+  group_by(user_id) %&gt;% 
+  summarise(active_profiles = n_distinct(profile_id))
+
+# find number of users with 3 or less active profiles
+n_distinct(filter(by_user, active_profiles &lt;= 3)$user_id)</code></pre>
+<pre><code>## [1] 23168</code></pre>
+<p><strong>Out of the 71,412 Awesome users in our dataset, 23,168 (32%) have 3 or less active profiles!</strong></p>
+</div>
+<div id="how-many-of-these-users-have-two-or-more-profiles-from-the-same-social-network" class="section level3">
+<h3>How many of these users have two or more profiles from the same social network?</h3>
+<p>In order to answer this question, we’ll need to do some grouping. First, let’s join the grouped users data with the profiles data, and only include users that have three or less active profiles.</p>
+<pre class="r"><code># join users with profiles
+active_user_profiles &lt;- profiles %&gt;% 
+  inner_join(by_user, by = &#39;user_id&#39;) %&gt;% 
+  filter(active_profiles &lt;= 3)</code></pre>
+<p>Now, of these users, how many have two or more profiles from the same social network?</p>
+<pre class="r"><code># now look at how many have two or three profiles of the same type
+users_with_multiple_profiles &lt;- active_user_profiles %&gt;% 
+  group_by(user_id, service) %&gt;% 
+  summarise(profiles = n_distinct(profile_id)) %&gt;% 
+  filter(profiles &gt; 1)
+
+# group by service and count users
+users_with_multiple_profiles %&gt;%
+  group_by(service) %&gt;% 
+  summarise(users = n_distinct(user_id)) %&gt;%
+  arrange(desc(users))</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##     service users
+##      &lt;fctr&gt; &lt;int&gt;
+## 1  facebook  4150
+## 2   twitter  2058
+## 3 instagram   721
+## 4  linkedin   564
+## 5    google   119
+## 6 pinterest    70</code></pre>
+<p>We can see that Facebook, Twitter, and Instagram are the most popular social networks for users that have two or more active profiles of the same type. <strong>In total, 7682 (10.7%) users fit this criteria.</strong></p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/values_survey/" data-toggle="tooltip" data-placement="top" title="How Buffer lives its values">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2017
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+

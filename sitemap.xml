@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/awesome_profile_counts/</loc>
+    <lastmod>2017-12-14T13:29:40-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/values_survey/</loc>
     <lastmod>2017-12-11T15:14:20-05:00</lastmod>
   </url>
@@ -223,7 +228,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2017-12-11T15:14:20-05:00</lastmod>
+    <lastmod>2017-12-14T13:29:40-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -240,7 +245,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2017-12-11T15:14:20-05:00</lastmod>
+    <lastmod>2017-12-14T13:29:40-05:00</lastmod>
     <priority>0</priority>
   </url>
   

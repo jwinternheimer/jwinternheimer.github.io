@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 11 Dec 2017 15:14:20 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 14 Dec 2017 13:29:40 -0500</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>An exploration of Awesome profile counts</title>
+      <link>/blog/awesome_profile_counts/</link>
+      <pubDate>Thu, 14 Dec 2017 13:29:40 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/awesome_profile_counts/</guid>
+      <description>In order to gain a better understanding of how Buffer’s customers use the product within the constraint of the current plan limits, we can explore the data related to users’ active profiles. More specifically, we can use this data to answer the question “How many Awesome users with up to 3 Active profiles connected have 2 or 3 of the same profile types?”
+This is a very specific question. It will help us learn about usage and inform future decisions related to Buffer’s pricing structure.</description>
+    </item>
     
     <item>
       <title>How Buffer lives its values</title>
