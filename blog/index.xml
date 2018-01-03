@@ -7,10 +7,33 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Thu, 14 Dec 2017 13:29:40 -0500</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jan 2018 11:38:42 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Effect of landing page and upgrade modal intervention on Awesome MRR</title>
+      <link>/blog/awesome-causal-impact/</link>
+      <pubDate>Wed, 03 Jan 2018 11:38:42 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/awesome-causal-impact/</guid>
+      <description>TL;DR  Changes to the app and landing pages have led to a large (30%) and significant increase in Awesome trial starts.
+ The changes have not yet made any detectable effect on Awesome MRR, which still stagnates.
+ Awesome trialists still need time to convert and finish trials.
+   Background Back in September, Buffer experienced a period of relatively low MRR growth. This was especially impactful for the Awesome plans, which saw a sharp and distinct decrease in growth.</description>
+    </item>
+    
+    <item>
+      <title>The State of Social Media</title>
+      <link>/blog/remote-work-survey/</link>
+      <pubDate>Tue, 19 Dec 2017 09:57:02 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/remote-work-survey/</guid>
+      <description>Towards the end of 2017, Buffer sent out a survey to gauge the state of social media going into 2018. We had over 1700 responses, which we downloaded as a csv file and stored as an R data object. The questions and responses can be viewed here.
+The survey consisted of 30 questions about how users use social media.
+# get response data responses &amp;lt;- readRDS(&amp;#39;state-of-social.rds&amp;#39;) The data is quite messy and untidy.</description>
+    </item>
     
     <item>
       <title>An exploration of Awesome profile counts</title>
@@ -49,18 +72,6 @@ You could answer these questions with a mean or median, but these can be mislead
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/blog/annual-ltv/</guid>
       <description>It’s fairly well known that, for a subscription business model, subscriptions that are billed annually are more valuable than subsciptions billed monthly. That’s why many SaaS companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.</description>
-    </item>
-    
-    <item>
-      <title>Effect of landing page and upgrade modal intervention on Awesome MRR</title>
-      <link>/blog/awesome-causal-impact/</link>
-      <pubDate>Wed, 01 Nov 2017 11:38:42 -0400</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/awesome-causal-impact/</guid>
-      <description>TL;DR  Changes to the app and landing pages have led to a large (30%) and significant increase in Awesome trial starts.
- The changes have not yet made any detectable effect on Awesome MRR, which still stagnates.
- Awesome trialists still need time to convert and finish trials.
-   Background In September, Buffer experienced a period of relatively low MRR growth. This was especially impactful for the Awesome plans, which saw a sharp and distinct decrease in growth.</description>
     </item>
     
     <item>

@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/awesome-causal-impact/</loc>
+    <lastmod>2018-01-03T11:38:42-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/remote-work-survey/</loc>
+    <lastmod>2017-12-19T09:57:02-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/awesome_profile_counts/</loc>
     <lastmod>2017-12-14T13:29:40-05:00</lastmod>
   </url>
@@ -20,11 +30,6 @@
   <url>
     <loc>/blog/annual-ltv/</loc>
     <lastmod>2017-11-06T10:14:27-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/awesome-causal-impact/</loc>
-    <lastmod>2017-11-01T11:38:42-04:00</lastmod>
   </url>
   
   <url>
@@ -228,7 +233,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2017-12-14T13:29:40-05:00</lastmod>
+    <lastmod>2018-01-03T11:38:42-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -245,7 +250,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2017-12-14T13:29:40-05:00</lastmod>
+    <lastmod>2018-01-03T11:38:42-04:00</lastmod>
     <priority>0</priority>
   </url>
   
