@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Churn Prediction with Deep Learning</title>
+  <meta property="og:title" content="Churn Prediction with Deep Learning" />
+  <meta name="twitter:title" content="Churn Prediction with Deep Learning" />
+  <meta name="description" content="In this analysis we’ll try to predict customer churn with an atrificial neural network (ANN). We’ll use Keras and R to build the model. Our analysis will mirror the approach laid out in this great blog post.
+First let’s load the libraries we’ll need.
+# load libraries library(keras) library(lime) library(tidyquant) library(rsample) library(recipes) library(yardstick) library(forcats) library(corrr) library(buffer) library(hrbrthemes) The features used in our models can be found in this Look. The look contains all Stripe subscriptions that were active 32 days ago.">
+  <meta property="og:description" content="In this analysis we’ll try to predict customer churn with an atrificial neural network (ANN). We’ll use Keras and R to build the model. Our analysis will mirror the approach laid out in this great blog post.
+First let’s load the libraries we’ll need.
+# load libraries library(keras) library(lime) library(tidyquant) library(rsample) library(recipes) library(yardstick) library(forcats) library(corrr) library(buffer) library(hrbrthemes) The features used in our models can be found in this Look. The look contains all Stripe subscriptions that were active 32 days ago.">
+  <meta name="twitter:description" content="In this analysis we’ll try to predict customer churn with an atrificial neural network (ANN). We’ll use Keras and R to build the model. Our analysis will mirror the approach laid out in this great …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/churn_prediction_keras/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/churn_prediction_keras/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Churn Prediction with Deep Learning</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on January 22, 2018
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>In this analysis we’ll try to predict customer churn with an atrificial neural network (ANN). We’ll use Keras and R to build the model. Our analysis will mirror the approach laid out in <a href="https://tensorflow.rstudio.com/blog/keras-customer-churn.html">this great blog post</a>.</p>
+<p>First let’s load the libraries we’ll need.</p>
+<pre class="r"><code># load libraries
+library(keras)
+library(lime)
+library(tidyquant)
+library(rsample)
+library(recipes)
+library(yardstick)
+library(forcats)
+library(corrr)
+library(buffer)
+library(hrbrthemes)</code></pre>
+<p>The features used in our models can be found in <a href="https://looker.buffer.com/looks/4308">this Look</a>. The look contains all Stripe subscriptions that were active <em>32 days ago</em>. With this condition, subscriptions that have churned in the past month have been included.</p>
+<p>For each subscription, the dataset includes the subscription’s billing interval, the number of months that the user has been with Buffer, the number of successful, failed, and refunded charges, the number of profiles and team members the user had, as well as the number of updates scheduled to the users’ profiles in the past 28 days.</p>
+<p>We’ll use the <code>buffer</code> package to read the data from Looker into our R session.</p>
+<pre class="r"><code># get data from look
+subs &lt;- get_look(4308)</code></pre>
+<p>Now we need to clean the data up a bit before we start the preprocessing. The code below renames the column names, sets date columns as date types, and replaces all NA values in the <code>team_members</code> column with 0.</p>
+<pre class="r"><code># change column names
+colnames(subs) &lt;- c(&#39;sub_id&#39;, &#39;user_id&#39;, &#39;plan_id&#39;, &#39;simple_plan_id&#39;, &#39;interval&#39;, &#39;created_date&#39;, &#39;canceled_date&#39;,
+                    &#39;status&#39;, &#39;seats&#39;, &#39;successful_charges&#39;, &#39;failed_charges&#39;, &#39;refunded_charges&#39;, &#39;plan_amount&#39;,
+                    &#39;profiles&#39;, &#39;updates&#39;, &#39;months_since_signup&#39;, &#39;team_members&#39;)
+
+# set dates as date objects
+subs$created_date &lt;- as.Date(subs$created_date, format = &#39;%Y-%m-%d&#39;)
+subs$canceled_date &lt;- as.Date(subs$canceled_date, format = &#39;%Y-%m-%d&#39;)
+
+# replace NAs with 0s
+subs$team_members[is.na(subs$team_members)] &lt;- 0</code></pre>
+<p>We will also look at the number of Helpscout conversations had with each user, the data for which can be found in <a href="https://looker.buffer.com/looks/4309">this Look</a>.</p>
+<pre class="r"><code>convos &lt;- get_look(4309)</code></pre>
+<p>After a little cleanup, we can join these two dataframes together.</p>
+<pre class="r"><code># rename columns
+colnames(convos) &lt;- c(&#39;user_id&#39;, &#39;conversations&#39;)
+
+# join into subs dataframe
+subs &lt;- subs %&gt;% 
+  left_join(convos, by = &#39;user_id&#39;) %&gt;% 
+  filter(successful_charges &gt;= 1)
+
+# replace NAs with 0
+subs$conversations[is.na(subs$conversations)] &lt;- 0
+
+# indicate if subscription churned
+subs &lt;- subs %&gt;% 
+  mutate(churned = !is.na(canceled_date))
+
+# remove unneeded convos dataframe
+rm(convos)</code></pre>
+<p>Now let’s see how many of these subscriptions churned in the past month.</p>
+<pre class="r"><code># count churns
+subs %&gt;% 
+  group_by(churned) %&gt;% 
+  summarise(subs = n_distinct(sub_id)) %&gt;% 
+  mutate(percent = subs / sum(subs))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   churned  subs    percent
+##     &lt;lgl&gt; &lt;int&gt;      &lt;dbl&gt;
+## 1   FALSE 65200 0.91731502
+## 2    TRUE  5877 0.08268498</code></pre>
+<p>Around 8.2% of all active subscriptions churned in the past month. The past month includes the Holiday period, so it may not be exactly representative of the usual month of churn.</p>
+<div id="preprocessing" class="section level3">
+<h3>Preprocessing</h3>
+<p>We need to do some preprocessing to make the models run more successfully. To do this, we need to do some exploratory data analysis. Let’s begin by taking a look at the <code>seats</code> variable. This represents the <em>quantity</em> of plans that each subscription pays for. An Awesome subscription with two seats is paying for two Awesome plans in a single subscription.</p>
+<pre class="r"><code>subs %&gt;% 
+  group_by(seats, churned) %&gt;% 
+  summarise(subs = n_distinct(sub_id)) %&gt;% 
+  mutate(percent = subs / sum(subs)) </code></pre>
+<pre><code>## # A tibble: 10 x 4
+## # Groups:   seats [7]
+##    seats churned  subs    percent
+##    &lt;int&gt;   &lt;lgl&gt; &lt;int&gt;      &lt;dbl&gt;
+##  1     0   FALSE     1 1.00000000
+##  2     1   FALSE 64999 0.91719700
+##  3     1    TRUE  5868 0.08280300
+##  4     2   FALSE   163 0.95321637
+##  5     2    TRUE     8 0.04678363
+##  6     3   FALSE    25 1.00000000
+##  7     4   FALSE     9 0.90000000
+##  8     4    TRUE     1 0.10000000
+##  9     5   FALSE     2 1.00000000
+## 10     6   FALSE     1 1.00000000</code></pre>
+<p>We can see that the vast majority of subscriptions only have one seat. It may not be worth keeping this column as there isn’t enough variability. We’ll also need to remove columns with unique identifiers, such as <code>sub_id</code> and <code>user_id</code>. We do this in the code below.</p>
+<pre class="r"><code># remove unnecessary data
+churn_data &lt;- subs %&gt;% 
+  select(-(sub_id:user_id), -(status:seats), -(created_date:canceled_date))
+
+# glimpse the data
+glimpse(churn_data)</code></pre>
+<pre><code>## Observations: 75,769
+## Variables: 12
+## $ plan_id             &lt;fctr&gt; business_v2_small_monthly, pro-annual, pr...
+## $ simple_plan_id      &lt;fctr&gt; business, awesome, awesome, awesome, busi...
+## $ interval            &lt;fctr&gt; month, year, month, month, year, month, y...
+## $ successful_charges  &lt;int&gt; 2, 2, 6, 20, 4, 5, 1, 8, 23, 3, 2, 3, 7, 2...
+## $ failed_charges      &lt;int&gt; 0, 0, 0, 5, 3, 0, 0, 0, 0, 0, 0, 0, 3, 5, ...
+## $ plan_amount         &lt;int&gt; 99, 102, 10, 10, 1010, 10, 1010, 10, 102, ...
+## $ profiles            &lt;int&gt; 2, 10, 5, 16, 2, 12, 4, 6, 10, 34, 0, 4, 2...
+## $ updates             &lt;int&gt; 87, 72, 5, 93, 48, 11, 340, 84, 11, 823, 0...
+## $ months_since_signup &lt;int&gt; 2, 13, 6, 20, 45, 3, 7, 7, 21, 63, 2, 23, ...
+## $ team_members        &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, ...
+## $ conversations       &lt;dbl&gt; 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...
+## $ churned             &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, ...</code></pre>
+</div>
+<div id="data-transformations" class="section level3">
+<h3>Data transformations</h3>
+<p>The key concept is knowing what transformations are needed to run the algorithm most effectively. Artificial Neural Networks are best when the data is one-hot encoded, scaled and centered. In addition, other transformations may be beneficial as well to make relationships easier for the algorithm to identify.</p>
+<p>Let’s look at the charge-related features.</p>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We can see here that there are many values in the low range of <code>number_of_successful_charges</code>. This variable is clearly not scaled and centered. We can apply a log transformation to help with that.</p>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>That’s a little better, but not <em>super</em> great. Now let’s look at failed and refunded charges.</p>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Most subscriptions have 0 failed charges, and we can’t take the log of 0. We could try a square or cube root transformation. But it might be more useful to create a boolean variable indicating whether or not the subscription has had <em>any</em> failed charges.</p>
+<pre class="r"><code># see churn rates 
+churn_data %&gt;% 
+  mutate(has_failed_charge = (failed_charges &gt; 0)) %&gt;% 
+  group_by(has_failed_charge, churned) %&gt;% 
+  summarise(subs = n()) %&gt;% 
+  mutate(percent = subs / sum(subs)) %&gt;% 
+  filter(churned == TRUE)</code></pre>
+<pre><code>## # A tibble: 2 x 4
+## # Groups:   has_failed_charge [2]
+##   has_failed_charge churned  subs    percent
+##               &lt;lgl&gt;   &lt;lgl&gt; &lt;int&gt;      &lt;dbl&gt;
+## 1             FALSE    TRUE  4509 0.07886038
+## 2              TRUE    TRUE  1746 0.09391136</code></pre>
+<p>We can see that there is a difference in the churn rates of those that have had a failed charge, which is good! Now we create the boolean variable in our data frame.</p>
+<pre class="r"><code># create new variables
+churn_data &lt;- churn_data %&gt;% 
+  filter(!is.na(months_since_signup)) %&gt;% 
+  mutate(has_failed_charge = (failed_charges &gt; 0)) %&gt;% 
+  select(-failed_charges)</code></pre>
+<p>Now let’s look at the <code>months_since_signup</code> variable.</p>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Most of the users with active subscriptions have signed up for Buffer more recently. This makes sense. This feature can be “discretized”, or bucketed, into groups, say of 6-months.</p>
+<pre class="r"><code># define breaks
+cuts &lt;- seq(0, 85, 6)
+
+# plot new tenure variable
+churn_data %&gt;% 
+  mutate(tenure = cut(months_since_signup, breaks = cuts)) %&gt;% 
+  count(tenure) %&gt;% 
+  ggplot(aes(x = tenure, y = n)) +
+  geom_bar(stat = &#39;identity&#39;) +
+  theme_ipsum() +
+  labs(x = &quot;Number of Months Since Signing Up&quot;, y = &quot;Users&quot;)</code></pre>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>That’s looking better!</p>
+</div>
+<div id="partitioning" class="section level3">
+<h3>Partitioning</h3>
+<p>Now we’re ready to split the data into training and testing sets. We’ll use the <code>rsample</code> package for this.</p>
+<pre class="r"><code># set seed for reproducibility
+set.seed(100)
+
+# split data
+train_test_split &lt;- initial_split(churn_data, prop = 0.8)
+
+# view split
+train_test_split</code></pre>
+<pre><code>## &lt;60615/15153/75768&gt;</code></pre>
+<p>There are 60,615 subscriptions in the trianing dataset and 15,153 subscriptions in the testing dataset. We can retrieve our training and testing sets using <code>training()</code> and <code>testing()</code> functions.</p>
+<pre class="r"><code># retreive the training and testing sets
+training &lt;- training(train_test_split)
+testing &lt;- testing(train_test_split)</code></pre>
+</div>
+<div id="one-hot-encoding" class="section level3">
+<h3>One-hot encoding</h3>
+<p>One-hot encoding is the process of converting categorical data to sparse data, which has columns of only zeros and ones (this is also called creating “dummy variables” or a “design matrix”). All non-numeric data will need to be converted to dummy variables. This is simple for binary Yes/No data because we can simply convert to 1’s and 0’s. It becomes slightly more complicated with multiple categories, which requires creating new columns of 1’s and 0`s for each value (actually one less).</p>
+</div>
+<div id="recipes" class="section level3">
+<h3>Recipes</h3>
+<p>A recipe is a series of steps we would like to perform on the training, testing, and validation datasets. Think of preprocessing data like baking a cake. The recipe explicitly states the steps needed to make the cake. It doesn’t do anything other than list the steps.</p>
+<p>We use the <code>recipe()</code> function to implement our preprocessing steps. The function takes a familiar object argument, which is a modeling function such as <code>object = churned ~ .</code> meaning “churned” is the outcome and all other features are predictors. The function also takes the data argument, which gives the recipe steps perspective on how to apply during baking.</p>
+<p>A recipe is not very useful until we add steps, which are used to transform the data during baking. The package contains a number of useful step functions that can be applied. For our model, we use:</p>
+<ul>
+<li><code>step_discretize()</code> with the <code>option = list(cuts = 6)</code> to cut the continuous variable for <code>months_since_signup</code> to group customers into cohorts.</li>
+<li><code>step_log()</code> to log transform <code>successful_charges</code>.</li>
+<li><code>step_dummy()</code> to one-hot encode the categorical data. Note that this adds columns of one/zero for categorical data with three or more categories.</li>
+<li><code>step_center()</code> to mean-center the data.</li>
+<li><code>step_scale()</code> to scale the data.</li>
+</ul>
+<p>The last step is to prepare the recipe with the <code>prep()</code> function. This step is used to “estimate the required parameters from a training set that can later be applied to other data sets”. This is important for centering and scaling and other functions that use parameters defined from the training set.</p>
+<pre class="r"><code># create recipe
+rec_obj &lt;- recipe(churned ~ ., data = training) %&gt;%
+  step_discretize(months_since_signup, options = list(cuts = 6)) %&gt;%
+  step_log(successful_charges) %&gt;%
+  step_dummy(all_nominal(), -all_outcomes()) %&gt;%
+  step_center(all_predictors(), -all_outcomes()) %&gt;%
+  step_scale(all_predictors(), -all_outcomes()) %&gt;%
+  prep(data = training)</code></pre>
+<p>We can print the recipe object if we ever forget what steps were used to prepare the data.</p>
+<pre class="r"><code>rec_obj</code></pre>
+<pre><code>## Data Recipe
+## 
+## Inputs:
+## 
+##       role #variables
+##    outcome          1
+##  predictor         10
+## 
+## Training data contained 60615 data points and no missing data.
+## 
+## Operations:
+## 
+## Dummy variables from months_since_signup [trained]
+## Log transformation on successful_charges [trained]
+## Dummy variables from simple_plan_id, interval, ... [trained]
+## Centering for successful_charges, plan_amount, ... [trained]
+## Scaling for successful_charges, plan_amount, ... [trained]</code></pre>
+<p>We can apply the recipe to any data set with the <code>bake()</code> function, and it processes the data following our recipe steps. We’ll apply to our training and testing data to convert from raw data to a machine learning dataset. Check our training set out with <code>glimpse()</code>. Now it’s an ML-ready dataset prepared for ANN modeling!</p>
+<pre class="r"><code># predictors
+x_train_tbl &lt;- bake(rec_obj, newdata = training) %&gt;% select(-churned)
+x_test_tbl  &lt;- bake(rec_obj, newdata = testing) %&gt;% select(-churned)
+
+glimpse(x_train_tbl)</code></pre>
+<pre><code>## Observations: 60,615
+## Variables: 16
+## $ successful_charges        &lt;dbl&gt; -0.79506737, 0.13834790, 1.16128076,...
+## $ plan_amount               &lt;dbl&gt; 0.05297433, -0.39502380, -0.39502380...
+## $ profiles                  &lt;dbl&gt; -0.43928366, -0.25586509, 0.41666965...
+## $ updates                   &lt;dbl&gt; -0.02322058, -0.05589073, -0.0208300...
+## $ team_members              &lt;dbl&gt; -0.2358782, 0.4313371, -0.2358782, -...
+## $ conversations             &lt;dbl&gt; -0.1075231, -0.1075231, 23.3367621, ...
+## $ simple_plan_id_business   &lt;dbl&gt; 2.7434270, -0.3645016, -0.3645016, 2...
+## $ simple_plan_id_enterprise &lt;dbl&gt; -0.03173876, -0.03173876, -0.0317387...
+## $ interval_year             &lt;dbl&gt; -0.8791031, -0.8791031, -0.8791031, ...
+## $ months_since_signup_bin1  &lt;dbl&gt; 2.1824067, 2.1824067, -0.4582022, -0...
+## $ months_since_signup_bin2  &lt;dbl&gt; -0.4414737, -0.4414737, -0.4414737, ...
+## $ months_since_signup_bin3  &lt;dbl&gt; -0.4520486, -0.4520486, 2.2121152, -...
+## $ months_since_signup_bin4  &lt;dbl&gt; -0.453900, -0.453900, -0.453900, -0....
+## $ months_since_signup_bin5  &lt;dbl&gt; -0.4311598, -0.4311598, -0.4311598, ...
+## $ months_since_signup_bin6  &lt;dbl&gt; -0.4462933, -0.4462933, -0.4462933, ...
+## $ has_failed_charge_yes     &lt;dbl&gt; -0.5718909, -0.5718909, 1.7485566, 1...</code></pre>
+<p>Looky ’dere. One last step, we need to store the actual values (the true observations) as <code>y_train_vec</code> and <code>y_test_vec</code>, which are needed for modeling our ANN. We convert to a series of numeric ones and zeros which can be accepted by the Keras ANN modeling functions. We add <code>vec</code> to the name so we can easily remember the class of the object (it’s easy to get confused when working with tibbles, vectors, and matrix data types).</p>
+<pre class="r"><code># response variables for training and testing sets
+y_train_vec &lt;- ifelse(pull(training, churned) == &quot;yes&quot;, 1, 0)
+y_test_vec  &lt;- ifelse(pull(testing, churned) == &quot;yes&quot;, 1, 0)</code></pre>
+</div>
+<div id="modeling-customer-churn" class="section level3">
+<h3>Modeling customer churn</h3>
+<p>We’re going to build a special class of ANN called a <a href="https://en.wikipedia.org/wiki/Multilayer_perceptron">Multi-Layer Perceptron (MLP)</a>. MLPs are one of the simplest forms of deep learning, but they are both highly accurate and serve as a jumping-off point for more complex algorithms. MLPs are quite versatile as they can be used for regression, binary and multi classification (and are typically quite good at classification problems).</p>
+<p>We’ll build a three layer MLP with Keras. Let’s walk-through the steps before we implement in R.</p>
+<ul>
+<li><p>Initialize a sequential model: The first step is to initialize a sequential model with <code>keras_model_sequential()</code>, which is the beginning of our Keras model. The sequential model is composed of a linear stack of layers.</p></li>
+<li><p>Apply layers to the sequential model: Layers consist of the input layer, hidden layers and an output layer. The input layer is the data and provided it’s formatted correctly there’s nothing more to discuss. The hidden layers and output layers are what controls the ANN inner workings.</p></li>
+<li><p>Hidden Layers: Hidden layers form the neural network nodes that enable non-linear activation using weights. The hidden layers are created using <code>layer_dense()</code>. We’ll add two hidden layers. We’ll apply <code>units = 16</code>, which is the number of nodes. We’ll select <code>kernel_initializer = &quot;uniform&quot;</code> and <code>activation = &quot;relu&quot;</code> for both layers. The first layer needs to have the <code>input_shape</code> equal to the number of columns in the training set. Key Point: While we are arbitrarily selecting the number of hidden layers, units, kernel initializers and activation functions, these parameters can be optimized through a process called hyperparameter tuning.</p></li>
+<li><p>Dropout Layers: Dropout layers are used to control overfitting. This eliminates weights below a cutoff threshold to prevent low weights from overfitting the layers. We use the <code>layer_dropout()</code> function add two drop out layers with <code>rate = 0.10</code> to remove weights below 10%.</p></li>
+<li><p>Output Layer: The output layer specifies the shape of the output and the method of assimilating the learned information. The output layer is applied using the <code>layer_dense()</code>. For binary values, the shape should be <code>units = 1</code>. For multi-classification, the units should correspond to the number of classes. We set the <code>kernel_initializer = &quot;uniform&quot;</code> and the <code>activation = &quot;sigmoid&quot;</code> (common for binary classification).</p></li>
+</ul>
+<p>Compile the model: The last step is to compile the model with <code>compile()</code>. We’ll use <code>optimizer = &quot;adam&quot;</code>, which is one of the most popular optimization algorithms. We select <code>loss = &quot;binary_crossentropy&quot;</code> since this is a binary classification problem. We’ll select <code>metrics = c(&quot;accuracy&quot;)</code> to be evaluated during training and testing. Key Point: The optimizer is often included in the tuning process.</p>
+<pre class="r"><code># building the Artificial Neural Network
+model_keras &lt;- keras_model_sequential()
+
+model_keras %&gt;% 
+  
+  # first hidden layer
+  layer_dense(
+    units = 16, 
+    kernel_initializer = &quot;uniform&quot;, 
+    activation = &quot;relu&quot;, 
+    input_shape = ncol(x_train_tbl)) %&gt;% 
+  
+  # dropout to prevent overfitting
+  layer_dropout(rate = 0.1) %&gt;%
+  
+  # second hidden layer
+  layer_dense(
+    units = 16, 
+    kernel_initializer = &quot;uniform&quot;, 
+    activation  = &quot;relu&quot;) %&gt;% 
+  
+  # dropout to prevent overfitting
+  layer_dropout(rate = 0.1) %&gt;%
+  
+  # output layer
+  layer_dense(
+    units = 1, 
+    kernel_initializer = &quot;uniform&quot;, 
+    activation = &quot;sigmoid&quot;) %&gt;% 
+  
+  # compile ANN
+  compile(
+    optimizer = &#39;adam&#39;,
+    loss = &#39;binary_crossentropy&#39;,
+    metrics = c(&#39;accuracy&#39;)
+  )
+
+model_keras</code></pre>
+<pre><code>## Model
+## ___________________________________________________________________________
+## Layer (type)                     Output Shape                  Param #     
+## ===========================================================================
+## dense_1 (Dense)                  (None, 16)                    272         
+## ___________________________________________________________________________
+## dropout_1 (Dropout)              (None, 16)                    0           
+## ___________________________________________________________________________
+## dense_2 (Dense)                  (None, 16)                    272         
+## ___________________________________________________________________________
+## dropout_2 (Dropout)              (None, 16)                    0           
+## ___________________________________________________________________________
+## dense_3 (Dense)                  (None, 1)                     17          
+## ===========================================================================
+## Total params: 561
+## Trainable params: 561
+## Non-trainable params: 0
+## ___________________________________________________________________________</code></pre>
+<p>Now let’s fit the model to the training data.</p>
+<pre class="r"><code># fit the keras model to the training data
+history &lt;- fit(
+  object = model_keras, 
+  x = as.matrix(x_train_tbl), 
+  y = y_train_vec,
+  batch_size = 50, 
+  epochs = 35,
+  validation_split = 0.30
+)</code></pre>
+<p>We can inspect the training history. We want to make sure there is minimal difference between the validation accuracy and the training accuracy.</p>
+<pre class="r"><code># print model summary statistics
+print(history)</code></pre>
+<pre><code>## Trained on 42,430 samples, validated on 18,185 samples (batch_size=50, epochs=35)
+## Final epoch (plot to see history):
+## val_loss: 0.231
+##  val_acc: 0.9357
+##     loss: 0.2755
+##      acc: 0.9146</code></pre>
+<p>Wow, accuracy was quite high, even on the validation set!</p>
+<p>We can visualize the Keras training history using the <code>plot()</code> function. What we want to see is the validation accuracy and loss leveling off, which means the model has completed training. We see that there is some divergence between training loss/accuracy and validation loss/accuracy. This model indicates we can possibly stop training at an earlier epoch. Pro Tip: Only use enough epochs to get a high validation accuracy. Once validation accuracy curve begins to flatten or decrease, it’s time to stop training.</p>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>It’ interesting to see that accuracy remains relatively constant throughout training, apart from the first epoch. It may be useful to remember that if we predicted that <em>everyone</em> would churn, we would have a model that achieves 91.8% accuracy.</p>
+</div>
+<div id="making-predictions" class="section level3">
+<h3>Making predictions</h3>
+<p>We’ve got a good model based on the validation accuracy. Now let’s make some predictions from our keras model on the testing set, which was unseen during modeling. We have two functions to generate predictions:</p>
+<ul>
+<li><p><code>predict_classes()</code>: Generates class values as a matrix of ones and zeros. Since we are dealing with binary classification, we’ll convert the output to a vector.</p></li>
+<li><p><code>predict_proba()</code>: Generates the class probabilities as a numeric matrix indicating the probability of being a class. Again, we convert to a numeric vector because there is only one column output.</p></li>
+</ul>
+<pre class="r"><code># predicted class
+yhat_class_vec &lt;- predict_classes(object = model_keras, x = as.matrix(x_test_tbl)) %&gt;% as.vector()
+
+# predicted class probability
+yhat_prob_vec  &lt;- predict_proba(object = model_keras, x = as.matrix(x_test_tbl)) %&gt;% as.vector()</code></pre>
+</div>
+<div id="inspect-performance-with-yardstick" class="section level3">
+<h3>Inspect performance with Yardstick</h3>
+<p>The <code>yardstick</code> package has a collection of handy functions for measuring performance of machine learning models. We’ll overview some metrics we can use to understand the performance of our model.</p>
+<p>First, let’s get the data formatted for yardstick. We create a data frame with the truth (actual values as factors), estimate (predicted values as factors), and the class probability (probability of yes as numeric). We use the <code>fct_recode()</code> function from the <code>forcats</code> package to assist with recoding as Yes/No values.</p>
+<pre class="r"><code># format test data and predictions for yardstick metrics
+estimates_keras_tbl &lt;- tibble(
+  truth      = as.factor(y_test_vec) %&gt;% fct_recode(yes = &quot;1&quot;, no = &quot;0&quot;),
+  estimate   = as.factor(yhat_class_vec) %&gt;% fct_recode(yes = &quot;1&quot;, no = &quot;0&quot;),
+  class_prob = yhat_prob_vec
+)
+
+head(estimates_keras_tbl, n = 10)</code></pre>
+<pre><code>## # A tibble: 10 x 3
+##     truth estimate  class_prob
+##    &lt;fctr&gt;   &lt;fctr&gt;       &lt;dbl&gt;
+##  1     no       no 0.048169497
+##  2     no       no 0.015589011
+##  3     no       no 0.017783972
+##  4     no       no 0.009276078
+##  5     no       no 0.108753555
+##  6     no       no 0.162961081
+##  7     no       no 0.021975949
+##  8     no       no 0.016171509
+##  9     no       no 0.024991035
+## 10     no       no 0.011792799</code></pre>
+<p>Now that we have the data formatted, we can take advantage of the yardstick package. The only other thing we need to do is to set <code>options(yardstick.event_first = FALSE)</code>, because the default is to classify 0 as the positive class instead of 1.</p>
+<pre class="r"><code>options(yardstick.event_first = FALSE)</code></pre>
+</div>
+<div id="confusion-matrix" class="section level3">
+<h3>Confusion matrix</h3>
+<p>We can use the <code>conf_mat()</code> function to get the confusion table. We see that the model was by no means perfect, but it did a decent job of identifying customers likely to churn. It missed a good amount of users that churned, but most of those that were likely to churn did in fact churn.</p>
+<pre class="r"><code># confusion matrix
+estimates_keras_tbl %&gt;% conf_mat(truth, estimate)</code></pre>
+<pre><code>##           Truth
+## Prediction    no   yes
+##        no  13836  1208
+##        yes    42    67</code></pre>
+<p>We can use the <code>metrics()</code> function to get an accuracy measurement from the test set. We are getting roughly 92% accuracy. Probably because most folks do not churn.</p>
+<pre class="r"><code># get accuracy
+estimates_keras_tbl %&gt;% metrics(truth, estimate)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##    accuracy
+##       &lt;dbl&gt;
+## 1 0.9175081</code></pre>
+<p>We can also get the ROC Area Under the Curve (AUC) measurement. AUC is often a good metric used to compare different classifiers and to compare to randomly guessing (AUC_random = 0.50). Our model has AUC = 0.70, which is better than randomly guessing. Tuning and testing different classification algorithms may yield even better results.</p>
+<pre class="r"><code># get AUC
+estimates_keras_tbl %&gt;% roc_auc(truth, class_prob)</code></pre>
+<pre><code>## [1] 0.7056872</code></pre>
+<p>We can also calculate precision and recall. Precision is when the model predicts “yes”, how often is it actually “yes”. Recall (also true positive rate or specificity) is when the actual value is “yes” how often is the model correct. In our case, I think we would like to optimize for recall.</p>
+<pre class="r"><code># precision and recall
+tibble(
+  precision = estimates_keras_tbl %&gt;% precision(truth, estimate),
+  recall = estimates_keras_tbl %&gt;% recall(truth, estimate)
+)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   precision     recall
+##       &lt;dbl&gt;      &lt;dbl&gt;
+## 1 0.6146789 0.05254902</code></pre>
+<p>Precision and recall are very important to the business case: The organization is concerned with balancing the cost of targeting and retaining customers at risk of leaving with the cost of inadvertently targeting customers that are not planning to leave (and potentially decreasing revenue from this group). The threshold above which to predict Churn = “Yes” can be adjusted to optimize for the business problem.</p>
+</div>
+<div id="explaining-the-model-with-lime" class="section level3">
+<h3>Explaining the model with LIME</h3>
+<p>LIME stands for <em>Local Interpretable Model-agnostic Explanations</em>, and is a method for explaining black-box machine learning model classifiers. The <code>lime</code> package implements LIME in R. We’ll need to make two custom functions:</p>
+<ul>
+<li><p><code>model_type</code>: Used to tell lime what type of model we are dealing with. It could be classification, regression, survival, etc.</p></li>
+<li><p><code>predict_model</code>: Used to allow lime to perform predictions that its algorithm can interpret.</p></li>
+</ul>
+<p>The first thing we need to do is identify the class of our model object. We do this with the <code>class()</code> function.</p>
+<pre class="r"><code>class(model_keras)</code></pre>
+<pre><code>## [1] &quot;keras.models.Sequential&quot;         &quot;keras.engine.training.Model&quot;    
+## [3] &quot;keras.engine.topology.Container&quot; &quot;keras.engine.topology.Layer&quot;    
+## [5] &quot;python.builtin.object&quot;</code></pre>
+<p>Next we create our <code>model_type()</code> function. It’s only input is x the keras model. The function simply returns “classification”, which tells LIME we are classifying.</p>
+<pre class="r"><code># setup lime::model_type() function for keras
+model_type.keras.models.Sequential &lt;- function(x, ...) {
+  &quot;classification&quot;
+}</code></pre>
+<p>Now we can create our <code>predict_model()</code> function, which wraps <code>keras::predict_proba()</code>. The trick here is to realize that it’s inputs must be <code>x</code> a model, <code>newdata</code> a dataframe object (this is important), and <code>type</code> which is not used but can be use to switch the output type. The output is also a little tricky because it must be in the format of probabilities by classification (this is important; shown next).</p>
+<pre class="r"><code># setup lime::predict_model() function for keras
+predict_model.keras.models.Sequential &lt;- function(x, newdata, type, ...) {
+  pred &lt;- predict_proba(object = x, x = as.matrix(newdata))
+  data.frame(Yes = pred, No = 1 - pred)
+}</code></pre>
+<p>Run this next script to show you what the output looks like and to test our predict_model() function. See how it’s the probabilities by classification. It must be in this form for <code>model_type = &quot;classification&quot;</code>.</p>
+<pre class="r"><code># test our predict_model() function
+predict_model(x = model_keras, newdata = x_test_tbl, type = &#39;raw&#39;) %&gt;%
+  tibble::as_tibble()</code></pre>
+<pre><code>## # A tibble: 15,153 x 2
+##            Yes        No
+##          &lt;dbl&gt;     &lt;dbl&gt;
+##  1 0.048169497 0.9518305
+##  2 0.015589011 0.9844110
+##  3 0.017783972 0.9822160
+##  4 0.009276078 0.9907239
+##  5 0.108753555 0.8912464
+##  6 0.162961081 0.8370389
+##  7 0.021975949 0.9780241
+##  8 0.016171509 0.9838285
+##  9 0.024991035 0.9750090
+## 10 0.011792799 0.9882072
+## # ... with 15,143 more rows</code></pre>
+<p>Now we create an explainer using the <code>lime()</code> function. Just pass the training data set without the “Attribution column”. The form must be a data frame, which is OK since our <code>predict_model</code> function will switch it to an keras object. Set <code>model = automl_leader</code> our leader model, and <code>bin_continuous = FALSE</code>. We could tell the algorithm to bin continuous variables, but this may not make sense for categorical numeric data that we didn’t change to factors.</p>
+<pre class="r"><code># run lime() on training set
+explainer &lt;- lime::lime(
+  x = x_train_tbl, 
+  model = model_keras, 
+  bin_continuous = FALSE
+)</code></pre>
+<p>Now we run the <code>explain()</code> function, which returns our explanation. This can take a minute to run so we limit it to just the first ten rows of the test data set. We set <code>n_labels = 1</code> because we care about explaining a single class. Setting <code>n_features = 4</code> returns the top four features that are critical to each case. Finally, setting <code>kernel_width = 0.5</code> allows us to increase the “model_r2” value by shrinking the localized evaluation.</p>
+<pre class="r"><code># run explain() on explainer
+explanation &lt;- lime::explain(
+  x_test_tbl[1:10, ], 
+  explainer = explainer, 
+  n_labels = 1, 
+  n_features = 4,
+  kernel_width = 0.5
+)</code></pre>
+</div>
+<div id="feature-importance-visualization" class="section level3">
+<h3>Feature importance visualization</h3>
+<p>The payoff for the work we put in using LIME is this feature importance plot. This allows us to visualize each of the first ten cases (observations) from the test data. The top four features for each case are shown. Note that they are not the same for each case. The green bars mean that the feature supports the model conclusion, and the red bars contradict. A couple important features based on frequency in first ten cases:</p>
+<ul>
+<li><code>months_since_signup</code> (8 cases)</li>
+<li><code>updates</code>(9 cases)</li>
+</ul>
+<pre class="r"><code>plot_features(explanation) +
+  labs(title = &quot;LIME Feature Importance Visualization&quot;,
+       subtitle = &quot;Hold Out (Test) Set, First 10 Cases Shown&quot;)</code></pre>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+<p>Another excellent visualization can be performed using <code>plot_explanations()</code>, which produces a facetted heatmap of all case/label/feature combinations. It’s a more condensed version of <code>plot_features()</code>, but we need to be careful because it does not provide exact statistics and it makes it less easy to investigate binned features.</p>
+<pre class="r"><code>plot_explanations(explanation) +
+    labs(title = &quot;LIME Feature Importance Heatmap&quot;,
+         subtitle = &quot;Hold Out (Test) Set, First 10 Cases Shown&quot;)</code></pre>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+</div>
+<div id="checking-explanations-with-correlation-analysis" class="section level3">
+<h3>Checking explanations with correlation analysis</h3>
+<pre class="r"><code># Feature correlations to Churn
+corr_analysis &lt;- x_train_tbl %&gt;%
+  mutate(churned = y_train_vec) %&gt;%
+  correlate() %&gt;%
+  focus(churned) %&gt;%
+  rename(feature = rowname) %&gt;%
+  arrange(abs(churned)) %&gt;%
+  mutate(feature = as_factor(feature)) 
+
+corr_analysis</code></pre>
+<pre><code>## # A tibble: 16 x 2
+##                      feature      churned
+##                       &lt;fctr&gt;        &lt;dbl&gt;
+##  1 simple_plan_id_enterprise -0.003811565
+##  2  months_since_signup_bin4 -0.005386576
+##  3  months_since_signup_bin3  0.007203574
+##  4  months_since_signup_bin2  0.011171815
+##  5                   updates -0.012636411
+##  6  months_since_signup_bin5 -0.014485731
+##  7                  profiles -0.014986354
+##  8     has_failed_charge_yes  0.024346626
+##  9               plan_amount -0.026337084
+## 10  months_since_signup_bin6 -0.028114759
+## 11   simple_plan_id_business -0.028392391
+## 12  months_since_signup_bin1  0.028851225
+## 13              team_members -0.030647368
+## 14             conversations  0.030742660
+## 15             interval_year -0.049423370
+## 16        successful_charges -0.058451465</code></pre>
+<p><img src="/blog/churn_prediction_keras_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<p>Notice that the correlation for each individual feature is quite small. Customers that have refunded charges and helpscout conversations are naturally more likely to churn. Subscriptions that have more successful charges and yearly subscriptions are less likely to churn.</p>
+<p>That’s it for now!</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/facebook-post-types/" data-toggle="tooltip" data-placement="top" title="Which type of post gets the best reach on Facebook?">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+
