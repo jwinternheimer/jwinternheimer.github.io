@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>How does the 280 character limit affect tweet length?</title>
+  <meta property="og:title" content="How does the 280 character limit affect tweet length?" />
+  <meta name="twitter:title" content="How does the 280 character limit affect tweet length?" />
+  <meta name="description" content="Twitter increased the character limit for most countries from 140 characters to 280 in 2017. Buffer quickly followed suit and enabled the functionality in our composer and browser etensions. Let’s take a look at a sample of tweets scheduled with Buffer in the past couple of years to see if people have been taking advantage of the new character limit. :)
+We’ll gather the tweets from Buffer’s updates table, but we could also use the handy rtweet package to gather the tweets.">
+  <meta property="og:description" content="Twitter increased the character limit for most countries from 140 characters to 280 in 2017. Buffer quickly followed suit and enabled the functionality in our composer and browser etensions. Let’s take a look at a sample of tweets scheduled with Buffer in the past couple of years to see if people have been taking advantage of the new character limit. :)
+We’ll gather the tweets from Buffer’s updates table, but we could also use the handy rtweet package to gather the tweets.">
+  <meta name="twitter:description" content="Twitter increased the character limit for most countries from 140 characters to 280 in 2017. Buffer quickly followed suit and enabled the functionality in our composer and browser etensions. Let’s …">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/tweet-length/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/tweet-length/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>How does the 280 character limit affect tweet length?</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on January 26, 2018
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Twitter increased the character limit for most countries from 140 characters to 280 in 2017. Buffer quickly followed suit and enabled the functionality in our composer and browser etensions. Let’s take a look at a sample of tweets scheduled with Buffer in the past couple of years to see if people have been taking advantage of the new character limit. :)</p>
+<p>We’ll gather the tweets from Buffer’s <code>updates</code> table, but we could also use the handy <code>rtweet</code> package to gather the tweets. We’ll gather a random sample of one million tweets sent in the past couple of years.</p>
+<pre class="r"><code># connect to redshift
+con &lt;- redshift_connect()</code></pre>
+<pre class="sql"><code>select
+  id
+  , created_at
+  , sent_at
+  , date_trunc(&#39;month&#39;, sent_at) as sent_month
+  , was_sent_with_buffer
+  , text
+  , len(text) as length
+from dbt.updates
+where profile_service = &#39;twitter&#39;
+and (not has_photo or has_photo is null)
+and (not has_multiple_photos or has_photo is null)
+and (not has_video or has_photo is null)
+and sent_at &gt;= &#39;2016-01-01&#39;
+and sent_at &lt; &#39;2018-01-01&#39;
+order by random()
+limit 1000000</code></pre>
+<p>Let’s do a bit of tidying and look at what the dataset looks like. We want to determine if the tweet contains a link. If it does, we will remove it with the url and replace it with a shortened one that corresponds with the number of characters that Twitter’s link shortener produces. We’ll use the <code>stringr</code> package to extract the URL.</p>
+<p>According to <a href="https://follows.com/blog/2017/11/best-link-shortener-twitter">this article</a>, all links, regardless of their actual length, take up 23 characters in Twitter. That’s a good enough approximation for us, so we’ll replace all url’s with a 23 character made up url.</p>
+<pre class="r"><code># define url regex pattern
+url_pattern &lt;- &quot;http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&amp;+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+&quot;
+
+# extract url
+tweets$url &lt;- str_extract(tweets$text, url_pattern)
+
+# get the year and replace urls
+tweets &lt;- tweets %&gt;% 
+  filter(was_sent_with_buffer) %&gt;% 
+  mutate(year = as.factor(year(sent_at)),
+         sent_month = as.Date(sent_month, format = &#39;%Y-%m-%d&#39;),
+         text_updated = gsub(url_pattern, &quot;https://t.co/x6yvMQC1vG&quot;, text)) %&gt;% 
+  mutate(length = nchar(text_updated))</code></pre>
+<pre class="r"><code># glimpse tweets
+glimpse(tweets)</code></pre>
+<pre><code>## Observations: 769,687
+## Variables: 10</code></pre>
+<pre><code>## Warning in as.POSIXlt.POSIXct(x, tz): unknown timezone &#39;default/America/
+## New_York&#39;</code></pre>
+<pre><code>## $ id                   &lt;chr&gt; &quot;585ff590ae69734266970527&quot;, &quot;595239dd2633...
+## $ created_at           &lt;dttm&gt; 2016-12-25 16:36:32, 2017-06-27 10:56:29...
+## $ sent_at              &lt;dttm&gt; 2016-12-25 16:36:45, 2017-06-27 10:56:35...
+## $ sent_month           &lt;date&gt; 2016-12-01, 2017-06-01, 2017-06-01, 2017...
+## $ was_sent_with_buffer &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,...
+## $ text                 &lt;chr&gt; &quot;Jesus came to bring peace. He came to be...
+## $ length               &lt;int&gt; 94, 76, 23, 91, NA, 275, 140, 59, 90, 100...
+## $ url                  &lt;chr&gt; NA, NA, &quot;http://buff.ly/2sIFx9j&quot;, &quot;http:/...
+## $ year                 &lt;fctr&gt; 2016, 2017, 2017, 2017, 2017, 2017, 2017...
+## $ text_updated         &lt;chr&gt; &quot;Jesus came to bring peace. He came to be...</code></pre>
+<p>Next let’s explore our dataset and plot the number of tweets sent in each month.</p>
+<p><img src="/blog/tweet-length_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Many of the tweets in our dataset were sent during the past six months. Now let’s plot the distributions of tweet length over the course of the two years, and look at how the new character limit has affected it.</p>
+<p><img src="/blog/tweet-length_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>We can see a growing trend of people becoming more comfortable with the new character limits, especially towards the end of 2017. That’s it for now!</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/churn_prediction_keras/" data-toggle="tooltip" data-placement="top" title="Churn Prediction with Deep Learning">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+
