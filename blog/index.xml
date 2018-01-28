@@ -18,8 +18,8 @@
       <pubDate>Fri, 26 Jan 2018 16:09:11 -0500</pubDate>
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/blog/tweet-length/</guid>
-      <description>Twitter increased the character limit for most countries from 140 characters to 280 in 2017. Buffer quickly followed suit and enabled the functionality in our composer and browser etensions. Let’s take a look at a sample of tweets scheduled with Buffer in the past couple of years to see if people have been taking advantage of the new character limit. :)
-We’ll gather the tweets from Buffer’s updates table, but we could also use the handy rtweet package to gather the tweets.</description>
+      <description>Twitter increased the character limit to 280 for most countries in November of 2017. We quickly followed suit and enabled the functionality in our composer and browser etensions. In this analysis we’ll take a look at a random sample of tweets scheduled with Buffer in the past couple of years to see if people have been taking advantage of the increased character limit.
+We’ll gather the tweets by querying Buffer’s updates table, but we could also use the handy rtweet package to gather the tweets.</description>
     </item>
     
     <item>
