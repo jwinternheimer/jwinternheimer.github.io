@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Fri, 26 Jan 2018 16:09:11 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 29 Jan 2018 11:29:16 -0500</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Revisiting Churn Surveys</title>
+      <link>/blog/revisiting-churn-surveys/</link>
+      <pubDate>Mon, 29 Jan 2018 11:29:16 -0500</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/revisiting-churn-surveys/</guid>
+      <description>Back in July, I analyzed responses from Buffer’s churn surveys. In this post we’ll recreate that analysis with more recent data. The goal is to see if general themes and trends have changed over time. It will also help remind us of the reasons why people choose to leave Buffer.
+We’ll use data collected from four separate surveys that represents different types of churn:
+ The exit survey prompts users to explain why they are abandoning the Buffer product completely.</description>
+    </item>
     
     <item>
       <title>How does the 280 character limit affect tweet length?</title>

@@ -194,6 +194,28 @@
           
           
             <article class="post-preview">
+              <a href="/blog/annual-ltv/">
+                <h2 class="post-title">A case for annual subscriptions</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on November 6, 2017
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  It’s fairly well known that, for a subscription business model, subscriptions that are billed annually are more valuable than subsciptions billed monthly. That’s why many SaaS companies use the slightly misleading tactic of displaying a monthly price with an asterisk that indicates that the amount is the monthly amount of a subsciption billed annually. The prospective customer has to either multiply the amount by twelve to see what he or she will actually be billed, or lose out on this “deal” and pay more to be billed monthly.
+                  <a href="/blog/annual-ltv/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="/blog/awesome-price-experiment/">
                 <h2 class="post-title">Analysis of 2016 Awesome Pricing Experiment</h2>
                 
@@ -397,30 +419,6 @@ In this post, we will analyze a subset of our features with two simple criteria:
 Data collection We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.
 select subscriptions.id , subscriptions.created , subscriptions.canceled_at , subscriptions.plan_id , plans.interval , subscriptions.customer_id , count(distinct charges.id) as successful_charges from subscriptions left join invoices on invoices.
                   <a href="/blog/when-do-customers-churn/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/trial-activity/">
-                <h2 class="post-title">How active are Business trialists?</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 24, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  One question that has come up recently is about Business trialists: how long do they stick with the trial before becoming inactive and churning from Buffer?
-To answer this question, we can analyze the data in this Look. The dataset contains the trial start and end dates for each user, as well as the days in which there were any actions_taken events triggered.
-The number of actions for each day is counted for up to 30 days after the trial start date for each user.
-                  <a href="/blog/trial-activity/" class="post-read-more">[Read More]</a>
                 
               </div>
 
