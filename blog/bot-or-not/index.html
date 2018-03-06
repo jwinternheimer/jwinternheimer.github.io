@@ -204,6 +204,10 @@
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
         <p>I happened to come across <a href="https://twitter.com/kearneymw/status/970070047073951744">this Tweet</a> from Mike Kearney about a new package called <code>botornot</code> that classifies Twitter profiles into two categories: “bot” or “not”.</p>
+<div class="figure">
+<img src="https://media.makeameme.org/created/bots-bots-9c4m68.jpg" />
+
+</div>
 <p>After seeing this, I couldn’t <em>not</em> take it for a spin. Let’s determine which of the Buffer team’s profiles are most bot-like, and test the models on profiles that are known to be spammy accounts.</p>
 <pre class="r"><code># load libraries
 library(rtweet)
@@ -249,21 +253,20 @@ data$user_hash &lt;- md5(data$user)
 
 # arrange by prob ests
 data %&gt;% 
-  arrange(desc(prob_bot)) %&gt;% 
-  select(-user)</code></pre>
-<pre><code>## # A tibble: 63 x 2
-##    prob_bot user_hash                       
-##       &lt;dbl&gt; &lt;chr&gt;                           
-##  1    0.999 3ff40b69a60e6210f3cbda8db1cb4ae2
-##  2    0.988 3e921417f41b66f1c24862710537f192
-##  3    0.985 d093563010eedd85801769f91909265d
-##  4    0.964 712a4384e6681bd521c5266e16789c29
-##  5    0.906 0edb7ec9098076761bd14c9c3ca97bd3
-##  6    0.899 6ed84e511f386eb4942cfab089b02602
-##  7    0.897 db82005412c13e740c03860b29aec7b7
-##  8    0.894 8dc5886d5c56e75b89ab191e0e5958cd
-##  9    0.889 a1d8e95101f88a8d7ef65d5106b7183c
-## 10    0.880 fa3d30c0919008e2ab8b5e87192a13ac
+  arrange(desc(prob_bot)) </code></pre>
+<pre><code>## # A tibble: 63 x 3
+##    user           prob_bot user_hash                       
+##    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;                           
+##  1 bufferlove        0.999 3ff40b69a60e6210f3cbda8db1cb4ae2
+##  2 thedarcypeters    0.988 3e921417f41b66f1c24862710537f192
+##  3 goku2             0.985 d093563010eedd85801769f91909265d
+##  4 bufferreply       0.964 712a4384e6681bd521c5266e16789c29
+##  5 BorisTroja        0.906 0edb7ec9098076761bd14c9c3ca97bd3
+##  6 JordanMorgan10    0.899 6ed84e511f386eb4942cfab089b02602
+##  7 bufferdevs        0.897 db82005412c13e740c03860b29aec7b7
+##  8 FedericoWeber     0.894 8dc5886d5c56e75b89ab191e0e5958cd
+##  9 eric_khun         0.889 a1d8e95101f88a8d7ef65d5106b7183c
+## 10 juliabreathes     0.880 fa3d30c0919008e2ab8b5e87192a13ac
 ## # ... with 53 more rows</code></pre>
 <p>Ok.. the model assigns a probability of over 90% to five of my teammates. Working for a company like Buffer, I can understand why this model might assign a higher-than-average probability of being a bot account. We tend to share many articles, use hashtags, and retweet a lot. Even so, these probabilities seem to be a bit too high for accounts that I know not to be bots. :)</p>
 <p>Let’s now look at a group of accounts that are indeed spammy, and test the model’s output.</p>
@@ -282,7 +285,7 @@ data %&gt;% arrange(desc(prob_bot))</code></pre>
 ##  1 nazeer_mumtaz     0.971 
 ##  2 0GM10S            0.555 
 ##  3 jawned            0.476 
-##  4 BadAdviceDog      0.347 
+##  4 BadAdviceDog      0.324 
 ##  5 newsbreakph       0.318 
 ##  6 uNaz9             0.181 
 ##  7 SimsProbIems      0.145 
