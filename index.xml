@@ -7,21 +7,10 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 05 Mar 2018 09:33:43 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 29 Jan 2018 11:29:16 -0500</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Bot? Or Not?</title>
-      <link>/blog/bot-or-not/</link>
-      <pubDate>Mon, 05 Mar 2018 09:33:43 -0500</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/bot-or-not/</guid>
-      <description>I happened to come across this Tweet from Mike Kearney about a new package called botornot that classifies Twitter profiles into two categories: “bot” or “not”.
-After seeing this, I couldn’t not take it for a spin. Let’s determine which of the Buffer team’s profiles are most bot-like, and test the models on profiles that are known to be spammy accounts.
-# load libraries library(rtweet) library(dplyr) library(botornot) library(openssl) We’ll use the rtweet package to gather tweets from the Buffer team Twitter list.</description>
-    </item>
     
     <item>
       <title>Revisiting Churn Surveys</title>
@@ -555,6 +544,15 @@ Association football, more commonly known as football or soccer,[2] is a sport p
       <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
       <guid>/post/2015-01-04-first-post/</guid>
       <description>This is my first post, how exciting!</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/blog/bot-or-not/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/bot-or-not/</guid>
+      <description>Bot Or No Bot?       code{white-space: pre;} pre:not([class]) { background-color: white; }  if (window.hljs &amp;&amp; document.readyState &amp;&amp; document.readyState === &#34;complete&#34;) { window.setTimeout(function() { hljs.initHighlighting(); }, 0); }  h1 { font-size: 34px; } h1.title { font-size: 38px; } h2 { font-size: 30px; } h3 { font-size: 24px; } h4 { font-size: 18px; } h5 { font-size: 16px; } h6 { font-size: 12px; } .</description>
     </item>
     
     <item>

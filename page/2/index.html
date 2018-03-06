@@ -194,29 +194,6 @@
           
           
             <article class="post-preview">
-              <a href="/blog/clustering-business-customers/">
-                <h2 class="post-title">Clustering Business Users in R</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on November 20, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  I often get questions like “How many profiles do Business customers have?” or “How often to Business cusotmers log in?”. These are useful questions to ask when designing and developing a product to fit the needs of a specific user segment, but a singular answer isn’t always sufficient.
-You could answer these questions with a mean or median, but these can be misleading if the metric in question isn’t normally distributed.
-                  <a href="/blog/clustering-business-customers/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
               <a href="/blog/annual-ltv/">
                 <h2 class="post-title">A case for annual subscriptions</h2>
                 
@@ -418,6 +395,30 @@ Picking the right metrics to use to calculate retention can be a tricky thing. I
 I was inspired by this blog post by Intercom’s Chief Strategy Officer to conduct an audit of the features available to Buffer for Business users in order to see which were being used, and how frequently.
 In this post, we will analyze a subset of our features with two simple criteria: how many users use it and how frequently.
                   <a href="/blog/business-feature-analysis/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="/blog/when-do-customers-churn/">
+                <h2 class="post-title">When do customers churn?</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on July 25, 2017
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  How long do customers stick with Buffer? Are there any covariates that affect the amount of time a user is expected to stay on a paid subscription?
+Data collection We can run the following query in Stripe Sigma to gather data on all Stripe subscriptions that have had successful charges.
+select subscriptions.id , subscriptions.created , subscriptions.canceled_at , subscriptions.plan_id , plans.interval , subscriptions.customer_id , count(distinct charges.id) as successful_charges from subscriptions left join invoices on invoices.
+                  <a href="/blog/when-do-customers-churn/" class="post-read-more">[Read More]</a>
                 
               </div>
 
