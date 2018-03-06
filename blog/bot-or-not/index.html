@@ -5,9 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>Bot? Or Not?</title>
+  <meta property="og:title" content="Bot? Or Not?" />
+  <meta name="twitter:title" content="Bot? Or Not?" />
+  <meta name="description" content="Identifying Twitter bots with machine learning">
+  <meta property="og:description" content="Identifying Twitter bots with machine learning">
+  <meta name="twitter:description" content="Identifying Twitter bots with machine learning">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +18,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/" />
+  <meta property="og:url" content="/blog/bot-or-not/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/" />
+  <link rel="canonical" href="/blog/bot-or-not/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,9 +175,20 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="post-heading">
+              <h1>Bot? Or Not?</h1>
                 
+                  
+                    <h2 class="post-subheading">Identifying Twitter bots with machine learning</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  Posted on March 5, 2018
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -185,211 +199,117 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>I happened to come across <a href="https://twitter.com/kearneymw/status/970070047073951744">this Tweet</a> from Mike Kearney about a new package called <code>botornot</code> that classifies Twitter profiles into two categories: “bot” or “not”.</p>
+<p>After seeing this, I couldn’t <em>not</em> take it for a spin. Let’s determine which of the Buffer team’s profiles are most bot-like, and test the models on profiles that are known to be spammy accounts.</p>
+<pre class="r"><code># load libraries
+library(rtweet)
+library(dplyr)
+library(botornot)
+library(openssl)</code></pre>
+<p>We’ll use the <code>rtweet</code> package to gather tweets from <a href="https://twitter.com/buffer/lists/the-buffer-team">the Buffer team Twitter list</a>.</p>
+<pre class="r"><code># gather tweets
+tweets &lt;- search_tweets(&quot;list:buffer/the-buffer-team&quot;, n = 5000)</code></pre>
+<p>Now we can gather the usernames from these tweets.</p>
+<pre class="r"><code># gather usernames
+users &lt;- unique(tweets$screen_name)
+users</code></pre>
+<pre><code>##  [1] &quot;hjharnis&quot;        &quot;Mike_Eck&quot;        &quot;Brian_G_Peters&quot; 
+##  [4] &quot;danmulc1&quot;        &quot;katie_womers&quot;    &quot;Maxberthelot&quot;   
+##  [7] &quot;kevanlee&quot;        &quot;alfred_lua&quot;      &quot;kellybakes&quot;     
+## [10] &quot;tiggreen&quot;        &quot;kiriappeee&quot;      &quot;eric_khun&quot;      
+## [13] &quot;Kalendium&quot;       &quot;hitherejoe&quot;      &quot;thedarcypeters&quot; 
+## [16] &quot;karamcnair&quot;      &quot;joelgascoigne&quot;   &quot;suprasannam&quot;    
+## [19] &quot;A_Farmer&quot;        &quot;emplums&quot;         &quot;ay8s&quot;           
+## [22] &quot;TTGonda&quot;         &quot;RoyOlende&quot;       &quot;moreofmorris&quot;   
+## [25] &quot;bufferreply&quot;     &quot;JordanMorgan10&quot;  &quot;bufferdevs&quot;     
+## [28] &quot;Ashread_&quot;        &quot;julietchen&quot;      &quot;stevenc81&quot;      
+## [31] &quot;hamstu&quot;          &quot;julheimer&quot;       &quot;KarinnaBriseno&quot; 
+## [34] &quot;bufferlove&quot;      &quot;no_good3r&quot;       &quot;redman&quot;         
+## [37] &quot;courtneyseiter&quot;  &quot;goku2&quot;           &quot;josemdev&quot;       
+## [40] &quot;juliabreathes&quot;   &quot;davechapman&quot;     &quot;twanlass&quot;       
+## [43] &quot;FedericoWeber&quot;   &quot;CaroKopp&quot;        &quot;parmly&quot;         
+## [46] &quot;natemhanson&quot;     &quot;hailleymari&quot;     &quot;michael_erasmus&quot;
+## [49] &quot;Bonnie_Hugs&quot;     &quot;mwermuth&quot;        &quot;hannah_voice&quot;   
+## [52] &quot;ariellemargot&quot;   &quot;djfarrelly&quot;      &quot;toddba&quot;         
+## [55] &quot;stephe_lee&quot;      &quot;jntrry&quot;          &quot;nystroms&quot;       
+## [58] &quot;BorisTroja&quot;      &quot;nmillerbooks&quot;    &quot;mickmahady&quot;     
+## [61] &quot;ivanazuber&quot;      &quot;_pioul&quot;          &quot;OCallaghanDavid&quot;</code></pre>
+<p>Now we can employ the <code>botornot</code> function and arrange the profiles by most bot-like to least. According to the package’s <a href="https://github.com/mkearney/botornot">README</a>, the default (gradient boosted) model uses both users-level (bio, location, number of followers and friends, etc.) and tweets-level (number of hashtags, mentions, capital letters, etc. in a user’s most recent 100 tweets) data to estimate the probability that users are bots. For larger data sets, this method can be quite slow. Due to Twitter’s REST API rate limits, users are limited to only 180 estimates per every 15 minutes.</p>
+<p>I’ll obfuscate the usernames for privacy’s sake, but they can easily be found by reproducing the steps in this analysis.</p>
+<pre class="r"><code># get bot probability estimates
+data &lt;- botornot(users)</code></pre>
+<pre><code>## Warning in strptime(x, fmt, tz = &quot;GMT&quot;): unknown timezone &#39;zone/tz/2018c.
+## 1.0/zoneinfo/America/New_York&#39;</code></pre>
+<pre class="r"><code># hash the usernames
+data$user_hash &lt;- md5(data$user)
+
+# arrange by prob ests
+data %&gt;% 
+  arrange(desc(prob_bot)) %&gt;% 
+  select(-user)</code></pre>
+<pre><code>## # A tibble: 63 x 2
+##    prob_bot user_hash                       
+##       &lt;dbl&gt; &lt;chr&gt;                           
+##  1    0.999 3ff40b69a60e6210f3cbda8db1cb4ae2
+##  2    0.988 3e921417f41b66f1c24862710537f192
+##  3    0.985 d093563010eedd85801769f91909265d
+##  4    0.964 712a4384e6681bd521c5266e16789c29
+##  5    0.906 0edb7ec9098076761bd14c9c3ca97bd3
+##  6    0.899 6ed84e511f386eb4942cfab089b02602
+##  7    0.897 db82005412c13e740c03860b29aec7b7
+##  8    0.894 8dc5886d5c56e75b89ab191e0e5958cd
+##  9    0.889 a1d8e95101f88a8d7ef65d5106b7183c
+## 10    0.880 fa3d30c0919008e2ab8b5e87192a13ac
+## # ... with 53 more rows</code></pre>
+<p>Ok.. the model assigns a probability of over 90% to five of my teammates. Working for a company like Buffer, I can understand why this model might assign a higher-than-average probability of being a bot account. We tend to share many articles, use hashtags, and retweet a lot. Even so, these probabilities seem to be a bit too high for accounts that I know not to be bots. :)</p>
+<p>Let’s now look at a group of accounts that are indeed spammy, and test the model’s output.</p>
+<pre class="r"><code># list spammy accounts
+spammy &lt;- c(&#39;BadAdviceDog&#39;, &#39;HakuiiParadise&#39;, &#39;SimsProbIems&#39;, &#39;iLikeVinesDaily&#39;, &#39;0GM10S&#39;,
+            &#39;nazeer_mumtaz&#39;, &#39;newsbreakph&#39;, &#39;sinceresexts&#39;, &#39;uNaz9&#39;, &#39;ocalastyle&#39;, &#39;ApparelPorn&#39;, &#39;jawned&#39;)
+
+# get botornot estimates
+data &lt;- botornot(spammy)
+
+# view prob ests
+data %&gt;% arrange(desc(prob_bot))</code></pre>
+<pre><code>## # A tibble: 10 x 2
+##    user            prob_bot
+##    &lt;chr&gt;              &lt;dbl&gt;
+##  1 nazeer_mumtaz     0.978 
+##  2 0GM10S            0.966 
+##  3 jawned            0.749 
+##  4 iLikeVinesDaily   0.499 
+##  5 BadAdviceDog      0.415 
+##  6 SimsProbIems      0.279 
+##  7 HakuiiParadise    0.194 
+##  8 newsbreakph       0.190 
+##  9 uNaz9             0.184 
+## 10 ocalastyle        0.0319</code></pre>
+<p>Interestingly, these accounts seem to have a lower average probability of being bots than the Buffer team’s accounts!</p>
+<p>All in all, it’s been fun to play with this package. I could imagine something like this being used as a weighted input in a spam prediction model, however I’ll wait a while before putting it into production. :)</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-26-flake-it-till-you-make-it/">
-                <h2 class="post-title">Flake it till you make it</h2>
-                
-                  <h3 class="post-subtitle">
-                  Excerpt from Soulshaping by Jeff Brown
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 26, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Under what circumstances should we step off a path? When is it essential that we finish what we start? If I bought a bag of peanuts and had an allergic reaction, no one would fault me if I threw it out. If I ended a relationship with a woman who hit me, no one would say that I had a commitment problem. But if I walk away from a seemingly secure route because my soul has other ideas, I am a flake?
-                  <a href="/post/2015-02-26-flake-it-till-you-make-it/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-20-test-markdown/">
-                <h2 class="post-title">Test markdown</h2>
-                
-                  <h3 class="post-subtitle">
-                  Each post also has a subtitle
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 20, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
-Here is some bold text
-Here is a secondary heading Here&rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?
-                  <a href="/post/2015-02-20-test-markdown/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="/tags/example">example</a>&nbsp;
-                
-                  #<a href="/tags/markdown">markdown</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-13-hamlet-monologue/">
-                <h2 class="post-title">To be</h2>
-                
-                  <h3 class="post-subtitle">
-                  ... or not to be?
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 13, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  To be, or not to be&ndash;that is the question: Whether &lsquo;tis nobler in the mind to suffer The slings and arrows of outrageous fortune Or to take arms against a sea of troubles And by opposing end them. To die, to sleep&ndash; No more&ndash;and by a sleep to say we end The heartache, and the thousand natural shocks That flesh is heir to. &lsquo;Tis a consummation Devoutly to be wished. To die, to sleep&ndash; To sleep&ndash;perchance to dream: ay, there&rsquo;s the rub, For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause.
-                  <a href="/post/2015-02-13-hamlet-monologue/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-27-dear-diary/">
-                <h2 class="post-title">Dear diary</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 27, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  What is it with that Mary girl? Dragging me to school every day. As if I had a choice. What you don&rsquo;t hear in those nursery rhymes is that she starves me if I don&rsquo;t go to school with her; it&rsquo;s the only way I can stay alive! I&rsquo;m thinking about being adopted by Little Bo Peep, sure I may get lost, but anything is better than being with Mary and those little brats at school (shudder, shudder).
-                  <a href="/post/2015-01-27-dear-diary/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-                
-                  <h3 class="post-subtitle">
-                  Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 19, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="/post/2015-01-19-soccer/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+          <li class="previous">
+            <a href="/blog/revisiting-churn-surveys/" data-toggle="tooltip" data-placement="top" title="Revisiting Churn Surveys">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/4">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
