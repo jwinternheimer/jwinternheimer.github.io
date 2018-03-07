@@ -245,28 +245,28 @@ users</code></pre>
 <p>Now we can employ the <code>botornot</code> function and arrange the profiles by most bot-like to least. According to the package’s <a href="https://github.com/mkearney/botornot">README</a>, the default (gradient boosted) model uses both users-level (bio, location, number of followers and friends, etc.) and tweets-level (number of hashtags, mentions, capital letters, etc. in a user’s most recent 100 tweets) data to estimate the probability that users are bots. For larger data sets, this method can be quite slow. Due to Twitter’s REST API rate limits, users are limited to only 180 estimates per every 15 minutes.</p>
 <p>I’ll obfuscate the usernames for privacy’s sake, but they can easily be found by reproducing the steps in this analysis.</p>
 <pre class="r"><code># get bot probability estimates
-data &lt;- botornot(users)</code></pre>
-<pre><code>## Warning in strptime(x, fmt, tz = &quot;GMT&quot;): unknown timezone &#39;zone/tz/2018c.
-## 1.0/zoneinfo/America/New_York&#39;</code></pre>
-<pre class="r"><code># hash the usernames
+data &lt;- botornot(users)
+
+# hash the usernames
 data$user_hash &lt;- md5(data$user)
 
 # arrange by prob ests
 data %&gt;% 
-  arrange(desc(prob_bot)) </code></pre>
-<pre><code>## # A tibble: 63 x 3
-##    user           prob_bot user_hash                       
-##    &lt;chr&gt;             &lt;dbl&gt; &lt;chr&gt;                           
-##  1 bufferlove        0.999 3ff40b69a60e6210f3cbda8db1cb4ae2
-##  2 thedarcypeters    0.988 3e921417f41b66f1c24862710537f192
-##  3 goku2             0.985 d093563010eedd85801769f91909265d
-##  4 bufferreply       0.964 712a4384e6681bd521c5266e16789c29
-##  5 BorisTroja        0.906 0edb7ec9098076761bd14c9c3ca97bd3
-##  6 JordanMorgan10    0.899 6ed84e511f386eb4942cfab089b02602
-##  7 bufferdevs        0.897 db82005412c13e740c03860b29aec7b7
-##  8 FedericoWeber     0.894 8dc5886d5c56e75b89ab191e0e5958cd
-##  9 eric_khun         0.889 a1d8e95101f88a8d7ef65d5106b7183c
-## 10 juliabreathes     0.880 fa3d30c0919008e2ab8b5e87192a13ac
+  arrange(desc(prob_bot)) %&gt;% 
+  select(-user)</code></pre>
+<pre><code>## # A tibble: 63 x 2
+##    prob_bot user_hash                       
+##       &lt;dbl&gt; &lt;chr&gt;                           
+##  1    0.999 3ff40b69a60e6210f3cbda8db1cb4ae2
+##  2    0.988 3e921417f41b66f1c24862710537f192
+##  3    0.985 d093563010eedd85801769f91909265d
+##  4    0.964 712a4384e6681bd521c5266e16789c29
+##  5    0.906 0edb7ec9098076761bd14c9c3ca97bd3
+##  6    0.899 6ed84e511f386eb4942cfab089b02602
+##  7    0.897 db82005412c13e740c03860b29aec7b7
+##  8    0.894 8dc5886d5c56e75b89ab191e0e5958cd
+##  9    0.889 a1d8e95101f88a8d7ef65d5106b7183c
+## 10    0.886 fa3d30c0919008e2ab8b5e87192a13ac
 ## # ... with 53 more rows</code></pre>
 <p>Ok.. the model assigns a probability of over 90% to five of my teammates. Working for a company like Buffer, I can understand why this model might assign a higher-than-average probability of being a bot account. We tend to share many articles, use hashtags, and retweet a lot. Even so, these probabilities seem to be a bit too high for accounts that I know not to be bots. :)</p>
 <p>Let’s now look at a group of accounts that are indeed spammy, and test the model’s output.</p>
@@ -285,10 +285,10 @@ data %&gt;% arrange(desc(prob_bot))</code></pre>
 ##  1 nazeer_mumtaz     0.971 
 ##  2 0GM10S            0.555 
 ##  3 jawned            0.476 
-##  4 BadAdviceDog      0.324 
-##  5 newsbreakph       0.318 
+##  4 newsbreakph       0.318 
+##  5 BadAdviceDog      0.304 
 ##  6 uNaz9             0.181 
-##  7 SimsProbIems      0.145 
+##  7 SimsProbIems      0.160 
 ##  8 iLikeVinesDaily   0.0781
 ##  9 HakuiiParadise    0.0691
 ## 10 ocalastyle        0.0479</code></pre>

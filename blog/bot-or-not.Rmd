@@ -10,6 +10,7 @@ I happened to come across [this Tweet](https://twitter.com/kearneymw/status/9700
 
 ![](https://media.makeameme.org/created/bots-bots-9c4m68.jpg)
 
+
 After seeing this, I couldn't _not_ take it for a spin. Let's determine which of the Buffer team's profiles are most bot-like, and test the models on profiles that are known to be spammy accounts.
 
 ```{r warning = FALSE, message = FALSE}
@@ -70,7 +71,7 @@ Now we can employ the `botornot` function and arrange the profiles by most bot-l
 
 I'll obfuscate the usernames for privacy's sake, but they can easily be found by reproducing the steps in this analysis.
 
-```{r}
+```{r warning = FALSE, message = FALSE}
 # get bot probability estimates
 data <- botornot(users)
 
@@ -79,7 +80,8 @@ data$user_hash <- md5(data$user)
 
 # arrange by prob ests
 data %>% 
-  arrange(desc(prob_bot)) 
+  arrange(desc(prob_bot)) %>% 
+  select(-user)
 ```
 
 Ok.. the model assigns a probability of over 90% to five of my teammates. Working for a company like Buffer, I can understand why this model might assign a higher-than-average probability of being a bot account. We tend to share many articles, use hashtags, and retweet a lot. Even so, these probabilities seem to be a bit too high for accounts that I know not to be bots. :) 
