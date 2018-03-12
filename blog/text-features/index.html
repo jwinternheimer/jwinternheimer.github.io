@@ -5,9 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Blogs</title>
-  <meta property="og:title" content="Blogs" />
-  <meta name="twitter:title" content="Blogs" />
+  <title>Analyzing Tweets with TextFeatures</title>
+  <meta property="og:title" content="Analyzing Tweets with TextFeatures" />
+  <meta name="twitter:title" content="Analyzing Tweets with TextFeatures" />
+  <meta name="description" content="I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.
+In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.
+# load libraries library(buffer) library(dplyr) library(tidyr) library(ggplot2) library(hrbrthemes) library(ggridges) library(textfeatures) library(corrplot) We now need to gather tweets sent from Buffer for Business users in the past few weeks.">
+  <meta property="og:description" content="I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.
+In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.
+# load libraries library(buffer) library(dplyr) library(tidyr) library(ggplot2) library(hrbrthemes) library(ggridges) library(textfeatures) library(corrplot) We now need to gather tweets sent from Buffer for Business users in the past few weeks.">
+  <meta name="twitter:description" content="I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +22,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/blog/" />
+  <meta property="og:url" content="/blog/text-features/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/blog/" />
+  <link rel="canonical" href="/blog/text-features/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -156,14 +163,33 @@
 
 
     
+  
+  
+  
+
+
+
+
+  
+
   <header class="header-section ">
+    
     <div class="intro-header no-img">
+      
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Blogs</h1>
-              <hr class="small">
+            <div class="post-heading">
+              <h1>Analyzing Tweets with TextFeatures</h1>
+                
+                
+                  <span class="post-meta">
+  Posted on March 8, 2018
+  
+</span>
+
+
+                
             </div>
           </div>
         </div>
@@ -171,214 +197,135 @@
     </div>
   </header>
 
+
     
-  <div class="container" role="main">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>I recently came across another useful package from Mike Kearney called <code>textfeatures</code>. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.</p>
+<p>In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.</p>
+<pre class="r"><code># load libraries
+library(buffer)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(hrbrthemes)
+library(ggridges)
+library(textfeatures)
+library(corrplot)</code></pre>
+<p>We now need to gather tweets sent from Buffer for Business users in the past few weeks. We’ll use the following query to do that.</p>
+<pre class="sql"><code>with business_users as (
+  select
+    user_id
+  from dbt.users
+  where simplified_billing_plan = &#39;business&#39; 
+)
+select 
+  up.id
+  , up.user_id
+  , up.via
+  , up.client_type
+  , up.text
+  , up.has_photo
+  , up.has_multiple_photos
+  , up.number_of_likes
+  , up.number_of_favorites
+  , up.number_of_times_mentioned
+  , up.number_of_retweets
+  , up.number_of_clicks
+  , up.number_of_comments
+  , up.number_of_total_interactions
+from dbt.updates as up
+inner join business_users as u
+on up.user_id = u.user_id
+where was_sent_with_buffer
+and profile_service = &#39;twitter&#39;
+and up.created_at &gt;= (current_date - 7)
+and up.text is not null 
+and up.text != &#39;&#39;
+and has_failed = false</code></pre>
+<pre class="r"><code># replace NAs with 0
+tweets &lt;- tweets %&gt;% 
+  replace_na(list(number_of_favorites = 0, 
+                  number_of_retweets = 0,
+                  number_of_times_mentioned = 0,
+                  number_of_total_interactions = 0))</code></pre>
+<p>Now we can extract features from the text.</p>
+<pre class="r"><code># extract text features
+tweets &lt;- tweets %&gt;% 
+  bind_cols(textfeatures(tweets$text))</code></pre>
+<p>Cool! Now let’s create a correlation matrix with these features and the <code>number_of_total_interactions</code> field.</p>
+<pre class="r"><code># extract features
+features &lt;- tweets %&gt;% 
+  select(interactions:n_charsperword) 
+
+# build correlation plot
+corrplot(cor(features), method = &quot;color&quot;, type = &quot;upper&quot;, tl.col = &quot;black&quot;, tl.srt = 45)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>There doesn’t appear to be a strong correlation between <code>interactions</code> and any single feature. Just for fun, let’s plot the density function of <code>interactions</code>.</p>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Looks to be power-law distributed. What if created the same correlation plot for a single user’s tweets?</p>
+<pre class="r"><code># gather tweets of a single user
+user_tweets &lt;- tweets %&gt;% 
+  filter(user_id == &#39;56a511bd20e312680618e45d&#39;) %&gt;% 
+  select(interactions:n_charsperword)
+  
+# build correlation plot for single user
+corrplot(cor(user_tweets), method = &quot;color&quot;, type = &quot;upper&quot;, tl.col = &quot;black&quot;, tl.srt = 45)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>We can detect some stronger correlations here. Let’s plot the number of exclamation points against the number of interactions for this user’s tweets.</p>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Not surprisingly, the distribution of interactions is quite wide. We could make some sort of log transformation to help this, but what if we plotted the median number of interactions for each number of exclamation points?</p>
+<pre class="r"><code>user_tweets %&gt;% 
+  mutate(n_exclaims = as.factor(n_exclaims)) %&gt;% 
+  group_by(n_exclaims) %&gt;% 
+  summarise(tweets = n(), med_interactions = median(interactions)) %&gt;% 
+  ggplot(aes(x = n_exclaims, y = med_interactions)) +
+  geom_bar(stat = &#39;identity&#39;) + 
+  coord_flip() +
+  theme_ipsum() +
+  labs(x = &quot;Median Number of Interactions&quot;, y = &quot;Number of Exclamation Points&quot;,
+       title = &quot;Median Number of Interactions&quot;,
+       subtitle = &quot;By Number of Exclamation Points&quot;)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>This is quite interesting to see. There appears to be a significant increase in the number of interactions that this user’s tweets get when there are more exclamation points. Let’s recreate this plot, but use the number of hashtags instead of the number of exclamation points.</p>
+<pre class="r"><code>user_tweets %&gt;% 
+  mutate(n_hashtags = as.factor(n_hashtags)) %&gt;% 
+  group_by(n_hashtags) %&gt;% 
+  summarise(tweets = n(), med_interactions = median(interactions)) %&gt;% 
+  ggplot(aes(x = n_hashtags, y = med_interactions)) +
+  geom_bar(stat = &#39;identity&#39;) + 
+  coord_flip() +
+  theme_ipsum() +
+  labs(x = &quot;Median Number of Interactions&quot;, y = &quot;Number of Hashtags&quot;,
+       title = &quot;Median Number of Interactions&quot;,
+       subtitle = &quot;By Number of Hashtags&quot;)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Cool! We’ll come back to this in the future…</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-        <div class="posts-list">
-          
-            <article class="post-preview">
-              <a href="/blog/instagram-analysis/">
-                <h2 class="post-title">How do I get more likes on Instagram?</h2>
-    
-                
-                  <h3 class="post-subtitle">
-                    Take better pictures of people!
-                  </h3>
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on July 5, 2017
-              </p>
-              <div class="post-entry">
-                
-                  I haven’t asked myself this question before, and I’ve never tried to optimize my Instagram posts for maximum likeage. I have made a couple of observations though:
- Instagram posts that are shared earlier in the day, while my friends and colleagues in Europe are still awake, seem to get more likes more quickly.
- Posts that include people and faces seem to get more likes.
- Images of New York (which happen to include the #nyc hashtag) tend to get lots of likes.
-                  <a href="/blog/instagram-analysis/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/free-plan-limits/">
-                <h2 class="post-title">How many users will be affected by the Free plan limits?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 30, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction Over the past few weeks, simplifying the free plan has become a theme and key component of realizing our product vision. This Paper has a lot of good context and discussion around what that involves.
-There are four major components to this change:
- Reducing the profile limit to 2 Reducing the number of updates people can send to 5 per day per profile Removing the ‘Share Now’ option Removing custom scheduling  The goal of this analysis is to estimate how many active users would be affected by each component.
-                  <a href="/blog/free-plan-limits/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/5-posts-per-day/">
-                <h2 class="post-title">How many users post 5 times per day?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 27, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction A significant part of the Kodiak product cycle and Buffer’s product vision going forward is simplifying the experience for users on a free plan. One of the components we are considering simplifying is the Queue Limit.
-As of June 2017, the Queue Limit refers to the number of updates users on a free plan can have in the Queue of a single profile at any single point in time. This can understandable cause some confusion with users, and can also be exploited (e.
-                  <a href="/blog/5-posts-per-day/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/share-now/">
-                <h2 class="post-title">How often do free users &#39;Share Now&#39;?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 26, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction As part of the next product cycle, we will try to create a simpler, more streamlined experience for Buffer users on a free plan. Part of that simplification process could include the limiting or removal of the option to ‘Share Now’, when drafting updates.
-Sharing an update immediately doesn’t add a post to the queue, which could possibly allow for the sending of many updates in a single time period.
-                  <a href="/blog/share-now/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/free_updates_per_day/">
-                <h2 class="post-title">How many updates do Free users schedule per day?</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 22, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
- Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.
-                  <a href="/blog/free_updates_per_day/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/updates_per_day/">
-                <h2 class="post-title">Free Plan: Updates Per Day</h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 22, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction The goal of this analysis is to better understand how users use the Free plan, in order to better inform our decisions around changing its limits. In this analysis specifically, we’ll look at the number of updates that active users share on a daily basis.
- Data collection Let’s start by getting the Free users that have scheduled at least one update in the past 28 days. We’ll use the following SQL query to grab them.
-                  <a href="/blog/updates_per_day/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/profile_analysis/">
-                <h2 class="post-title">How many profiles do Free users use?</h2>
-    
-                
-                  <h3 class="post-subtitle">
-                    Not too many.
-                  </h3>
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on June 21, 2017
-              </p>
-              <div class="post-entry">
-                
-                  Introduction There is a big focus on simplifying the product for Buffer users on free plans in 2017 in order to create a more intuitive experience and encourage more upgrades.
-The purpose of this analysis is to get a better understanding of how users currently interact with the free plan, in order to better inform decisions around future plan limits. Specifically, we would love to learn about how many profiles users connect and actually schedule updates for.
-                  <a href="/blog/profile_analysis/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/business-pricing-and-upgrades/">
-                <h2 class="post-title"></h2>
-    
-                
-              </a>
-    
-              <p class="post-meta">
-                Posted on January 1, 0001
-              </p>
-              <div class="post-entry">
-                
-                  On March 11, 2016, we doubled the price of all of our Business plans. We measured the effect that this change had on MRR and new MRR, but don’t have the best understanding of the effect that it had on upgrades from Awesome plans.
-My hypothesis is that the percentage of Awesome customers that eventually upgraded to a Business subscription decreased significantly, but we don’t yet know if that is true.
-                  <a href="/blog/business-pricing-and-upgrades/" class="post-read-more">[Read More]</a>
-                
-              </div>
-    
-              
-    
-            </article>
-          
-        </div>
+          <li class="previous">
+            <a href="/blog/bot-or-not/" data-toggle="tooltip" data-placement="top" title="Bot Or No Bot?">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/blog/page/3">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+          <li class="next">
+            <a href="/blog/equal-pay-2018/" data-toggle="tooltip" data-placement="top" title="Equal Pay Report 2018">Next Post &rarr;</a>
+          </li>
+        
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

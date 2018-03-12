@@ -194,6 +194,57 @@
           
           
             <article class="post-preview">
+              <a href="/blog/equal-pay-2018/">
+                <h2 class="post-title">Equal Pay Report 2018</h2>
+                
+                  <h3 class="post-subtitle">
+                  What Men and Women Earn at Buffer
+                  </h3>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on March 12, 2018
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  Last April we released Buffer’s first equal pay report in celebration of Equal Pay Day. Since then, we have overhauled our salary formula and made many internal role changes. Given all of these changes, I’m excited to dig into our salary data today and see how we’re doing.
+Data Collection The data we’ll use in this analysis comes from this spreadsheet. We’ll simply read in a CSV downloaded from this sheet.
+                  <a href="/blog/equal-pay-2018/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
+              <a href="/blog/text-features/">
+                <h2 class="post-title">Analyzing Tweets with TextFeatures</h2>
+                
+              </a>
+
+              <span class="post-meta">
+  Posted on March 8, 2018
+  
+</span>
+
+
+              <div class="post-entry">
+                
+                  I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.
+In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.
+# load libraries library(buffer) library(dplyr) library(tidyr) library(ggplot2) library(hrbrthemes) library(ggridges) library(textfeatures) library(corrplot) We now need to gather tweets sent from Buffer for Business users in the past few weeks.
+                  <a href="/blog/text-features/" class="post-read-more">[Read More]</a>
+                
+              </div>
+
+              
+            </article>
+          
+            <article class="post-preview">
               <a href="/blog/bot-or-not/">
                 <h2 class="post-title">Bot Or No Bot?</h2>
                 
@@ -388,52 +439,6 @@ In this analysis we’ll try to measure the effect that this policy has had on t
 The survey consisted of 30 questions about how users use social media.
 # get response data responses &lt;- readRDS(&#39;state-of-social.rds&#39;) The data is quite messy and untidy.
                   <a href="/blog/remote-work-survey/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/awesome_profile_counts/">
-                <h2 class="post-title">An exploration of Awesome profile counts</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on December 14, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  In order to gain a better understanding of how Buffer’s customers use the product within the constraint of the current plan limits, we can explore the data related to users’ active profiles. More specifically, we can use this data to answer the question “How many Awesome users with up to 3 Active profiles connected have 2 or 3 of the same profile types?”
-This is a very specific question. It will help us learn about usage and inform future decisions related to Buffer’s pricing structure.
-                  <a href="/blog/awesome_profile_counts/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/blog/values_survey/">
-                <h2 class="post-title">How Buffer lives its values</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on December 11, 2017
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Buffer is well known for its 10 core values that guide the company forward. Continuously thinking and acting on these values has benefited the company a great deal over the years and has made an important contibution to our financial and emotional health.
-Every year, we ask team members to grade Buffer as an organization on how well it lives up to the values. In the survey, the responder is prompted to choose a value on a five-point scale for each of the ten values, with one corresponding to a value that needs a lot more work and five corresponding to a value that Buffer is strongly living.
-                  <a href="/blog/values_survey/" class="post-read-more">[Read More]</a>
                 
               </div>
 

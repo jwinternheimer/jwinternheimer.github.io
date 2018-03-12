@@ -3,6 +3,16 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/equal-pay-2018/</loc>
+    <lastmod>2018-03-12T14:26:51-04:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/text-features/</loc>
+    <lastmod>2018-03-08T09:44:37-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/bot-or-not/</loc>
     <lastmod>2018-03-05T09:33:43-05:00</lastmod>
   </url>
@@ -258,7 +268,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-03-05T09:33:43-05:00</lastmod>
+    <lastmod>2018-03-12T14:26:51-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -275,7 +285,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-03-05T09:33:43-05:00</lastmod>
+    <lastmod>2018-03-12T14:26:51-04:00</lastmod>
     <priority>0</priority>
   </url>
   
