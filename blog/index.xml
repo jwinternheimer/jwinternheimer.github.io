@@ -7,31 +7,10 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 12 Mar 2018 14:26:51 -0400</lastBuildDate>
+    <lastBuildDate>Mon, 05 Mar 2018 09:33:43 -0500</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Equal Pay Report 2018</title>
-      <link>/blog/equal-pay-2018/</link>
-      <pubDate>Mon, 12 Mar 2018 14:26:51 -0400</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/equal-pay-2018/</guid>
-      <description>Last April we released Buffer’s first equal pay report in celebration of Equal Pay Day. Since then, we have overhauled our salary formula and made many internal role changes. Given all of these changes, I’m excited to dig into our salary data today and see how we’re doing.
-Data Collection The data we’ll use in this analysis comes from this spreadsheet. We’ll simply read in a CSV downloaded from this sheet.</description>
-    </item>
-    
-    <item>
-      <title>Analyzing Tweets with TextFeatures</title>
-      <link>/blog/text-features/</link>
-      <pubDate>Thu, 08 Mar 2018 09:44:37 -0500</pubDate>
-      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
-      <guid>/blog/text-features/</guid>
-      <description>I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.
-In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.
-# load libraries library(buffer) library(dplyr) library(tidyr) library(ggplot2) library(hrbrthemes) library(ggridges) library(textfeatures) library(corrplot) We now need to gather tweets sent from Buffer for Business users in the past few weeks.</description>
-    </item>
     
     <item>
       <title>Bot Or No Bot?</title>
