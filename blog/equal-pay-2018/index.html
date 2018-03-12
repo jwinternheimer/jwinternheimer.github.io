@@ -5,9 +5,12 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>Equal Pay Report 2018</title>
+  <meta property="og:title" content="Equal Pay Report 2018" />
+  <meta name="twitter:title" content="Equal Pay Report 2018" />
+  <meta name="description" content="What Men and Women Earn at Buffer">
+  <meta property="og:description" content="What Men and Women Earn at Buffer">
+  <meta name="twitter:description" content="What Men and Women Earn at Buffer">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +18,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/" />
+  <meta property="og:url" content="/blog/equal-pay-2018/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/" />
+  <link rel="canonical" href="/blog/equal-pay-2018/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,8 +175,12 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="blog-heading">
+              <h1>Equal Pay Report 2018</h1>
+                
+                  
+                    <h2 class="blog-subheading">What Men and Women Earn at Buffer</h2>
+                  
                 
                 
             </div>
@@ -185,245 +192,126 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>Last April we released Buffer’s first <a href="https://open.buffer.com/equal-pay/">equal pay report</a> in celebration of Equal Pay Day. Since then, we have <a href="https://open.buffer.com/salary-formula/">overhauled our salary formula</a> and made many internal role changes. Given all of these changes, I’m excited to dig into our salary data today and see how we’re doing.</p>
+<div id="data-collection" class="section level3">
+<h3>Data Collection</h3>
+<p>The data we’ll use in this analysis comes from <a href="https://docs.google.com/spreadsheets/d/1cRI2VUhFVWB-c8wTmTnbT2OMOdDNnbh06bjCID_IKt0/edit?usp=sharing">this spreadsheet</a>. We’ll simply read in a CSV downloaded from this sheet.</p>
+<pre class="r"><code># read csv
+salaries &lt;- read.csv(&quot;~/Downloads/salaries.csv&quot;, header = TRUE)</code></pre>
+<p>Now we’re ready for some exploratory analysis.</p>
+</div>
+<div id="global-summary-statistics" class="section level3">
+<h3>Global Summary Statistics</h3>
+<p>Let’s begin by describing the distribution of salaries for all team members of Buffer. It might be helpful to define a couple fields in our dataset. The <code>salary</code> field contains the totol pre-tax salaries of team members before tax in US dollars. This includes dependent grants and the choice to receive a higher salary instead of stock options.</p>
+<p>The <code>base_salary</code> field contains the base salary as calculated by our new salary formula. This <em>excludes</em> dependent grants and salary choices.</p>
+<p>In this analysis I chose to focus on the <code>salary</code> values, because that is what people take home (for the most part).</p>
+<pre class="r"><code># summarise salary
+summary(salaries$salary)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   69483   86864  109350  114211  128412  265315</code></pre>
+<p>The median salary at Buffer is $109K and the average is $114K. We can plot the distribution of salaries across Buffer.</p>
+<pre class="r"><code># define cuts
+cuts &lt;- seq(60000, 280000, 20000)
+
+# define salary buckets
+salaries &lt;- salaries %&gt;% 
+  mutate(salary_bin = cut(salary, breaks = cuts, dig.lab = 10))
+
+# plot distribution of salaries
+salaries %&gt;% 
+  count(salary_bin) %&gt;% 
+  ggplot(aes(x = salary_bin, y = n)) +
+  geom_bar(stat = &#39;identity&#39;) +
+  theme_ipsum() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = NULL, y = &quot;Team Members&quot;, title = &quot;Salary Distribution&quot;)</code></pre>
+<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>The most common salary “bin” is 80-100K. Let’s break salary down by gender now.</p>
+</div>
+<div id="average-salary-by-gender" class="section level3">
+<h3>Average Salary by Gender</h3>
+<p>We can quickly calculate the average and median salaries for both men and women at Buffer.</p>
+<pre class="r"><code># calculate average and median salaries
+salaries %&gt;% 
+  group_by(gender) %&gt;% 
+  summarise(average_salary = mean(salary), median_salary = median(salary))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   gender average_salary median_salary
+##   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+## 1 female         106819         94546
+## 2 male           117530        114215</code></pre>
+<p>The average salary for females at Buffer is <strong>$106,808</strong> and the median is <strong>$94,546</strong>. The average salary for men is <strong>$117,530</strong> and the median is <strong>$114,215</strong>.</p>
+<p>If we look at averages, men earn around 10% more than women – if we look at medians, men earn around 21% more than women!</p>
+<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>This discrpency can be surprising, especially for a company with a salary formula! Gender does not enter the salary formula in any way. However, there is something interesting going on - let’s take a closer look at the data.</p>
+</div>
+<div id="technical-and-non-technical-roles" class="section level3">
+<h3>Technical and Non-Technical Roles</h3>
+<p>I’m not the biggest fan of this terminology, but it can be useful to describe roles. Technical roles include engineering, data, design, product, and our full-stack marketer. Non-technical roles include marketing, leadership, and advocacy.</p>
+<p>If we calculate the average salaries for technical and non-technical roles, we might see something interesting.</p>
+<pre class="r"><code># calculate average salaries for tech and non-tech roles
+salaries %&gt;% 
+  group_by(role_type, gender) %&gt;% 
+  summarise(average_salary = mean(salary))</code></pre>
+<pre><code>## # A tibble: 4 x 3
+## # Groups:   role_type [?]
+##   role_type     gender average_salary
+##   &lt;fct&gt;         &lt;fct&gt;           &lt;dbl&gt;
+## 1 non-technical female         105587
+## 2 non-technical male           104171
+## 3 technical     female         112363
+## 4 technical     male           125287</code></pre>
+<p>This is interesting. If we segment team members by their role type, we can see that women earn around 1% more than men in non-technical roles, and men earn around only 12% more than women in technical roles.</p>
+<p>This seems to explain the overall difference in average salaries. There are more men in technical roles, which tend to demand higher salaries. That, coupled with the fact that men earn more on-average than women in technical roles, leads to the 10% difference in the overall average salary.</p>
+<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="salaries-by-team" class="section level3">
+<h3>Salaries by Team</h3>
+<p>We can also plot the average salary for each team at Buffer.</p>
+<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>salaries %&gt;%
+  group_by(team) %&gt;%
+  summarise(average_salary = mean(salary)) %&gt;% 
+  arrange(desc(average_salary))</code></pre>
+<pre><code>## # A tibble: 9 x 2
+##   team        average_salary
+##   &lt;fct&gt;                &lt;dbl&gt;
+## 1 leadership          169675
+## 2 engineering         127177
+## 3 product             124146
+## 4 data                121996
+## 5 design              113257
+## 6 finance             103073
+## 7 people               99498
+## 8 marketing            86506
+## 9 advocacy             83751</code></pre>
+<p>Interesting stuff overall!</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="/post/2015-07-23-r-rmarkdown/">
-                <h2 class="post-title">Hello R Markdown</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 23, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.
-                  <a href="/post/2015-07-23-r-rmarkdown/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="/tags/r-markdown">R Markdown</a>&nbsp;
-                
-                  #<a href="/tags/plot">plot</a>&nbsp;
-                
-                  #<a href="/tags/regression">regression</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-26-flake-it-till-you-make-it/">
-                <h2 class="post-title">Flake it till you make it</h2>
-                
-                  <h3 class="post-subtitle">
-                  Excerpt from Soulshaping by Jeff Brown
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 26, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Under what circumstances should we step off a path? When is it essential that we finish what we start? If I bought a bag of peanuts and had an allergic reaction, no one would fault me if I threw it out. If I ended a relationship with a woman who hit me, no one would say that I had a commitment problem. But if I walk away from a seemingly secure route because my soul has other ideas, I am a flake?
-                  <a href="/post/2015-02-26-flake-it-till-you-make-it/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-20-test-markdown/">
-                <h2 class="post-title">Test markdown</h2>
-                
-                  <h3 class="post-subtitle">
-                  Each post also has a subtitle
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 20, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
-Here is some bold text
-Here is a secondary heading Here&rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?
-                  <a href="/post/2015-02-20-test-markdown/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="/tags/example">example</a>&nbsp;
-                
-                  #<a href="/tags/markdown">markdown</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-13-hamlet-monologue/">
-                <h2 class="post-title">To be</h2>
-                
-                  <h3 class="post-subtitle">
-                  ... or not to be?
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 13, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  To be, or not to be&ndash;that is the question: Whether &lsquo;tis nobler in the mind to suffer The slings and arrows of outrageous fortune Or to take arms against a sea of troubles And by opposing end them. To die, to sleep&ndash; No more&ndash;and by a sleep to say we end The heartache, and the thousand natural shocks That flesh is heir to. &lsquo;Tis a consummation Devoutly to be wished. To die, to sleep&ndash; To sleep&ndash;perchance to dream: ay, there&rsquo;s the rub, For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause.
-                  <a href="/post/2015-02-13-hamlet-monologue/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-27-dear-diary/">
-                <h2 class="post-title">Dear diary</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 27, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  What is it with that Mary girl? Dragging me to school every day. As if I had a choice. What you don&rsquo;t hear in those nursery rhymes is that she starves me if I don&rsquo;t go to school with her; it&rsquo;s the only way I can stay alive! I&rsquo;m thinking about being adopted by Little Bo Peep, sure I may get lost, but anything is better than being with Mary and those little brats at school (shudder, shudder).
-                  <a href="/post/2015-01-27-dear-diary/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-                
-                  <h3 class="post-subtitle">
-                  Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 19, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="/post/2015-01-19-soccer/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+          <li class="previous">
+            <a href="/blog/text-features/" data-toggle="tooltip" data-placement="top" title="Analyzing Tweets with TextFeatures">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/4">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">

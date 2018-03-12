@@ -5,9 +5,16 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Data Analysis?</title>
-  <meta property="og:title" content="Data Analysis?" />
-  <meta name="twitter:title" content="Data Analysis?" />
+  <title>Analyzing Tweets with TextFeatures</title>
+  <meta property="og:title" content="Analyzing Tweets with TextFeatures" />
+  <meta name="twitter:title" content="Analyzing Tweets with TextFeatures" />
+  <meta name="description" content="I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.
+In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.
+# load libraries library(buffer) library(dplyr) library(tidyr) library(ggplot2) library(hrbrthemes) library(ggridges) library(textfeatures) library(corrplot) We now need to gather tweets sent from Buffer for Business users in the past few weeks.">
+  <meta property="og:description" content="I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.
+In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.
+# load libraries library(buffer) library(dplyr) library(tidyr) library(ggplot2) library(hrbrthemes) library(ggridges) library(textfeatures) library(corrplot) We now need to gather tweets sent from Buffer for Business users in the past few weeks.">
+  <meta name="twitter:description" content="I recently came across another useful package from Mike Kearney called textfeatures. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -15,12 +22,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/" />
+  <meta property="og:url" content="/blog/text-features/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/" />
+  <link rel="canonical" href="/blog/text-features/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -172,9 +179,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="page-heading">
-              <h1>Data Analysis?</h1>
+            <div class="post-heading">
+              <h1>Analyzing Tweets with TextFeatures</h1>
                 
+                
+                  <span class="post-meta">
+  Posted on March 8, 2018
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -185,245 +199,133 @@
 
 
     
-  <div role="main" class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>I recently came across another useful package from Mike Kearney called <code>textfeatures</code>. It’s a simple package for extracting useful features from character objects, like the number of hashtags, mentions, urls, capital letters, exclamation points, etc.</p>
+<p>In this analysis we’ll analyze tweets from Buffer for Business users, and see which features correlate most closely to engagement. First let’s load the libraries we’ll need.</p>
+<pre class="r"><code># load libraries
+library(buffer)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(hrbrthemes)
+library(ggridges)
+library(textfeatures)
+library(corrplot)</code></pre>
+<p>We now need to gather tweets sent from Buffer for Business users in the past few weeks. We’ll use the following query to do that.</p>
+<pre class="sql"><code>with business_users as (
+  select
+    user_id
+  from dbt.users
+  where simplified_billing_plan = &#39;business&#39; 
+)
+select 
+  up.id
+  , up.user_id
+  , up.via
+  , up.client_type
+  , up.text
+  , up.has_photo
+  , up.has_multiple_photos
+  , up.number_of_likes
+  , up.number_of_favorites
+  , up.number_of_times_mentioned
+  , up.number_of_retweets
+  , up.number_of_clicks
+  , up.number_of_comments
+  , up.number_of_total_interactions
+from dbt.updates as up
+inner join business_users as u
+on up.user_id = u.user_id
+where was_sent_with_buffer
+and profile_service = &#39;twitter&#39;
+and up.created_at &gt;= (current_date - 7)
+and up.text is not null 
+and up.text != &#39;&#39;
+and has_failed = false</code></pre>
+<pre class="r"><code># replace NAs with 0
+tweets &lt;- tweets %&gt;% 
+  replace_na(list(number_of_favorites = 0, 
+                  number_of_retweets = 0,
+                  number_of_times_mentioned = 0,
+                  number_of_total_interactions = 0))</code></pre>
+<p>Now we can extract features from the text.</p>
+<pre class="r"><code># extract text features
+tweets &lt;- tweets %&gt;% 
+  bind_cols(textfeatures(tweets$text))</code></pre>
+<p>Cool! Now let’s create a correlation matrix with these features and the <code>number_of_total_interactions</code> field.</p>
+<pre class="r"><code># extract features
+features &lt;- tweets %&gt;% 
+  select(interactions:n_charsperword) 
+
+# build correlation plot
+corrplot(cor(features), method = &quot;color&quot;, type = &quot;upper&quot;, tl.col = &quot;black&quot;, tl.srt = 45)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>There doesn’t appear to be a strong correlation between <code>interactions</code> and any single feature. Just for fun, let’s plot the density function of <code>interactions</code>.</p>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Looks to be power-law distributed. What if created the same correlation plot for a single user’s tweets?</p>
+<pre class="r"><code># gather tweets of a single user
+user_tweets &lt;- tweets %&gt;% 
+  filter(user_id == &#39;56a511bd20e312680618e45d&#39;) %&gt;% 
+  select(interactions:n_charsperword)
+  
+# build correlation plot for single user
+corrplot(cor(user_tweets), method = &quot;color&quot;, type = &quot;upper&quot;, tl.col = &quot;black&quot;, tl.srt = 45)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>We can detect some stronger correlations here. Let’s plot the number of exclamation points against the number of interactions for this user’s tweets.</p>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Not surprisingly, the distribution of interactions is quite wide. We could make some sort of log transformation to help this, but what if we plotted the median number of interactions for each number of exclamation points?</p>
+<pre class="r"><code>user_tweets %&gt;% 
+  mutate(n_exclaims = as.factor(n_exclaims)) %&gt;% 
+  group_by(n_exclaims) %&gt;% 
+  summarise(tweets = n(), med_interactions = median(interactions)) %&gt;% 
+  ggplot(aes(x = n_exclaims, y = med_interactions)) +
+  geom_bar(stat = &#39;identity&#39;) + 
+  coord_flip() +
+  theme_ipsum() +
+  labs(x = &quot;Median Number of Interactions&quot;, y = &quot;Number of Exclamation Points&quot;,
+       title = &quot;Median Number of Interactions&quot;,
+       subtitle = &quot;By Number of Exclamation Points&quot;)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>This is quite interesting to see. There appears to be a significant increase in the number of interactions that this user’s tweets get when there are more exclamation points. Let’s recreate this plot, but use the number of hashtags instead of the number of exclamation points.</p>
+<pre class="r"><code>user_tweets %&gt;% 
+  mutate(n_hashtags = as.factor(n_hashtags)) %&gt;% 
+  group_by(n_hashtags) %&gt;% 
+  summarise(tweets = n(), med_interactions = median(interactions)) %&gt;% 
+  ggplot(aes(x = n_hashtags, y = med_interactions)) +
+  geom_bar(stat = &#39;identity&#39;) + 
+  coord_flip() +
+  theme_ipsum() +
+  labs(x = &quot;Median Number of Interactions&quot;, y = &quot;Number of Hashtags&quot;,
+       title = &quot;Median Number of Interactions&quot;,
+       subtitle = &quot;By Number of Hashtags&quot;)</code></pre>
+<p><img src="/blog/text-features_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Cool! We’ll come back to this in the future…</p>
+
+      </article>
+
+      <ul class="pager blog-pager">
         
-
-        <div class="posts-list">
-          
-          
-            <article class="post-preview">
-              <a href="/post/2015-07-23-r-rmarkdown/">
-                <h2 class="post-title">Hello R Markdown</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on July 23, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.
-                  <a href="/post/2015-07-23-r-rmarkdown/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="/tags/r-markdown">R Markdown</a>&nbsp;
-                
-                  #<a href="/tags/plot">plot</a>&nbsp;
-                
-                  #<a href="/tags/regression">regression</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-26-flake-it-till-you-make-it/">
-                <h2 class="post-title">Flake it till you make it</h2>
-                
-                  <h3 class="post-subtitle">
-                  Excerpt from Soulshaping by Jeff Brown
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 26, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Under what circumstances should we step off a path? When is it essential that we finish what we start? If I bought a bag of peanuts and had an allergic reaction, no one would fault me if I threw it out. If I ended a relationship with a woman who hit me, no one would say that I had a commitment problem. But if I walk away from a seemingly secure route because my soul has other ideas, I am a flake?
-                  <a href="/post/2015-02-26-flake-it-till-you-make-it/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-20-test-markdown/">
-                <h2 class="post-title">Test markdown</h2>
-                
-                  <h3 class="post-subtitle">
-                  Each post also has a subtitle
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 20, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  You can write regular markdown here and Jekyll will automatically convert it to a nice webpage. I strongly encourage you to take 5 minutes to learn how to write in markdown - it&rsquo;ll teach you how to transform regular text into bold/italics/headings/tables/etc.
-Here is some bold text
-Here is a secondary heading Here&rsquo;s a useless table:
-   Number Next number Previous number     Five Six Four   Ten Eleven Nine   Seven Eight Six   Two Three One    How about a yummy crepe?
-                  <a href="/post/2015-02-20-test-markdown/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-                <span class="post-meta">
-                
-                  #<a href="/tags/example">example</a>&nbsp;
-                
-                  #<a href="/tags/markdown">markdown</a>&nbsp;
-                
-                </span>
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-02-13-hamlet-monologue/">
-                <h2 class="post-title">To be</h2>
-                
-                  <h3 class="post-subtitle">
-                  ... or not to be?
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on February 13, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  To be, or not to be&ndash;that is the question: Whether &lsquo;tis nobler in the mind to suffer The slings and arrows of outrageous fortune Or to take arms against a sea of troubles And by opposing end them. To die, to sleep&ndash; No more&ndash;and by a sleep to say we end The heartache, and the thousand natural shocks That flesh is heir to. &lsquo;Tis a consummation Devoutly to be wished. To die, to sleep&ndash; To sleep&ndash;perchance to dream: ay, there&rsquo;s the rub, For in that sleep of death what dreams may come When we have shuffled off this mortal coil, Must give us pause.
-                  <a href="/post/2015-02-13-hamlet-monologue/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-27-dear-diary/">
-                <h2 class="post-title">Dear diary</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 27, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  What is it with that Mary girl? Dragging me to school every day. As if I had a choice. What you don&rsquo;t hear in those nursery rhymes is that she starves me if I don&rsquo;t go to school with her; it&rsquo;s the only way I can stay alive! I&rsquo;m thinking about being adopted by Little Bo Peep, sure I may get lost, but anything is better than being with Mary and those little brats at school (shudder, shudder).
-                  <a href="/post/2015-01-27-dear-diary/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-19-soccer/">
-                <h2 class="post-title">Soccer</h2>
-                
-                  <h3 class="post-subtitle">
-                  Best sport ever!
-                  </h3>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 19, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  From Wikipedia:
-Association football, more commonly known as football or soccer,[2] is a sport played between two teams of eleven players with a spherical ball. It is played by 250 million players in over 200 countries, making it the world&rsquo;s most popular sport.[3][4][5][6] The game is played on a rectangular field with a goal at each end. The object of the game is to score by getting the ball into the opposing goal.
-                  <a href="/post/2015-01-19-soccer/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-15-pirates/">
-                <h2 class="post-title">Pirates arrrr</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 15, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  Piracy is typically an act of robbery or criminal violence at sea. The term can include acts committed on land, in the air, or in other major bodies of water or on a shore. It does not normally include crimes committed against persons traveling on the same vessel as the perpetrator (e.g. one passenger stealing from others on the same vessel). The term has been used throughout history to refer to raids across land borders by non-state agents.
-                  <a href="/post/2015-01-15-pirates/" class="post-read-more">[Read More]</a>
-                
-              </div>
-
-              
-            </article>
-          
-            <article class="post-preview">
-              <a href="/post/2015-01-04-first-post/">
-                <h2 class="post-title">First post!</h2>
-                
-              </a>
-
-              <span class="post-meta">
-  Posted on January 5, 2015
-  
-</span>
-
-
-              <div class="post-entry">
-                
-                  <p>This is my first post, how exciting!</p>
-
-                
-              </div>
-
-              
-            </article>
-          
-        </div>
-
+          <li class="previous">
+            <a href="/blog/bot-or-not/" data-toggle="tooltip" data-placement="top" title="Bot Or No Bot?">&larr; Previous Post</a>
+          </li>
         
-          <ul class="pager main-pager">
-            
-              <li class="previous">
-                <a href="/page/4">&larr; Newer Posts</a>
-              </li>
-            
-            
-          </ul>
         
-      </div>
+          <li class="next">
+            <a href="/blog/equal-pay-2018/" data-toggle="tooltip" data-placement="top" title="Equal Pay Report 2018">Next Post &rarr;</a>
+          </li>
+        
+      </ul>
+
+      
+        
+      
+
     </div>
   </div>
+</div>
 
     <footer>
   <div class="container">
