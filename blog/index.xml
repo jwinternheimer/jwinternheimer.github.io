@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Mon, 12 Mar 2018 14:26:51 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 13 Mar 2018 08:48:47 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How Many Twitter Accounts Are Selected in Tailored Posts Sessions?</title>
+      <link>/blog/tailored-posts-twitter/</link>
+      <pubDate>Tue, 13 Mar 2018 08:48:47 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/tailored-posts-twitter/</guid>
+      <description>This question came to me last week from one of our product managers. Let’s set about answering it! To do so, we’ll gather updates sent in the past months from Tailored Posts sessions, calculate the average number of Twitter profiles selected for each user, then average that average. As of today, Tailored Posts has been rolled out to around 50% of Buffer users.
+ Findings The vast majority of Tailored Posts sessions that include at least one Twitter profile selected only have a single Twitter profile selected.</description>
+    </item>
     
     <item>
       <title>Equal Pay Report 2018</title>

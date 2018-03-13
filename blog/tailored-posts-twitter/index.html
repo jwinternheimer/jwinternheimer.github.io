@@ -5,12 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Equal Pay Report 2018</title>
-  <meta property="og:title" content="Equal Pay Report 2018" />
-  <meta name="twitter:title" content="Equal Pay Report 2018" />
-  <meta name="description" content="What Men and Women Earn at Buffer">
-  <meta property="og:description" content="What Men and Women Earn at Buffer">
-  <meta name="twitter:description" content="What Men and Women Earn at Buffer">
+  <title>How Many Twitter Accounts Are Selected in Tailored Posts Sessions?</title>
+  <meta property="og:title" content="How Many Twitter Accounts Are Selected in Tailored Posts Sessions?" />
+  <meta name="twitter:title" content="How Many Twitter Accounts Are Selected in Tailored Posts Sessions?" />
+  <meta name="description" content="This question came to me last week from one of our product managers. Let’s set about answering it! To do so, we’ll gather updates sent in the past months from Tailored Posts sessions, calculate the average number of Twitter profiles selected for each user, then average that average. As of today, Tailored Posts has been rolled out to around 50% of Buffer users.
+ Findings The vast majority of Tailored Posts sessions that include at least one Twitter profile selected only have a single Twitter profile selected.">
+  <meta property="og:description" content="This question came to me last week from one of our product managers. Let’s set about answering it! To do so, we’ll gather updates sent in the past months from Tailored Posts sessions, calculate the average number of Twitter profiles selected for each user, then average that average. As of today, Tailored Posts has been rolled out to around 50% of Buffer users.
+ Findings The vast majority of Tailored Posts sessions that include at least one Twitter profile selected only have a single Twitter profile selected.">
+  <meta name="twitter:description" content="This question came to me last week from one of our product managers. Let’s set about answering it! To do so, we’ll gather updates sent in the past months from Tailored Posts sessions, calculate the …">
   <meta name="author" content="Julian Winternheimer"/>
   <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
   <meta property="og:image" content="/img/julian-avatar.png" />
@@ -18,12 +20,12 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:site" content="@julheimer" />
   <meta name="twitter:creator" content="@julheimer" />
-  <meta property="og:url" content="/blog/equal-pay-2018/" />
+  <meta property="og:url" content="/blog/tailored-posts-twitter/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Data Analysis?" />
 
   <meta name="generator" content="Hugo 0.23" />
-  <link rel="canonical" href="/blog/equal-pay-2018/" />
+  <link rel="canonical" href="/blog/tailored-posts-twitter/" />
   <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -175,13 +177,16 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <div class="blog-heading">
-              <h1>Equal Pay Report 2018</h1>
+            <div class="post-heading">
+              <h1>How Many Twitter Accounts Are Selected in Tailored Posts Sessions?</h1>
                 
-                  
-                    <h2 class="blog-subheading">What Men and Women Earn at Buffer</h2>
-                  
                 
+                  <span class="post-meta">
+  Posted on March 13, 2018
+  
+</span>
+
+
                 
             </div>
           </div>
@@ -196,102 +201,66 @@
   <div class="row">
     <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
       <article role="main" class="blog-post">
-        <p>Last April we released Buffer’s first <a href="https://open.buffer.com/equal-pay/">equal pay report</a> in celebration of Equal Pay Day. Since then, we have <a href="https://open.buffer.com/salary-formula/">overhauled our salary formula</a> and made many internal role changes. Given all of these changes, I’m excited to dig into our salary data today and see how we’re doing.</p>
+        <p>This question came to me last week from one of our product managers. Let’s set about answering it! To do so, we’ll gather updates sent in the past months from Tailored Posts sessions, calculate the average number of Twitter profiles selected for each user, then average that average. As of today, Tailored Posts has been rolled out to around 50% of Buffer users.</p>
+<div class="figure">
+<img src="http://hi.buffer.com/1S0V0W2H3b1a/Screen%20Shot%202018-02-02%20at%2012.18.18%20PM.png" />
+
+</div>
+<div id="findings" class="section level3">
+<h3>Findings</h3>
+<p>The vast majority of Tailored Posts sessions that include at least one Twitter profile selected only have a single Twitter profile selected. Only around 8% of sessions in the past month have had more than one Twitter profile selected. This still equates to millions of sessions – my back of the napkin estimate is around 8-10 million sessions with multiple Twitter profiles selected.</p>
+<p>This makes sense to me, since most sessions come from users on the free plan. These users are less likely, or even unable, to have multiple Twitter profiles selected.</p>
+</div>
 <div id="data-collection" class="section level3">
-<h3>Data Collection</h3>
-<p>The data we’ll use in this analysis comes from <a href="https://docs.google.com/spreadsheets/d/1cRI2VUhFVWB-c8wTmTnbT2OMOdDNnbh06bjCID_IKt0/edit?usp=sharing">this spreadsheet</a>. We’ll simply read in a CSV downloaded from this sheet.</p>
-<pre class="r"><code># read csv
-salaries &lt;- read.csv(&quot;~/Downloads/salaries.csv&quot;, header = TRUE)</code></pre>
-<p>Now we’re ready for some exploratory analysis.</p>
-</div>
-<div id="global-summary-statistics" class="section level3">
-<h3>Global Summary Statistics</h3>
-<p>Let’s begin by describing the distribution of salaries for all team members of Buffer. It might be helpful to define a couple fields in our dataset. The <code>salary</code> field contains the totol pre-tax salaries of team members before tax in US dollars. This includes dependent grants and the choice to receive a higher salary instead of stock options.</p>
-<p>The <code>base_salary</code> field contains the base salary as calculated by our new salary formula. This <em>excludes</em> dependent grants and salary choices.</p>
-<p>In this analysis I chose to focus on the <code>salary</code> values, because that is what people take home (for the most part).</p>
-<pre class="r"><code># summarise salary
-summary(salaries$salary)</code></pre>
-<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   69483   86864  109350  114211  128412  265315</code></pre>
-<p>The median salary at Buffer is $109K and the average is $114K. We can plot the distribution of salaries across Buffer.</p>
-<pre class="r"><code># define cuts
-cuts &lt;- seq(60000, 280000, 20000)
+<h3>Data collection</h3>
+<p>We’ll need to load the libraries we use later on.</p>
+<pre class="r"><code># load libraries
+library(buffer)
+library(dplyr)
+library(ggplot2)
+library(hrbrthemes)
+library(scales)</code></pre>
+<p>Now let’s collecte the updates.</p>
+<pre class="sql"><code>select 
+  m.update_id
+  , m.composer_type
+  , m.composer_session_created_at
+  , m.composer_session_id
+  , up.profile_id
+  , up.profile_service
+  , up.user_id
+from dbt.multiple_composer_updates as m
+inner join dbt.updates as up on m.update_id = up.id
+where m.composer_type in (&#39;multiple_extension&#39;, &#39;multiple_web_dashboard&#39;)
+and m.composer_session_created_at &gt;= (current_date - 30)
+and up.profile_service = &#39;twitter&#39;
+order by random()
+limit 2000000</code></pre>
+<p>Great, we have two million Twitter updates to work with. At this point we can start grouping by the <code>user_id</code> and <code>composer_session_id</code> fields to find the number of Twitter profiles selected in each session.</p>
+<pre class="r"><code># group by composer session
+by_session &lt;- posts %&gt;% 
+  group_by(user_id, composer_session_id) %&gt;% 
+  summarise(profiles = n_distinct(profile_id))
 
-# define salary buckets
-salaries &lt;- salaries %&gt;% 
-  mutate(salary_bin = cut(salary, breaks = cuts, dig.lab = 10))
-
-# plot distribution of salaries
-salaries %&gt;% 
-  count(salary_bin) %&gt;% 
-  ggplot(aes(x = salary_bin, y = n)) +
-  geom_bar(stat = &#39;identity&#39;) +
-  theme_ipsum() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(x = NULL, y = &quot;Team Members&quot;, title = &quot;Salary Distribution&quot;)</code></pre>
-<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>The most common salary “bin” is 80-100K. Let’s break salary down by gender now.</p>
+# group by user
+by_user &lt;- by_session %&gt;% 
+  group_by(user_id) %&gt;% 
+  summarise(avg_profiles = mean(profiles))</code></pre>
 </div>
-<div id="average-salary-by-gender" class="section level3">
-<h3>Average Salary by Gender</h3>
-<p>We can quickly calculate the average and median salaries for both men and women at Buffer.</p>
-<pre class="r"><code># calculate average and median salaries
-salaries %&gt;% 
-  group_by(gender) %&gt;% 
-  summarise(average_salary = mean(salary), median_salary = median(salary))</code></pre>
-<pre><code>## # A tibble: 2 x 3
-##   gender average_salary median_salary
-##   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;
-## 1 female         106819         94546
-## 2 male           117530        114215</code></pre>
-<p>The average salary for females at Buffer is <strong>$106,808</strong> and the median is <strong>$94,546</strong>. The average salary for men is <strong>$117,530</strong> and the median is <strong>$114,215</strong>.</p>
-<p>If we look at averages, men earn around 10% more than women – if we look at medians, men earn around 21% more than women!</p>
-<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>This discrpency can be surprising, especially for a company with a salary formula! Gender does not enter the salary formula in any way. However, there is something interesting going on - let’s take a closer look at the data.</p>
+<div id="exploratory-analysis" class="section level3">
+<h3>Exploratory Analysis</h3>
+<p>Now we can plot the overall distribution of the number of Twitter profiles selected. We can see in the graphs below that the vast majority of tailored posts sessions have only one Twitter profile selected.</p>
+<p><img src="/blog/tailored-posts-twitter_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>We can also plot the cumulative distribution function (CDF). We can see that over 90% of sessions in which at least one Twitter profile was selected, only a single Twitter profile was selected. Around 96% of sessions have two or less Twitter profiles selected, and around 98% of sessions had five or less Twitter profiles selected.</p>
+<p><img src="/blog/tailored-posts-twitter_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Let’s try a slightly different approach. Instead of plotting the distribution of the number of Twitter profiles selected for all composer sessions, we can look at the distribution of the <em>average</em> number of Twitter profiles selected <em>per user</em>. This way, users that have posted very frequently will have less of an influence on the distribution.</p>
 </div>
-<div id="technical-and-non-technical-roles" class="section level3">
-<h3>Technical and Non-Technical Roles</h3>
-<p>I’m not the biggest fan of this terminology, but it can be useful to describe roles. Technical roles include engineering, data, design, product, and our full-stack marketer. Non-technical roles include marketing, leadership, and advocacy.</p>
-<p>If we calculate the average salaries for technical and non-technical roles, we might see something interesting.</p>
-<pre class="r"><code># calculate average salaries for tech and non-tech roles
-salaries %&gt;% 
-  group_by(role_type, gender) %&gt;% 
-  summarise(average_salary = mean(salary))</code></pre>
-<pre><code>## # A tibble: 4 x 3
-## # Groups:   role_type [?]
-##   role_type     gender average_salary
-##   &lt;fct&gt;         &lt;fct&gt;           &lt;dbl&gt;
-## 1 non-technical female         105587
-## 2 non-technical male           104171
-## 3 technical     female         112363
-## 4 technical     male           125287</code></pre>
-<p>This is interesting. If we segment team members by their role type, we can see that women earn around 1% more than men in non-technical roles, and men earn around only 12% more than women in technical roles.</p>
-<p>This seems to explain the overall difference in average salaries. There are more men in technical roles, which tend to demand higher salaries. That, coupled with the fact that men earn more on-average than women in technical roles, leads to the 10% difference in the overall average salary.</p>
-<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-</div>
-<div id="salaries-by-team" class="section level3">
-<h3>Salaries by Team</h3>
-<p>We can also plot the average salary for each team at Buffer.</p>
-<p><img src="/blog/equal-pay-2018_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
-<pre class="r"><code>salaries %&gt;%
-  group_by(team) %&gt;%
-  summarise(average_salary = mean(salary)) %&gt;% 
-  arrange(desc(average_salary))</code></pre>
-<pre><code>## # A tibble: 9 x 2
-##   team        average_salary
-##   &lt;fct&gt;                &lt;dbl&gt;
-## 1 leadership          169675
-## 2 engineering         127177
-## 3 product             124146
-## 4 data                121996
-## 5 design              113257
-## 6 finance             103073
-## 7 people               99498
-## 8 marketing            86506
-## 9 advocacy             83751</code></pre>
-<p>Interesting stuff overall!</p>
+<div id="average-number-of-twitter-profiles-selected-per-user" class="section level3">
+<h3>Average Number of Twitter Profiles Selected Per User</h3>
+<p>We’ll use the same techniques, but use the <code>by_user</code> dataframe we created earlier. We can see that the distribution is even more heavily skewed to the left!</p>
+<p><img src="/blog/tailored-posts-twitter_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The CDF below is pretty interesting, around 99% of users have had two or less Twitter profiles selected (on average) in thier Tailored Posts sessions.</p>
+<p><img src="/blog/tailored-posts-twitter_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 
       </article>
@@ -299,13 +268,9 @@ salaries %&gt;%
       <ul class="pager blog-pager">
         
           <li class="previous">
-            <a href="/blog/text-features/" data-toggle="tooltip" data-placement="top" title="Analyzing Tweets with TextFeatures">&larr; Previous Post</a>
+            <a href="/blog/equal-pay-2018/" data-toggle="tooltip" data-placement="top" title="Equal Pay Report 2018">&larr; Previous Post</a>
           </li>
         
-        
-          <li class="next">
-            <a href="/blog/tailored-posts-twitter/" data-toggle="tooltip" data-placement="top" title="How Many Twitter Accounts Are Selected in Tailored Posts Sessions?">Next Post &rarr;</a>
-          </li>
         
       </ul>
 
