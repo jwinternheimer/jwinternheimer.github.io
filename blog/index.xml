@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Tue, 13 Mar 2018 08:48:47 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 14 Mar 2018 09:44:03 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>How Buffer Uses Slack</title>
+      <link>/blog/slack-usage/</link>
+      <pubDate>Wed, 14 Mar 2018 09:44:03 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/slack-usage/</guid>
+      <description>Buffer started using Slack (again) on Thursday, June 2, 2016. Slack makes available some great data to all members of the team, so I thought it would be fun to analyze some of Buffer’s usage in the past couple of years.
+Transparency is one of our core values, so it is always good to check in and see how we’re doing on that front. In this analysis, we will look at message frequency over time, the percentage of messages sent in private and public channels, and the percentage of messages sent in DMs.</description>
+    </item>
     
     <item>
       <title>How Many Twitter Accounts Are Selected in Tailored Posts Sessions?</title>
