@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Defining an Activation Rate</title>
+  <meta property="og:title" content="Defining an Activation Rate" />
+  <meta name="twitter:title" content="Defining an Activation Rate" />
+  <meta name="description" content="What Makes New Users Successful?">
+  <meta property="og:description" content="What Makes New Users Successful?">
+  <meta name="twitter:description" content="What Makes New Users Successful?">
+  <meta name="author" content="Julian Winternheimer"/>
+  <link href='/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:image" content="/img/julian-avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@julheimer" />
+  <meta name="twitter:creator" content="@julheimer" />
+  <meta property="og:url" content="/blog/free-user-activation/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Data Analysis?" />
+
+  <meta name="generator" content="Hugo 0.23" />
+  <link rel="canonical" href="/blog/free-user-activation/" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Data Analysis?">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="/css/pygment_highlights.css" />
+  <link rel="stylesheet" href="/css/highlight.min.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.css" integrity="sha256-sCl5PUOGMLfFYctzDW3MtRib0ctyUvI9Qsmq2wXOeBY=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/default-skin/default-skin.min.css" integrity="sha256-BFeI1V+Vh1Rk37wswuOYn5lsTcaU96hGaI7OUVCLjPc=" crossorigin="anonymous" />
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Data Analysis?</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/">Blog</a>
+            </li>
+          
+        
+          
+            <li class="navlinks-container">
+              <a class="navlinks-parent" href="javascript:void(0)">Samples</a>
+              <div class="navlinks-children">
+                
+                  <a href="/post/2017-03-07-bigimg-sample">Big Image Sample</a>
+                
+                  <a href="/post/2017-03-05-math-sample">Math Sample</a>
+                
+              </div>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+          <a title="Data Analysis?" href="/">
+            <img class="avatar-img" src="/img/julian-avatar.png" alt="Data Analysis?" />
+          </a>
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Defining an Activation Rate</h1>
+                
+                  
+                    <h2 class="post-subheading">What Makes New Users Successful?</h2>
+                  
+                
+                
+                  <span class="post-meta">
+  Posted on March 14, 2018
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>A couple years ago we discovered that new users were much more likely to be successful with Buffer if they scheduled at least three updates in their first seven days after signing up. We defined success as still being an active user three months after signing up.</p>
+<p>In this analysis we’ll revisit the assumptions we made and determine if this “three updates in seven days” activation metric is still appropriate for today. To do that, we’ll examine usage in the first week after signing up for Buffer. We’ll look at the number of posts scheduled, the number of profiles added, and the number of days that users were active. We will again define success as being retained for three months.</p>
+<p>Based on some basic exploratory analysis below, I might suggest an activation metric of <strong>at least 3 updates created and 2 days active within the first week</strong>. Using this definition, approximately 17% of new users end up activating.</p>
+<p>Around 26% of users that did not activate were retained for three months, whereas 42% of users that activated were retained. Activated users are more than 60% more likely to be retained for three months by this definition.</p>
+<div id="data-collection" class="section level3">
+<h3>Data Collection</h3>
+<p>We’ll want to gather all users that signed up before three months ago. We don’t yet know if users that signed up in the past three months were “successful” or not. We also want to know how many profiles they added in the first week and how many updates were created. We want users that signed up between December 1, 2016 and December 1, 2017.</p>
+<p>We’ll gather that data with the following query.</p>
+<pre class="sql"><code>with profiles as (
+  select 
+    u.user_id
+    , count(distinct p.id) as profiles
+  from dbt.users as u
+  left join dbt.profiles as p
+  on u.user_id = p.user_id and datediff(day, u.created_at, p.created_at) &lt; 7
+  where u.created_at &gt;= &#39;2016-12-01&#39; and u.created_at &lt;= &#39;2017-12-01&#39;
+  group by 1
+),
+
+last_active_date as (
+  select 
+    user_id
+    , max(date(created_at)) as last_active_date
+  from dbt.updates
+  where was_sent_with_buffer
+  and status != &#39;failed&#39;
+  and created_at &gt; &#39;2016-12-01&#39;
+  group by 1
+)
+
+select 
+  u.user_id
+  , date(u.created_at) as signup_date
+  , p.profiles
+  , l.last_active_date
+  , count(distinct up.id) as updates
+  , count(distinct date(up.created_at)) as days_active
+from dbt.users as u
+left join dbt.updates as up
+  on (u.user_id = up.user_id and datediff(day, u.created_at, up.created_at) &lt; 7)
+left join profiles as p 
+  on u.user_id = p.user_id
+left join last_active_date as l
+  on u.user_id = l.user_id
+where u.created_at &gt;= &#39;2016-12-01&#39; and u.created_at &lt;= &#39;2017-12-01&#39;
+  and (up.was_sent_with_buffer = TRUE or up.was_sent_with_buffer is null)
+  and (up.status != &#39;failed&#39; or up.status is null)
+  group by 1, 2, 3, 4</code></pre>
+<p>Great, we now have around 1.4 million Buffer users to analyze!</p>
+</div>
+<div id="data-tidying" class="section level3">
+<h3>Data Tidying</h3>
+<p>We also want to know if the user was successful. We do this by determining if the user was still active 90 days after signing up. If the user didn’t send any updates, we’ll set their <code>last_active_date</code> to the <code>signup_date</code> value.</p>
+<pre class="r"><code># set last active date
+users$last_active_date[is.na(users$last_active_date)] &lt;- users$signup_date
+
+# determine if user was successful
+users &lt;- users %&gt;% 
+  mutate(successful = as.numeric(last_active_date - signup_date) &gt;= 90)</code></pre>
+<p>Let’s see what proportion of signups were retained for three months.</p>
+<pre class="r"><code># get success rate
+users %&gt;% 
+  group_by(successful) %&gt;% 
+  summarise(users = n_distinct(user_id)) %&gt;% 
+  mutate(percent = users / sum(users))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   successful   users percent
+##   &lt;lgl&gt;        &lt;int&gt;   &lt;dbl&gt;
+## 1 F          1022152   0.710
+## 2 T           417079   0.290</code></pre>
+<p>Around 29% of users were retained for three months.</p>
+</div>
+<div id="searching-for-activation" class="section level3">
+<h3>Searching for Activation</h3>
+<p>Now let’s see how well these metrics correlate with success. To do so, we’ll use a logistic regression model.</p>
+<pre class="r"><code># define logistic regression model
+mod &lt;- glm(successful ~ profiles + updates + days_active, data = users, family = &quot;binomial&quot;)
+
+# summarize the model
+summary(mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = successful ~ profiles + updates + days_active, 
+##     family = &quot;binomial&quot;, data = users)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -6.3761  -0.8256  -0.7762   1.3831   3.5820  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -1.110e+00  2.570e-03 -431.75   &lt;2e-16 ***
+## profiles     6.416e-02  1.353e-03   47.43   &lt;2e-16 ***
+## updates     -4.376e-04  3.634e-05  -12.04   &lt;2e-16 ***
+## days_active  1.448e-01  1.283e-03  112.80   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1732737  on 1439230  degrees of freedom
+## Residual deviance: 1712268  on 1439227  degrees of freedom
+## AIC: 1712276
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>All three metrics seem to have very significant effects on the probability of a user being successful. Interesting, the correlation between updates and success is negative! I have a hunch that this is because of outliers, folks that send thousands of updates in their first days. Let’s remove them from the dataset.</p>
+<pre class="r"><code># find quantiles for updates
+quantile(users$updates, probs = c(0, 0.5, 0.99, 0.995))</code></pre>
+<pre><code>##    0%   50%   99% 99.5% 
+##     0     0    75   117</code></pre>
+<p>The 99th percentile for updates created in the first week is 75, so let’s remove users that created 100 or more updates in their first week.</p>
+<pre class="r"><code># remove outliers
+users &lt;- filter(users, updates &lt; 100)</code></pre>
+<p>Now let’s rebuild the model.</p>
+<pre class="r"><code># define logistic regression model
+mod &lt;- glm(successful ~ profiles + updates + days_active, data = users, family = &quot;binomial&quot;)
+
+# summarize the model
+summary(mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = successful ~ profiles + updates + days_active, 
+##     family = &quot;binomial&quot;, data = users)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.8555  -0.8085  -0.7785   1.3988   1.6631  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -1.094146   0.002630 -416.04   &lt;2e-16 ***
+## profiles     0.055697   0.001445   38.54   &lt;2e-16 ***
+## updates      0.012799   0.000250   51.19   &lt;2e-16 ***
+## days_active  0.075354   0.001801   41.84   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1718696  on 1429914  degrees of freedom
+## Residual deviance: 1697077  on 1429911  degrees of freedom
+## AIC: 1697085
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>That’s much more like it. :)</p>
+</div>
+<div id="updates" class="section level3">
+<h3>Updates</h3>
+<p>In the first activation metric, we decided that three updates in seven days was optimal. We can examine the success rate for users that sent a certain number of updates in their first week to help with this.</p>
+<pre class="r"><code># define bins
+cuts &lt;- c(1, 5, 10, 20, 50, 100)
+
+# create update bins
+users &lt;- users %&gt;% 
+  mutate(update_bin = cut(updates, breaks = cuts, include.lowest = TRUE))
+
+# plot success rate for each bin
+users %&gt;% 
+  group_by(update_bin, successful) %&gt;% 
+  summarise(users = n_distinct(user_id)) %&gt;% 
+  mutate(percent = users / sum(users)) %&gt;% 
+  filter(successful &amp; !is.na(update_bin)) %&gt;% 
+  ggplot(aes(x = update_bin, y = percent)) +
+  geom_bar(stat = &#39;identity&#39;) +
+  theme_ipsum() +
+  scale_y_continuous(labels = percent) +
+  labs(x = &quot;Updates Created in First Week&quot;, y = NULL,
+       title = &quot;Success Rate by Update Bin&quot;, 
+       subtitle = &quot;Success: Retained for 90 Days&quot;)</code></pre>
+<p><img src="/blog/free-user-activation_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>We can see that the success rate increases as the update bins increase. Over 50% of users that create 50 or more updates in their first week are retained for three months. The problem is that there are very few users that do this. We see that there is a big jump from 1 to 20 updates. Let’s zoom in there and see if there is a point with the greatest marginal return.</p>
+<p><img src="/blog/free-user-activation_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>The graph below shows the proportion of users with at least X updates that were reteined for three months. We can see that there are diminishing returns, but it is tough to tell where an inflection point might be. One feature that is cool to see is the little bump at 11 updates. This exists because of the <em>queue limit</em>. Whene a user signs up for Buffer on a free plan, they can only have 10 updates scheduled at one time for a single profile.</p>
+<p>What would this grpah look like if we zoomed into only look at 1-15 updates?</p>
+<p><img src="/blog/free-user-activation_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>To my eyes, <strong>three</strong> updates seems as good a choice as we can get. There are clear diminishing returns after three updates, and a significant number of users (358 thousand) did successfully take the action.</p>
+</div>
+<div id="profiles" class="section level3">
+<h3>Profiles</h3>
+<p>We’ll take the same approach to look at profiles.</p>
+<p><img src="/blog/free-user-activation_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>We can see that adding a single profile doesn’t quite lead to success. The biggest jump in the success rate comes between two and ten profiles.</p>
+<p><img src="/blog/free-user-activation_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>There don’t appear to be any inflection points here, and we can’t really influence how many social accounts users have in general, so I may not recommend using profiles in an activation metric, despite the strong correlation.</p>
+</div>
+<div id="days-active" class="section level3">
+<h3>Days Active</h3>
+<p>Finally we’ll look at the number of days active in the first week.</p>
+<p><img src="/blog/free-user-activation_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>We see a significant jump in the success rate when the number of days active increases from one to two. Therefore, <strong>I might suggest an activation metric of at least 3 updates, at least 2 profiles, and at least 2 days active in the first week</strong>.</p>
+</div>
+<div id="activation-metric" class="section level3">
+<h3>Activation Metric</h3>
+<p>Let’s see how many users activated, if we use this metric, and what their retention rate was.</p>
+<pre class="r"><code># determine if activated
+users &lt;- users %&gt;% 
+  mutate(activated = (updates &gt;= 3 &amp; days_active &gt;= 2)) </code></pre>
+<p>Let’s see the proportion of users that activated.</p>
+<pre class="r"><code># get activation rate
+users %&gt;% 
+  group_by(activated) %&gt;% 
+  summarise(users = n_distinct(user_id)) %&gt;% 
+  mutate(percent = users / sum(users))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   activated   users percent
+##   &lt;lgl&gt;       &lt;int&gt;   &lt;dbl&gt;
+## 1 F         1184562   0.828
+## 2 T          245353   0.172</code></pre>
+<p>Around 17% of users activated. Let’s see how likely activated users are to be retained compoared to unactivated users.</p>
+<pre class="r"><code># see success rate
+users %&gt;% 
+  group_by(activated, successful) %&gt;% 
+  summarise(users = n_distinct(user_id)) %&gt;% 
+  mutate(percent = users / sum(users)) %&gt;% 
+  filter(successful)</code></pre>
+<pre><code>## # A tibble: 2 x 4
+## # Groups:   activated [2]
+##   activated successful  users percent
+##   &lt;lgl&gt;     &lt;lgl&gt;       &lt;int&gt;   &lt;dbl&gt;
+## 1 F         T          308803   0.261
+## 2 T         T          104005   0.424</code></pre>
+<p>Around 26% of users that did not activate were retained for three months, whereas 42% of users that activated were retained. Activated users are more than 60% more likely to be retained for three months by this definition.</p>
+</div>
+
+      </article>
+
+      <ul class="pager blog-pager">
+        
+          <li class="previous">
+            <a href="/blog/slack-usage/" data-toggle="tooltip" data-placement="top" title="How Buffer Uses Slack">&larr; Previous Post</a>
+          </li>
+        
+        
+      </ul>
+
+      
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:julianwinternheimer@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/julian.winternheimer" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/jwinternheimer" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/julheimer" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/jwinternheimer" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="/index.xml" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          Julian Winternheimer
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Data Analysis?</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.23</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe.min.js" integrity="sha256-UplRCs9v4KXVJvVY+p+RSo5Q4ilAUXh7kpjyIP5odyc=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.1/photoswipe-ui-default.min.js" integrity="sha256-PWHOlUzc96pMc8ThwRIXPn8yH4NOLu42RQ0b9SpnpFk=" crossorigin="anonymous"></script>
+<script src="/js/load-photoswipe.js"></script>
+
+
+
+
+  </body>
+</html>
+

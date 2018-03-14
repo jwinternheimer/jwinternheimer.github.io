@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Wed, 14 Mar 2018 09:44:03 -0400</lastBuildDate>
+    <lastBuildDate>Wed, 14 Mar 2018 14:43:59 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Defining an Activation Rate</title>
+      <link>/blog/free-user-activation/</link>
+      <pubDate>Wed, 14 Mar 2018 14:43:59 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/free-user-activation/</guid>
+      <description>A couple years ago we discovered that new users were much more likely to be successful with Buffer if they scheduled at least three updates in their first seven days after signing up. We defined success as still being an active user three months after signing up.
+In this analysis we’ll revisit the assumptions we made and determine if this “three updates in seven days” activation metric is still appropriate for today.</description>
+    </item>
     
     <item>
       <title>How Buffer Uses Slack</title>
