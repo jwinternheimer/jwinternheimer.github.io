@@ -7,10 +7,22 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>julianwinternheimer@gmail.com (Julian Winternheimer)</managingEditor>
     <webMaster>julianwinternheimer@gmail.com (Julian Winternheimer)</webMaster>
-    <lastBuildDate>Wed, 14 Mar 2018 14:43:59 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 15 Mar 2018 09:49:13 -0400</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>An Activation Metric for Paying Users</title>
+      <link>/blog/awesome-activation-metric/</link>
+      <pubDate>Thu, 15 Mar 2018 09:49:13 -0400</pubDate>
+      <author>julianwinternheimer@gmail.com (Julian Winternheimer)</author>
+      <guid>/blog/awesome-activation-metric/</guid>
+      <description>In a previous analysis we used some simple EDA techniques to explore “activation” for new Buffer users.
+In this analysis, we’ll use a similar approach to explore what activation could look like for users that subscribe to Buffer’s Awesome plan. We’ll define success in this case as being retained – not cancelling the subscription – for at least six months.
+The features we’ll analyze are:
+ The number of days that the user was a Buffer user before becoming a paid customer.</description>
+    </item>
     
     <item>
       <title>Defining an Activation Rate</title>

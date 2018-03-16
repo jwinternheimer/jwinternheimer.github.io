@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/blog/awesome-activation-metric/</loc>
+    <lastmod>2018-03-15T09:49:13-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/free-user-activation/</loc>
     <lastmod>2018-03-14T14:43:59-04:00</lastmod>
   </url>
@@ -283,7 +288,7 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2018-03-14T14:43:59-04:00</lastmod>
+    <lastmod>2018-03-15T09:49:13-04:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -300,7 +305,7 @@
   
   <url>
     <loc>/</loc>
-    <lastmod>2018-03-14T14:43:59-04:00</lastmod>
+    <lastmod>2018-03-15T09:49:13-04:00</lastmod>
     <priority>0</priority>
   </url>
   
